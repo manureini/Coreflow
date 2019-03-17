@@ -1,0 +1,36 @@
+﻿
+
+
+
+String or Email parameter
+
+
+
+CodeContainer kann Farbe besitzen, Childs werden stufenweise heller
+
+Zoom
+
+Overview
+
+Auskommentieren durch Rechtsklick
+
+
+
+Ein serialisierter Workflow kann UI Zustände speichern. Der Core kann diese aber nicht lesen oder verarbeiten
+
+Sequenz umbenennbar
+
+Expand
+
+
+Anmerkungen
+
+
+Baumansicht?
+
+
+Core:
+
+Versioning
+
+

@@ -1,0 +1,46 @@
+﻿
+IfThenActivity
+IfThenElse
+
+TerminateIfShuttingDownActivity
+
+ChangeLogRedirectToMemoryActivty
+CommitCollectedLogsToDatabaseActivity
+
+
+DxWorkflowInstanceAddMetadataActivity
+DxWorkflowInstanceGetMetadataActivity
+RunWorkflowSyncActivity
+
+ConnectToNetworkShare
+        SharedPath
+        UserName
+        Pass
+        
+FileCopyActivity
+FileMoveActivity
+
+FileDeleteActivity
+
+DirectoryMoveActivity
+DirectoryCopyActivity
+
+
+  SourceDirectory
+  DestinationDirectory
+  FilterExpression
+  Recursive
+  StopOnError
+  ReturnValue
+
+
+DirectoryLooper
+        Directory
+        FilterExpression
+        Recursive
+        LoopDirectories
+        FileNameVariable
+
+
+DownloadStringActivity
+

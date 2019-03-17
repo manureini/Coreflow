@@ -1,0 +1,134 @@
+﻿using Coreflow.Web.Identity;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
+
+namespace Coreflow.Web
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => false;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Default Lockout settings.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
+                options.Lockout.MaxFailedAccessAttempts = 8;
+                options.Lockout.AllowedForNewUsers = true;
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 1;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            });
+
+            services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "X-CSRF-TOKEN";
+                options.Cookie.Name = "X-CSRF-TOKEN-COOKIE";
+            });
+
+
+            services.AddDbContext<IdentityDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+            .AddUserStore<MemoryUserStore>()
+            .AddRoleStore<MemoryRoleStore>()
+            .AddDefaultTokenProviders();
+
+            services.AddAuthentication().AddCookie(options => options.ExpireTimeSpan = TimeSpan.FromMinutes(30));
+
+            //TODO
+            /*
+            services.AddMvc(options =>
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute())
+            );*/
+
+            services.AddMvc();
+
+            services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
+            services.AddSession();
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider pServiceProvider)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
+            }
+
+            app.UseSession();
+            //    app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseCookiePolicy();
+
+            app.UseAuthentication();
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            CreateRoles(pServiceProvider).Wait();
+        }
+
+
+        private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            //initializing custom roles           
+            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+            string email = "admin@localhost";
+            var poweruser = new IdentityUser
+            {
+                UserName = "admin",
+                Email = email,
+            };
+
+            string userPWD = "a";
+
+            var _user = await userManager.FindByEmailAsync(email);
+
+            if (_user == null)
+            {
+                var createPowerUser = await userManager.CreateAsync(poweruser, userPWD);
+                if (!createPowerUser.Succeeded)
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+        }
+
+    }
+}

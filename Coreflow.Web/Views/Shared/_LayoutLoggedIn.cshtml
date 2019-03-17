@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html>
+@await Html.PartialAsync("_Head")
+<body>
+    @*  <partial name="_CookieConsentPartial" /> *@
+
+    <div class="body-content">
+
+        @await Html.PartialAsync("_Navbar")
+
+        @RenderBody()
+    </div>
+
+    @await Html.PartialAsync("_Scripts")
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
+
+
+

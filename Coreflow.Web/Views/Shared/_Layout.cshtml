@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+@await Html.PartialAsync("_Head")
+<body>
+
+    <link rel="stylesheet" href="~/css/signin.css" />
+
+    @*  <partial name="_CookieConsentPartial" /> *@
+    <div class="container body-content">
+        @RenderBody()
+
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Coreflow.Web</p>
+        </footer>
+    </div>
+
+    @await Html.PartialAsync("_Scripts")
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

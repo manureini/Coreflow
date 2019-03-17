@@ -1,0 +1,206 @@
+﻿@model WorkflowDefinitionModel
+@*
+    @{
+        ViewData["Title"] = "About";
+    }
+    <h2>@ViewData["Title"]</h2>
+    <h3>@ViewData["Message"]</h3>
+
+    <p>Use this area to provide additional information.</p>
+*@
+
+
+
+@section Scripts
+    {
+    <script type="text/javascript" src="@Url.Content("/lib/jqueryui/jquery-ui.js")"></script>
+
+    <script>var require = { paths: { 'vs': '/lib/monaco-editor/min/vs' } };</script>
+    <script type="text/javascript" src="@Url.Content("/lib/monaco-editor/min/vs/loader.js")"></script>
+    <script type="text/javascript" src="@Url.Content("/lib/monaco-editor/min/vs/editor/editor.main.nls.js")"></script>
+    <script type="text/javascript" src="@Url.Content("/lib/monaco-editor/min/vs/editor/editor.main.js")"></script>
+
+    <script type="text/javascript" src="@Url.Content("/js/SubmitHelper.js")"></script>
+    <script type="text/javascript" src="@Url.Content("/js/Workflow.js")"></script>
+}
+
+
+@{
+
+    Func<CodeCreatorModel, object> PrintCodeCreatorModel = null;
+
+    PrintCodeCreatorModel =
+    @<text>
+
+        @if (item != null)
+        {
+            bool isContainer = item.CodeCreatorModels != null;
+
+            <div class="codecreator @if (isContainer) { @("codecreator-container"); }" data-id="@item.Identifier" data-type="@item.Type" title="@item.Type">
+
+                @{string displayname = item.UserDisplayName != null ? item.UserDisplayName : item.DisplayName;}
+
+                <span><i class="@item.IconClass"></i> <input type="text" class="input-displayname" spellcheck="false" value="@displayname" /></span>
+
+                @if (isContainer)
+                {
+                    <div class="codecreator-container-top"></div>
+                }
+
+                @if (item.CodeCreatorModels != null)
+                {
+                    @foreach (CodeCreatorModel creator in item.CodeCreatorModels)
+                    {
+                        @PrintCodeCreatorModel(creator);
+                    }
+                }
+
+                @if (item.Parameters != null)
+                {
+                    <div class="codecreator-parameters" style="border: solid; border-color: gray; margin: 4px">
+
+                        @foreach (IGrouping<string, CodeCreatorParameterModel> groupingPm in item.Parameters.GroupBy(p => p.Category))
+                        {
+                            <p>@groupingPm.Key</p>
+
+                            <table id="codecreator-parameters-table" data-creator-id="@item.Identifier">
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Value</th>
+                                </tr>
+
+                                @foreach (CodeCreatorParameterModel pm in groupingPm)
+                                {
+                                    ArgumentModel pme = item.Arguments[pm.Index];
+
+                                    <tr data-name="@pm.Name" data-id="@pme.Guid" data-index="@pm.Index">
+                                        <td data-toggle="tooltip" title="@pm.Direction @pm.Name @pm.Type @pm.Index">@pm.GetDisplayNameOrName()</td>
+                                        <td><div class="codecreator-parameters-table-text" data-id="@pme.Guid" style="width: 100%; height: 20px" data-value="@pme.Code" /></td>
+                                    </tr>
+                                }
+
+                            </table>
+                        }
+
+                    </div>
+                }
+
+            </div>
+        }
+
+    </text>
+    ;
+
+}
+
+
+
+
+<dialog id="dialog">
+    <div>
+
+        <button id="close-dialog">Close</button>
+
+        <div id="dialog-editor">
+
+        </div>
+    </div>
+</dialog>
+
+<div>
+
+    <div id="codecreator-panel" class="panel border-panel">
+
+        @foreach (var entry in Model.CodeCreators.OrderBy(c => c.Value.DisplayName))
+        {
+            <div class="codecreator-panel-parameter" data-type="@entry.Value.Type">
+                <i class="@entry.Value.IconClass"></i> @entry.Value.DisplayName
+
+                <div class="codecreator-panel-parameter-container">
+                    @PrintCodeCreatorModel(entry.Value)
+                </div>
+            </div>
+        }
+
+    </div>
+
+    <div id="editor-center" class="panel">
+        <h4>@Model.Name</h4>
+
+        <div id="main">
+            @PrintCodeCreatorModel(@Model.CodeCreatorModel)
+        </div>
+    </div>
+
+    <div id="parameter-box" class="panel border-panel">
+    </div>
+
+    <div id="control-panel" class="panel border-panel">
+        <input type="button" id="RunWorkflowbtn" value="Run Workflow">
+    </div>
+
+    <div id="center-box" class="panel border-panel">
+        <ul class="nav nav-tabs">
+            <li><a data-toggle="tab" href="#menu0" class="active">Variables</a></li>
+            <li><a data-toggle="tab" href="#menu1">Arguments</a></li>
+            <li><a data-toggle="tab" href="#menu2">Namespaces</a></li>
+            <li><a data-toggle="tab" href="#menu3">Assemblies</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="menu0" class="tab-pane fade in active">
+                <div></div>
+
+            </div>
+            <div id="menu1" class="tab-pane fade">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <td width="30%">Name</td>
+                            <td width="30%">Type</td>
+                            <td width="30%">Value</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var u in Model.Arguments)
+                        {
+                            <tr>
+                                <td>@u.Name</td>
+                                <td>@u.Type</td>
+                                <td>@u.DefaultExpression</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+            <div id="menu2" class="tab-pane fade">
+                <ul>
+                    @foreach (string u in Model.ReferencedNamespaces)
+                    {
+                        <li><i class="fa fa-trash clickable remove-referenced-namespace" data-id="@u"></i> @u</li>
+                    }
+
+                    <li><i class="fa fa-plus clickable add-referenced-namespace"></i><input type="text" placeholder="Add Namespace" /></li>
+                </ul>
+            </div>
+            <div id="menu3" class="tab-pane fade">
+                <ul>
+                    @foreach (string u in Model.ReferencedAssemblies)
+                    {
+                        <li><i class="fa fa-trash clickable remove-referenced-assembly" data-id="@u"></i> @u</li>
+                    }
+
+                    <li><i class="fa fa-plus clickable add-referenced-assembly"></i><input type="text" placeholder="Add Assembly" /></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <span id="hidden-span"></span>
+
+</div>
+
