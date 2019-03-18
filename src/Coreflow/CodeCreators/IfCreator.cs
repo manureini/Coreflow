@@ -4,26 +4,27 @@ using System.Collections.Generic;
 
 namespace Coreflow.CodeCreators
 {
-    public class ForLoopCreator : AbstractSingleSequenceCreator, IParametrized
+    public class IfCreator : AbstractSingleSequenceCreator, IParametrized
     {
         public List<IArgument> Arguments { get; set; } = new List<IArgument>();
 
-        public ForLoopCreator()
+        public IfCreator()
         {
         }
 
-        public ForLoopCreator(ICodeCreatorContainerCreator pParentContainerCreator) : base(pParentContainerCreator)
+        public IfCreator(ICodeCreatorContainerCreator pParentContainerCreator) : base(pParentContainerCreator)
         {
         }
 
-        public override string Name => "For Loop";
+        public override string Name => "If";
 
+        public override string Icon => "fa-check";
 
         public override void ToSequenceCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer)
         {
             AddInitializeCode(pBuilderContext, pCodeBuilder);
 
-            pCodeBuilder.AppendLine("for(");
+            pCodeBuilder.AppendLine("if(");
 
             Arguments[0].ToCode(pBuilderContext, pCodeBuilder, pContainer);
 

@@ -59,8 +59,8 @@ namespace Coreflow
 
                     string value = $"default({parameter.Type.FullName})";
 
-                    if (parameter.DefaultExpression != null && !string.IsNullOrWhiteSpace(parameter.DefaultExpression))
-                        value = parameter.DefaultExpression;
+                    if (parameter.Expression != null && !string.IsNullOrWhiteSpace(parameter.Expression))
+                        value = parameter.Expression;
 
                     cw.AppendLine($"public {parameter.Type.FullName} {parameter.Name} = {value};");
                 }

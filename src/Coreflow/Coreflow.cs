@@ -28,6 +28,9 @@ namespace Coreflow
             CodeCreatorStorage.AddCodeCreator(new SequenceCreator());
             CodeCreatorStorage.AddCodeCreator(new InlineCodeCodeCreator());
             CodeCreatorStorage.AddCodeCreator(new CommentCreator());
+            CodeCreatorStorage.AddCodeCreator(new AssignCreator());
+            CodeCreatorStorage.AddCodeCreator(new TerminateCreator());
+            CodeCreatorStorage.AddCodeCreator(new IfCreator());
         }
 
         public void Dispose()

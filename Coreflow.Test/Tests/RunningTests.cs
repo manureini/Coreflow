@@ -58,6 +58,23 @@ namespace Coreflow.Test
 
             Console.WriteLine("Invoketime: " + stopwatch.Elapsed.TotalMilliseconds + " ms");
         }
+        
+        [TestMethod]
+        public void CheckResultTestWorkflow1()
+        {
+            WorkflowDefinition wfdef = TestWorkflows.GetTestWorkflow1(mCoreflow);
+
+            WorkflowCompileResult compileResult = wfdef.GenerateWorkflowCode().Compile();
+
+            Type workflowtype = compileResult.ResultAssembly.GetTypes().First(t => typeof(ICompiledWorkflow).IsAssignableFrom(t));
+
+            ICompiledWorkflow wf = Activator.CreateInstance(workflowtype) as ICompiledWorkflow;
+            wf.Run();
+
+            int result = (int)wf.GetType().GetField("Result").GetValue(wf);
+
+            Assert.AreEqual(3, result);
+        }
 
         [TestCleanup]
         public void CleanUp()

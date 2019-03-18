@@ -109,10 +109,16 @@ namespace Coreflow.Web.Controllers
                         var param = pCodeCreatorModel.Parameters[i];
                         var argument = pCodeCreatorModel.Arguments[i];
 
-                        if (param.Direction == ParameterDirection.In)
+                        if (param.Direction == VariableDirection.In)
                             parametrized.Arguments.Add(new InputExpressionCreator(argument.Name, argument.Code, argument.Guid));
-                        else if (param.Direction == ParameterDirection.Out)
-                            parametrized.Arguments.Add(new OutputVariableCreator(argument.Name, argument.Code, argument.Guid));
+                        else if (param.Direction == VariableDirection.Out)
+                        {
+                            if (param.Type == typeof(CSharpCode))
+                                parametrized.Arguments.Add(new OutputVariableCodeInlineCreator(argument.Name, argument.Code, argument.Guid));
+                            else
+                                parametrized.Arguments.Add(new OutputVariableNameCreator(argument.Name, argument.Code, argument.Guid));
+
+                        }
 
                         //TODO InOut
                     }

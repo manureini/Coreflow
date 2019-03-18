@@ -45,15 +45,19 @@ namespace Coreflow.Helper
         {
             var xName = element.Attribute("Name");
             var xType = element.Attribute("Type");
-            var xDefaultExpression = element.Attribute("DefaultExpression");
-            return new WorkflowArguments(xName.Value, Type.GetType(xType.Value), xDefaultExpression?.Value);
+            var xDirection = element.Attribute("Direction");
+            var xExpression = element.Attribute("Expression");
+
+            VariableDirection direction = Enum.Parse<VariableDirection>(xDirection.Value);
+            return new WorkflowArguments(xName.Value, Type.GetType(xType.Value), direction, xExpression?.Value);
         }
 
         public void Serializer(XmlWriter writer, WorkflowArguments obj)
         {
             writer.WriteAttributeString("Name", obj.Name);
             writer.WriteAttributeString("Type", obj.Type.AssemblyQualifiedName);
-            writer.WriteAttributeString("DefaultExpression", obj.DefaultExpression);
+            writer.WriteAttributeString("Direction", obj.Direction.ToString());
+            writer.WriteAttributeString("Expression", obj.Expression);
         }
     }
 
@@ -67,7 +71,7 @@ namespace Coreflow.Helper
             var xCategory = element.Attribute("Category");
             var xDirection = element.Attribute("Direction");
 
-            return new CodeCreatorParameter(xName.Value, xDisplayName.Value, Type.GetType(xType.Value), xCategory.Value, Enum.Parse<ParameterDirection>(xDirection.Value));
+            return new CodeCreatorParameter(xName.Value, xDisplayName.Value, Type.GetType(xType.Value), xCategory.Value, Enum.Parse<VariableDirection>(xDirection.Value));
         }
 
         public void Serializer(XmlWriter writer, CodeCreatorParameter obj)

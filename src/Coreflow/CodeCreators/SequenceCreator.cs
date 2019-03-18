@@ -3,7 +3,7 @@ using Coreflow.Objects;
 
 namespace Coreflow.CodeCreators
 {
-    public class SequenceCreator : AbstractSequenceCreator
+    public class SequenceCreator : AbstractSingleSequenceCreator
     {
         public SequenceCreator() : base()
         {

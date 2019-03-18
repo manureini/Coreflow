@@ -33,4 +33,5 @@ Core:
 
 Versioning
 
+Workflow Parameter: Keine Reflection weil teuer sondern Dictinary in ICompiledWorkflow
 

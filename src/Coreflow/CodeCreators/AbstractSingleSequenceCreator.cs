@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Coreflow.CodeCreators
 {
-    public abstract class AbstractSequenceCreator : ICodeCreatorContainerCreator, IUiDesignable
+    public abstract class AbstractSingleSequenceCreator : ICodeCreatorContainerCreator, IUiDesignable
     {
         public List<ICodeCreator> CodeCreators { get; set; } = new List<ICodeCreator>();
 
@@ -18,11 +18,11 @@ namespace Coreflow.CodeCreators
 
         public virtual string Icon => "fa-tasks";
 
-        public AbstractSequenceCreator()
+        public AbstractSingleSequenceCreator()
         {
         }
 
-        public AbstractSequenceCreator(ICodeCreatorContainerCreator pParentContainerCreator)
+        public AbstractSingleSequenceCreator(ICodeCreatorContainerCreator pParentContainerCreator)
         {
             ParentContainerCreator = pParentContainerCreator;
         }

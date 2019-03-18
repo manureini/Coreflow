@@ -8,17 +8,19 @@ namespace Coreflow.Objects
 
         public Type Type { get; set; }
 
-        public string DefaultExpression { get; set; }
+        public string Expression { get; set; }
+
+        public VariableDirection Direction { get; set; }
 
         public WorkflowArguments()
         {
         }
 
-        public WorkflowArguments(string pName, Type pType, string pDefaultExpression = null)
+        public WorkflowArguments(string pName, Type pType, VariableDirection pDirection, string pExpression = null)
         {
             Name = pName;
             Type = pType;
-            DefaultExpression = pDefaultExpression;
+            Expression = pExpression;
         }
     }
 }

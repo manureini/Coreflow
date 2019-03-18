@@ -12,13 +12,13 @@ namespace Coreflow.Objects
 
         public string Category { get; set; } = "Default";
 
-        public ParameterDirection Direction { get; set; }
+        public VariableDirection Direction { get; set; }
 
         public CodeCreatorParameter()
         {
         }
 
-        public CodeCreatorParameter(string pName, string pDisplayName, Type pType, string pCategory, ParameterDirection pDirection)
+        public CodeCreatorParameter(string pName, string pDisplayName, Type pType, string pCategory, VariableDirection pDirection)
         {
             Name = pName;
             DisplayName = pDisplayName;

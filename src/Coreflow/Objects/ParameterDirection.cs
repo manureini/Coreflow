@@ -1,6 +1,6 @@
 ﻿namespace Coreflow.Objects
 {
-    public enum ParameterDirection
+    public enum VariableDirection
     {
         In,
         Out,

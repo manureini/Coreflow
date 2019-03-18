@@ -5,27 +5,37 @@ using Coreflow.Objects;
 
 namespace Coreflow.CodeCreators
 {
-    public class InlineCodeCodeCreator : ICodeCreator, IParametrized, IUiDesignable
+    public class AssignCreator : ICodeCreator, IParametrized, IUiDesignable
     {
         public Guid Identifier { get; set; } = Guid.NewGuid();
 
         public List<IArgument> Arguments { get; set; } = new List<IArgument>();
 
-        public string Name => "Inline Code";
+        public string Name => "Assign";
 
-        public string Icon => "fa-code";
+        public string Icon => "fa-equals";
 
         public void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer = null)
         {
             pCodeWriter.WriteIdentifierTag(this);
+
             Arguments[0].ToCode(pBuilderContext, pCodeWriter, pContainer);
+            pCodeWriter.Append(" = ");
+            Arguments[1].ToCode(pBuilderContext, pCodeWriter, pContainer);
+            pCodeWriter.Append(";");
         }
 
         public CodeCreatorParameter[] GetParameters()
         {
-            return new[] { new CodeCreatorParameter() {
+            return new[] {
+                new CodeCreatorParameter() {
+                 Direction = VariableDirection.Out,
+                 Name = "Left",
+                 Type = typeof(CSharpCode)
+                }  ,
+                new CodeCreatorParameter() {
                  Direction = VariableDirection.In,
-                 Name = "Expression",
+                 Name = "Right",
                  Type = typeof(CSharpCode)
                 }
             };

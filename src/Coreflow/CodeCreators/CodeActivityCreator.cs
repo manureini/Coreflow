@@ -73,7 +73,9 @@ namespace Coreflow.CodeCreators
                 IArgument argument = Arguments[pi.Position];
 
                 if (argument.Name != pi.Name)
-                    throw new Exception("Inconsistent parameter and arguments. Did the source method changed?"); //TODO implement "CodeGenerator Compile Errors"
+                    throw new Exception($"Inconsistent parameter and arguments. Argument '{argument.Name}' does not match Parameter '{pi.Name}'. Did the source method changed?"); 
+                
+                //TODO implement "CodeGenerator Compile Errors"
 
                 argument.ToCode(pBuilderContext, pCodeWriter, pContainer);
                 pCodeWriter.Append(",");
@@ -91,7 +93,7 @@ namespace Coreflow.CodeCreators
                 Category = "Default",
                 Name = pParameterInfo.Name,
                 Type = pParameterInfo.ParameterType,
-                Direction = pParameterInfo.IsOut ? ParameterDirection.Out : ParameterDirection.In
+                Direction = pParameterInfo.IsOut ? VariableDirection.Out : VariableDirection.In
             };
 
             var attr = pParameterInfo.GetCustomAttribute<UiDesignAttribute>();

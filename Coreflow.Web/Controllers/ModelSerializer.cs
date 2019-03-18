@@ -41,7 +41,7 @@ namespace Coreflow.Web.Controllers
             var xDirection = element.Attribute("Direction");
             var xIndex = element.Attribute("Index");
 
-            return new CodeCreatorParameterModel(xName.Value, xDisplayName.Value, Type.GetType(xType.Value), xCategory.Value, Enum.Parse<ParameterDirection>(xDirection.Value), Convert.ToInt32(xIndex.Value));
+            return new CodeCreatorParameterModel(xName.Value, xDisplayName.Value, Type.GetType(xType.Value), xCategory.Value, Enum.Parse<VariableDirection>(xDirection.Value), Convert.ToInt32(xIndex.Value));
         }
 
         public void Serializer(XmlWriter writer, CodeCreatorParameterModel obj)

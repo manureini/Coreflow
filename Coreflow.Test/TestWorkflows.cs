@@ -13,36 +13,40 @@ namespace Coreflow.Test
         {
             WorkflowDefinition wf = pCoreflow.WorkflowDefinitionFactory.Create("test");
 
-            wf.Arguments.Add(new WorkflowArguments("pInput", typeof(string), "\"DefaultInputValue\""));
+            wf.Arguments.Add(new WorkflowArguments("pInput", typeof(string), VariableDirection.In, "\"DefaultInputValue\""));
+            wf.Arguments.Add(new WorkflowArguments("Result", typeof(int), VariableDirection.Out));
 
             SequenceCreator sequence = new SequenceCreator(null);
 
-            /*
-
             var cacSequence2 = new CodeActivityCreator<ConsoleWriteLineActivity>();
-            cacSequence2.Arguments.Set("pText", new InputExpressionCreator("\"Sequence 2\""));
+            cacSequence2.Arguments.Add(new InputExpressionCreator("pText", "\"Sequence 2\""));
 
             var cacSequence22 = new CodeActivityCreator<ConsoleWriteLineActivity>();
-            cacSequence22.Arguments.Set("pText", new InputExpressionCreator("\"Writeline Activity:\" + calcResult.ToString()"));
+            cacSequence22.Arguments.Add(new InputExpressionCreator("pText", "\"Writeline Activity:\" + calcResult.ToString()"));
 
             var cacSequence2calc = new CodeActivityCreator<AdderActivity>();
-            cacSequence2calc.Arguments.Set("pFirstNumber", new InputExpressionCreator("2"));
-            cacSequence2calc.Arguments.Set("pSecondNumber", new InputExpressionCreator("1"));
-            cacSequence2calc.Arguments.Set("rResult", new OutputVariableCreator("calcResult"));
+            cacSequence2calc.Arguments.Add(new InputExpressionCreator("pFirstNumber", "2"));
+            cacSequence2calc.Arguments.Add(new InputExpressionCreator("pSecondNumber", "1"));
+            cacSequence2calc.Arguments.Add(new OutputVariableNameCreator("rResult", "calcResult"));
 
+            var assign = new AssignCreator();
+            assign.Arguments.Add(new OutputVariableCodeInlineCreator("Left", "Result"));
+            assign.Arguments.Add(new InputExpressionCreator("Right", "calcResult"));
+            
             ForLoopCreator sequence2 = new ForLoopCreator(sequence);
             sequence2.CodeCreators = new List<ICodeCreator>()
             {
                 cacSequence2,
                 cacSequence2calc,
-                cacSequence22
+                cacSequence22,
+                assign
             };
-            sequence2.Arguments.Set("Expression", new InputExpressionCreator("int i = 0; i < 5; i++"));
+            sequence2.Arguments.Add(new InputExpressionCreator("Expression", "int i = 0; i < 5; i++"));
 
             var cacSequence11 = new CodeActivityCreator<ConsoleWriteLineActivity>();
-            cacSequence11.Arguments.Set("pText", new InputExpressionCreator("\"Sequence 11\""));
+            cacSequence11.Arguments.Add(new InputExpressionCreator("pText", "\"Sequence 11\""));
             var cacSequence12 = new CodeActivityCreator<ConsoleWriteLineActivity>();
-            cacSequence12.Arguments.Set("pText", new InputExpressionCreator("\"Sequence 12\""));
+            cacSequence12.Arguments.Add(new InputExpressionCreator("pText", "\"Sequence 12\""));
 
             var noCreator = new NoCodeCreator();
 
@@ -51,9 +55,8 @@ namespace Coreflow.Test
                 cacSequence11,
                 sequence2,
                 cacSequence12,
-                noCreator
+                noCreator,
             };
-            */
 
             wf.CodeCreator = sequence;
 

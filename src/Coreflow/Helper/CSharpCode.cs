@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Coreflow.Interfaces
 {
-    public interface ICSharpCode
+    public struct CSharpCode
     {
     }
 }
