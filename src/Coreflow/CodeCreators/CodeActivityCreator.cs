@@ -46,44 +46,47 @@ namespace Coreflow.CodeCreators
 
         public void Initialize(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter)
         {
-            pCodeWriter.WriteIdentifierTag(this);
+            pCodeWriter.WriteIdentifierTagTop(this);
 
             string typeName = typeof(T).Name;
             string variableName = pBuilderContext.CreateLocalVariableName(this);
 
-            pCodeWriter.AppendLine($"{typeName} {variableName} = new {typeName}();");
+            pCodeWriter.AppendLineTop($"{typeName} {variableName} = new {typeName}();");
 
             foreach (FieldInfo fi in typeof(T).GetFields())
             {
-                pCodeWriter.AppendLine($"{variableName}.{fi.Name} = {fi.Name};");
+                pCodeWriter.AppendLineTop($"{variableName}.{fi.Name} = {fi.Name};");
             }
         }
 
         public void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer)
         {
-            pCodeWriter.WriteIdentifierTag(this);
-            pCodeWriter.AppendLine($"{pBuilderContext.GetLocalVariableName(this)}.Execute(");
+            pBuilderContext.UpdateCurrentSymbols();
+
+            pCodeWriter.WriteIdentifierTagTop(this);
+
+            pCodeWriter.AppendLineTop($"{pBuilderContext.GetLocalVariableName(this)}.Execute(");
 
             MethodInfo mi = typeof(T).GetMethod("Execute");
 
-            pCodeWriter.AppendLine(); //prevent issue with RemoveLastChar if no parameters are there
+            pCodeWriter.AppendLineTop(); //prevent issue with RemoveLastChar if no parameters are there
 
             foreach (ParameterInfo pi in mi.GetParameters().OrderBy(p => p.Position))
             {
                 IArgument argument = Arguments[pi.Position];
 
                 if (argument.Name != pi.Name)
-                    throw new Exception($"Inconsistent parameter and arguments. Argument '{argument.Name}' does not match Parameter '{pi.Name}'. Did the source method changed?"); 
-                
+                    throw new Exception($"Inconsistent parameter and arguments. Argument '{argument.Name}' does not match Parameter '{pi.Name}'. Did the source method changed?");
+
                 //TODO implement "CodeGenerator Compile Errors"
 
                 argument.ToCode(pBuilderContext, pCodeWriter, pContainer);
-                pCodeWriter.Append(",");
+                pCodeWriter.AppendTop(",");
             }
 
-            pCodeWriter.RemoveLastChar();
+            pCodeWriter.RemoveLastCharTop();
 
-            pCodeWriter.AppendLine($");");
+            pCodeWriter.AppendLineTop($");");
         }
 
         private CodeCreatorParameter ConvertToParameter(ParameterInfo pParameterInfo)

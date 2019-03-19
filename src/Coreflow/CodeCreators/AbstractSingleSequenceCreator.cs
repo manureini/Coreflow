@@ -31,14 +31,14 @@ namespace Coreflow.CodeCreators
 
         public void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer)
         {
-            pCodeBuilder.WriteIdentifierTag(this);
-            pCodeBuilder.WriteContainerTag(this);
+            pCodeBuilder.WriteIdentifierTagTop(this);
+            pCodeBuilder.WriteContainerTagTop(this);
 
-            pCodeBuilder.AppendLine("{");
+            pCodeBuilder.AppendLineTop("{");
+
+            pCodeBuilder.AppendLineBottom("}");
 
             ToSequenceCode(pBuilderContext, pCodeBuilder, pContainer);
-
-            pCodeBuilder.AppendLine("}");
         }
 
         protected void AddInitializeCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeBuilder)

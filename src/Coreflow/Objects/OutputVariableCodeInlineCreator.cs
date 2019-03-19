@@ -34,8 +34,8 @@ namespace Coreflow.Interfaces
 
         public virtual void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer = null)
         {
-            pCodeWriter.WriteIdentifierTag(this);
-            pCodeWriter.AppendLine(Code);
+            pCodeWriter.WriteIdentifierTagTop(this);
+            pCodeWriter.AppendLineTop(Code);
         }
     }
 

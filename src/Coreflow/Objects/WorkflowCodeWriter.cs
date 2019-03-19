@@ -7,47 +7,59 @@ namespace Coreflow.Objects
 {
     public class WorkflowCodeWriter
     {
-        public event EventHandler<WorkflowCodeWriterWriteEventArgs> OnCodeWrite = delegate { };
-
-        private StringBuilder mStringBuilder = new StringBuilder();
+        private readonly StringBuilder mTopStringBuilder = new StringBuilder();
+        private readonly StringBuilder mBottomStringBuilder = new StringBuilder();
 
         internal WorkflowCodeWriter() { }
 
-        public void Append(string pCode)
+        public void AppendTop(string pCode)
         {
-            WorkflowCodeWriterWriteEventArgs args = new WorkflowCodeWriterWriteEventArgs()
-            {
-                Code = pCode
-            };
-
-            OnCodeWrite.Invoke(this, args);
-
-            mStringBuilder.Append(args.Code);
+            mTopStringBuilder.Append(pCode);
         }
 
-        public void AppendLine(string pCode = "")
+        public void AppendLineTop(string pCode = "")
         {
-            Append(Environment.NewLine + pCode);
+            AppendTop(Environment.NewLine + pCode);
         }
 
-        public void WriteIdentifierTag(IIdentifiable pIdentifiable)
+        public void AppendBottom(string pCode)
         {
-            AppendLine(WorkflowCompilerHelper.COMMENT_ID_PREFIX + pIdentifiable.Identifier);
+            mBottomStringBuilder.Append(pCode);
         }
 
-        public void WriteContainerTag(IIdentifiable pIdentifiable)
+        public void AppendLineBottom(string pCode = "")
         {
-            AppendLine(WorkflowCompilerHelper.CONTAINER_ID_PREFIX);
+            AppendBottom(Environment.NewLine + pCode);
         }
 
-        public void RemoveLastChar()
+        public void WriteIdentifierTagTop(IIdentifiable pIdentifiable)
         {
-            mStringBuilder.Remove(mStringBuilder.Length - 1, 1);
+            AppendLineTop(WorkflowCompilerHelper.COMMENT_ID_PREFIX + pIdentifiable.Identifier);
+        }
+
+        public void WriteContainerTagTop(IIdentifiable pIdentifiable)
+        {
+            AppendLineTop(WorkflowCompilerHelper.CONTAINER_ID_PREFIX);
+        }
+
+        public void RemoveLastCharTop()
+        {
+            mTopStringBuilder.Remove(mTopStringBuilder.Length - 1, 1);
+        }
+
+        public string ToStringTop()
+        {
+            return mTopStringBuilder.ToString();
+        }
+
+        public string ToStringBottom()
+        {
+            return mBottomStringBuilder.ToString();
         }
 
         public override string ToString()
         {
-            return mStringBuilder.ToString();
+            return mTopStringBuilder.ToString() + mBottomStringBuilder.ToString();
         }
     }
 }

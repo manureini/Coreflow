@@ -25,31 +25,31 @@ namespace Coreflow
             ret.ReferencedAssemblies = wfReferencesDict.Values;
 
 
-            WorkflowBuilderContext context = new WorkflowBuilderContext();
-
-
             WorkflowCodeWriter cw = new WorkflowCodeWriter();
 
-            cw.AppendLine("namespace DynamicGeneratedWorkflow" + pWorkflow.Identifier.ToString().ToVariableName() + " {");
+            WorkflowBuilderContext context = new WorkflowBuilderContext(cw, ret.ReferencedAssemblies.ToList());
+
+
+            cw.AppendLineTop("namespace DynamicGeneratedWorkflow" + pWorkflow.Identifier.ToString().ToVariableName() + " {");
 
             foreach (string import in pWorkflow.ReferencedNamespaces.Distinct())
             {
-                cw.AppendLine($"using {import};");
+                cw.AppendLineTop($"using {import};");
             }
 
-            cw.AppendLine();
+            cw.AppendLineTop();
 
-            cw.WriteIdentifierTag(pWorkflow);
-            cw.WriteContainerTag(pWorkflow);
+            cw.WriteIdentifierTagTop(pWorkflow);
+            cw.WriteContainerTagTop(pWorkflow);
 
             //Currently idk which letters needs an escape
-            cw.AppendLine("public class wf_" + pWorkflow.Name.Replace(" ", "") + " : " + nameof(ICompiledWorkflow) + "  {");
+            cw.AppendLineTop("public class wf_" + pWorkflow.Name.Replace(" ", "") + " : " + nameof(ICompiledWorkflow) + "  {");
 
-            cw.AppendLine();
+            cw.AppendLineTop();
 
-            cw.AppendLine($"public Guid {INSTANCE_ID_PARAMETER_NAME} = Guid.NewGuid();");
+            cw.AppendLineTop($"public Guid {INSTANCE_ID_PARAMETER_NAME} = Guid.NewGuid();");
 
-            cw.AppendLine();
+            cw.AppendLineTop();
 
             if (pWorkflow.Arguments != null)
                 foreach (WorkflowArguments parameter in pWorkflow.Arguments)
@@ -62,12 +62,20 @@ namespace Coreflow
                     if (parameter.Expression != null && !string.IsNullOrWhiteSpace(parameter.Expression))
                         value = parameter.Expression;
 
-                    cw.AppendLine($"public {parameter.Type.FullName} {parameter.Name} = {value};");
+                    cw.AppendLineTop($"public {parameter.Type.FullName} {parameter.Name} = {value};");
                 }
 
-            cw.AppendLine();
+            cw.AppendLineTop();
 
-            cw.AppendLine("public void Run() { ");
+            cw.AppendLineTop("public void Run() { ");
+
+
+            cw.AppendLineBottom("}"); //Close Run
+
+            cw.AppendLineBottom("}"); //Close Class
+
+            cw.AppendLineBottom("}"); //Close Namespace
+
 
             if (pWorkflow.CodeCreator != null)
             {
@@ -76,12 +84,6 @@ namespace Coreflow
 
                 pWorkflow.CodeCreator.ToCode(context, cw);
             }
-
-            cw.AppendLine("}"); //Close Run
-
-            cw.AppendLine("}"); //Close Class
-
-            cw.AppendLine("}"); //Close Namespace
 
             ret.Code = cw.ToString();
             return ret;
@@ -97,7 +99,7 @@ namespace Coreflow
             IVariableCreator found = ccontainer.Select(v => v as IVariableCreator).Where(v => v != null).FirstOrDefault(pFilter);
             if (found != null)
                 return found;
-         
+
             return GetVariableCreatorInScope(pContainer.ParentContainerCreator, pContainer, pFilter);
         }
 

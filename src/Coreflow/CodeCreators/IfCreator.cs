@@ -24,15 +24,15 @@ namespace Coreflow.CodeCreators
         {
             AddInitializeCode(pBuilderContext, pCodeBuilder);
 
-            pCodeBuilder.AppendLine("if(");
+            pCodeBuilder.AppendLineTop("if(");
 
             Arguments[0].ToCode(pBuilderContext, pCodeBuilder, pContainer);
 
-            pCodeBuilder.AppendLine(") {");
+            pCodeBuilder.AppendLineTop(") {");
+
+            pCodeBuilder.AppendLineBottom("}");
 
             AddCodeCreatorsCode(pBuilderContext, pCodeBuilder);
-
-            pCodeBuilder.AppendLine("}");
         }
 
         public CodeCreatorParameter[] GetParameters()

@@ -1,5 +1,6 @@
 ﻿using Coreflow.Objects;
 using System;
+using System.Linq;
 
 namespace Coreflow.Interfaces
 {
@@ -23,11 +24,12 @@ namespace Coreflow.Interfaces
 
         public override void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer = null)
         {
-            pCodeWriter.WriteIdentifierTag(this);
-            bool existing = false; // WorkflowBuilderHelper.GetVariableCreatorInScope(pContainer, this, c => c.VariableIdentifier == VariableIdentifier);
+            pCodeWriter.WriteIdentifierTagTop(this);
+            // WorkflowBuilderHelper.GetVariableCreatorInScope(pContainer, this, c => c.VariableIdentifier == VariableIdentifier);
+                       
+            bool existing = pBuilderContext.CurrentSymbols.Any(s => s.Name == Code);
 
-
-            pCodeWriter.AppendLine($"out {(existing ? "var " : " ")}{Code}");
+            pCodeWriter.AppendLineTop($"out {(!existing ? "var " : " ")}{Code}");
         }
     }
 }

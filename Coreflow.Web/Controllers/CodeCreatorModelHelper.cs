@@ -114,11 +114,12 @@ namespace Coreflow.Web.Controllers
                             parametrized.Arguments.Add(new InputExpressionCreator(argument.Name, argument.Code, argument.Guid));
                         else if (param.Direction == VariableDirection.Out)
                         {
-                            if (param.Type == typeof(CSharpCode))
-                                parametrized.Arguments.Add(new OutputVariableCodeInlineCreator(argument.Name, argument.Code, argument.Guid));
-                            else
+                            bool isSimpleVariableName = !argument.Code.Trim().Contains(" ") && !argument.Code.Contains("\"");
+
+                            if (isSimpleVariableName)
                                 parametrized.Arguments.Add(new OutputVariableNameCreator(argument.Name, argument.Code, argument.Guid));
 
+                            else parametrized.Arguments.Add(new OutputVariableCodeInlineCreator(argument.Name, argument.Code, argument.Guid));
                         }
 
                         //TODO InOut

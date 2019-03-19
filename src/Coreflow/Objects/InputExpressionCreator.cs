@@ -38,15 +38,15 @@ namespace Coreflow.Interfaces
 
         public void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodewriter, ICodeCreatorContainerCreator pContainer = null)
         {
-            pCodewriter.WriteIdentifierTag(this);
+            pCodewriter.WriteIdentifierTagTop(this);
 
             if (string.IsNullOrWhiteSpace(Code))
             {
-                pCodewriter.AppendLine("null");
+                pCodewriter.AppendLineTop("null");
                 return;
             }
 
-            pCodewriter.AppendLine(Code);
+            pCodewriter.AppendLineTop(Code);
         }
     }
 }

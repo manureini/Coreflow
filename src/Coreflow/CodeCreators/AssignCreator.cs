@@ -17,12 +17,14 @@ namespace Coreflow.CodeCreators
 
         public void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer = null)
         {
-            pCodeWriter.WriteIdentifierTag(this);
+            pBuilderContext.UpdateCurrentSymbols();
+
+            pCodeWriter.WriteIdentifierTagTop(this);
 
             Arguments[0].ToCode(pBuilderContext, pCodeWriter, pContainer);
-            pCodeWriter.Append(" = ");
+            pCodeWriter.AppendTop(" = ");
             Arguments[1].ToCode(pBuilderContext, pCodeWriter, pContainer);
-            pCodeWriter.Append(";");
+            pCodeWriter.AppendTop(";");
         }
 
         public CodeCreatorParameter[] GetParameters()
@@ -32,7 +34,7 @@ namespace Coreflow.CodeCreators
                  Direction = VariableDirection.Out,
                  Name = "Left",
                  Type = typeof(CSharpCode)
-                }  ,
+                },
                 new CodeCreatorParameter() {
                  Direction = VariableDirection.In,
                  Name = "Right",

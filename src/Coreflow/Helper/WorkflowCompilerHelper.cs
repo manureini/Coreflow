@@ -138,7 +138,7 @@ namespace Coreflow.Helper
             return ret;
         }
 
-        private static SyntaxTree ParseText(string sourceCode)
+        public static SyntaxTree ParseText(string sourceCode)
         {
             var options = new CSharpParseOptions(kind: SourceCodeKind.Regular, languageVersion: LanguageVersion.Latest);
 
@@ -184,6 +184,20 @@ namespace Coreflow.Helper
             }
 
             throw new Exception("GetIdentifier: Identifier not found!");
+        }
+
+        internal static int GetLineOfCode(string[] pCode, Guid pIdentifier)
+        {
+            for (int i = 0; i < pCode.Length; i++)
+            {
+                var regexResult = mIdRegex.Match(pCode[i]);
+                if (regexResult.Success)
+                {
+                    return i;
+                }
+            }
+
+            throw new Exception("GetLineOfCode: Identifier not found!");
         }
 
         private static int GetContainerLineOfCode(string[] pCode, int pLineOfCode)

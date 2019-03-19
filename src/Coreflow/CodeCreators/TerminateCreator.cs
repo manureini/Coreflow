@@ -14,8 +14,8 @@ namespace Coreflow.CodeCreators
 
         public void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer = null)
         {
-            pCodeWriter.WriteIdentifierTag(this);
-            pCodeWriter.AppendLine("return;");
+            pCodeWriter.WriteIdentifierTagTop(this);
+            pCodeWriter.AppendLineTop("return;");
         }
     }
 }
