@@ -11,7 +11,7 @@ namespace Coreflow.CodeCreators
 
         public ICodeCreatorContainerCreator ParentContainerCreator { get; set; }
 
-        public List<ICodeCreator> CodeCreators { get; set; } = new List<ICodeCreator>();
+        public List<List<ICodeCreator>> CodeCreators { get; set; } = new List<List<ICodeCreator>>();
 
         public void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pParentContainer = null)
         {

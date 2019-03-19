@@ -61,12 +61,13 @@ namespace Coreflow.Web.Controllers
 
             if (pCodeCreator is ICodeCreatorContainerCreator)
             {
-                ret.CodeCreatorModels = new List<CodeCreatorModel>();
+                ret.CodeCreatorModelsFirst = new List<CodeCreatorModel>();
                 ICodeCreatorContainerCreator container = pCodeCreator as ICodeCreatorContainerCreator;
 
-                foreach (ICodeCreator cc in container.CodeCreators)
+                foreach (var listcc in container.CodeCreators)
                 {
-                    ret.CodeCreatorModels.Add(CreateModel(cc, ret, pWorkflowDefinition));
+                    foreach (ICodeCreator cc in listcc)
+                        ret.CodeCreatorModelsFirst.Add(CreateModel(cc, ret, pWorkflowDefinition));
                 }
             }
 
@@ -127,11 +128,19 @@ namespace Coreflow.Web.Controllers
 
             if (ret is ICodeCreatorContainerCreator container)
             {
-                if (pCodeCreatorModel.CodeCreatorModels != null)
-                    foreach (CodeCreatorModel ccmodel in pCodeCreatorModel.CodeCreatorModels)
+                container.CodeCreators = new List<List<ICodeCreator>>();
+
+                if (pCodeCreatorModel.CodeCreatorModelsFirst != null)
+                {
+                    List<ICodeCreator> first = new List<ICodeCreator>();
+
+                    foreach (CodeCreatorModel ccmodel in pCodeCreatorModel.CodeCreatorModelsFirst)
                     {
-                        container.CodeCreators.Add(CreateCode(ccmodel, pWorkflowDefinition));
+                        first.Add(CreateCode(ccmodel, pWorkflowDefinition));
                     }
+
+                    container.CodeCreators.Add(first);
+                }
             }
 
             return ret;

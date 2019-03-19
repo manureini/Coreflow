@@ -19,8 +19,8 @@ namespace Coreflow.Web.Controllers
             if (pCodeCreator.Identifier == pGuid)
                 return pCodeCreator;
 
-            if (pCodeCreator.CodeCreatorModels != null)
-                foreach (var codeCreatorModel in pCodeCreator.CodeCreatorModels)
+            if (pCodeCreator.CodeCreatorModelsFirst != null)
+                foreach (var codeCreatorModel in pCodeCreator.CodeCreatorModelsFirst)
                 {
                     IIdentifiable found = FindIIdentifiable(codeCreatorModel, pGuid);
                     if (found != null)

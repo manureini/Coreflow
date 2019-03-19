@@ -35,3 +35,20 @@ Versioning
 
 Workflow Parameter: Keine Reflection weil teuer sondern Dictinary in ICompiledWorkflow
 
+
+
+
+
+Workflow Code von Anfang und Ende nach Innen generieren
+
+
+
+
+
+
+
+
+
+
+
+

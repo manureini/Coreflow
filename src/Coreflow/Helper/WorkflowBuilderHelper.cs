@@ -87,12 +87,52 @@ namespace Coreflow
             return ret;
         }
 
-        public static IVariableCreator GetParentVariableCreator(ICodeCreatorContainerCreator pContainer, Func<IVariableCreator, bool> pFilter)
+        public static IVariableCreator GetVariableCreatorInScope(ICodeCreatorContainerCreator pContainer, ICodeCreator pCodeCreator, Func<IVariableCreator, bool> pFilter)
         {
             if (pContainer == null)
                 return null;
 
-            return GetParentVariableCreator(pContainer.ParentContainerCreator, pFilter) ?? pContainer.CodeCreators.Select(v => v as IVariableCreator).Where(v => v != null).FirstOrDefault(pFilter);
+            List<ICodeCreator> ccontainer = pContainer.CodeCreators.FirstOrDefault(cl => cl.Contains(pCodeCreator));
+
+            IVariableCreator found = ccontainer.Select(v => v as IVariableCreator).Where(v => v != null).FirstOrDefault(pFilter);
+            if (found != null)
+                return found;
+         
+            return GetVariableCreatorInScope(pContainer.ParentContainerCreator, pContainer, pFilter);
         }
+
+
+
+        /*
+        public static IVariableCreator GetVariableCreatorInScope(ICodeCreatorContainerCreator pContainer, ICodeCreator pCodeCreator, Func<IVariableCreator, bool> pFilter)
+        {
+            if (pContainer == null)
+                return null;
+
+            List<ICodeCreator> ccontainer = pContainer.CodeCreators.FirstOrDefault(
+                cl => cl.Contains(pCodeCreator) ||
+                cl.Select(v => v as IParametrized).Where(v => v != null).Any(c => c.Arguments.Contains(pCodeCreator)));
+
+            IVariableCreator found = ccontainer.Select(v => v as IVariableCreator).Where(v => v != null).FirstOrDefault(pFilter);
+            if (found != null)
+                return found;
+
+            var parametrizedCc = ccontainer.Select(v => v as IParametrized).Where(v => v != null);
+
+            foreach (var cc in parametrizedCc)
+            {
+                found = cc.Arguments.Select(a => a as IVariableCreator).Where(v => v != null).FirstOrDefault(pFilter);
+
+                if (found == pCodeCreator)
+                    return null;
+
+                if (found != null)
+                    return found;
+            }
+
+            return GetVariableCreatorInScope(pContainer.ParentContainerCreator, pContainer, pFilter);
+        } */
+
+
     }
 }

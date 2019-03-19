@@ -36,6 +36,18 @@ namespace Coreflow.Test
             WorkflowInvoker.Invoke(wfdef);
         }
 
+
+        [TestMethod]
+        public void CreateCodeTestWorkflow1()
+        {
+            WorkflowDefinition wfdef = TestWorkflows.GetTestWorkflow1(mCoreflow);
+
+            WorkflowCompileResult compileResult = wfdef.GenerateWorkflowCode().Compile();
+
+            Console.WriteLine(compileResult.WorkflowCode.Code);
+        }
+
+
         [TestMethod]
         public void StartTestWorkflow1()
         {
@@ -58,7 +70,7 @@ namespace Coreflow.Test
 
             Console.WriteLine("Invoketime: " + stopwatch.Elapsed.TotalMilliseconds + " ms");
         }
-        
+
         [TestMethod]
         public void CheckResultTestWorkflow1()
         {

@@ -6,6 +6,6 @@ namespace Coreflow.Interfaces
     {
         ICodeCreatorContainerCreator ParentContainerCreator { get; set; }
 
-        List<ICodeCreator> CodeCreators { get; set; }
+        List<List<ICodeCreator>> CodeCreators { get; set; }
     }
 }

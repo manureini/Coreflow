@@ -23,6 +23,6 @@ namespace Coreflow.Web.Models
 
         public CodeCreatorModel Parent { get; set; }
 
-        public List<CodeCreatorModel> CodeCreatorModels { get; set; }
+        public List<CodeCreatorModel> CodeCreatorModelsFirst { get; set; }
     }
 }

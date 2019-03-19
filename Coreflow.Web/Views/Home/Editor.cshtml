@@ -34,7 +34,7 @@
 
         @if (item != null)
         {
-            bool isContainer = item.CodeCreatorModels != null;
+            bool isContainer = item.CodeCreatorModelsFirst != null;
 
             <div class="codecreator @if (isContainer) { @("codecreator-container"); }" data-id="@item.Identifier" data-type="@item.Type" title="@item.Type">
 
@@ -47,9 +47,9 @@
                     <div class="codecreator-container-top"></div>
                 }
 
-                @if (item.CodeCreatorModels != null)
+                @if (item.CodeCreatorModelsFirst != null)
                 {
-                    @foreach (CodeCreatorModel creator in item.CodeCreatorModels)
+                    @foreach (CodeCreatorModel creator in item.CodeCreatorModelsFirst)
                     {
                         @PrintCodeCreatorModel(creator);
                     }

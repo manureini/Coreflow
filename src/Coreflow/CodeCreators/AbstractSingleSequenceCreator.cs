@@ -8,7 +8,7 @@ namespace Coreflow.CodeCreators
 {
     public abstract class AbstractSingleSequenceCreator : ICodeCreatorContainerCreator, IUiDesignable
     {
-        public List<ICodeCreator> CodeCreators { get; set; } = new List<ICodeCreator>();
+        public List<List<ICodeCreator>> CodeCreators { get; set; } = new List<List<ICodeCreator>>();
 
         public ICodeCreatorContainerCreator ParentContainerCreator { get; set; }
 
@@ -43,9 +43,9 @@ namespace Coreflow.CodeCreators
 
         protected void AddInitializeCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeBuilder)
         {
-            foreach (IVariableCreator varCreator in CodeCreators.Select(a => a as IVariableCreator).Where(a => a != null))
+            foreach (IVariableCreator varCreator in CodeCreators.First().Select(a => a as IVariableCreator).Where(a => a != null))
             {
-                IVariableCreator existing = WorkflowBuilderHelper.GetParentVariableCreator(this, c => c.VariableIdentifier == varCreator.VariableIdentifier && pBuilderContext.HasLocalVariableName(c));
+                IVariableCreator existing = WorkflowBuilderHelper.GetVariableCreatorInScope(this, varCreator, c => c.VariableIdentifier == varCreator.VariableIdentifier && pBuilderContext.HasLocalVariableName(c));
                 if (existing != null)
                 {
                     pBuilderContext.SetLocalVariableName(varCreator, pBuilderContext.GetLocalVariableName(existing));
@@ -58,7 +58,7 @@ namespace Coreflow.CodeCreators
 
         protected void AddCodeCreatorsCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter)
         {
-            foreach (ICodeCreator c in CodeCreators)
+            foreach (ICodeCreator c in CodeCreators.First())
             {
                 c.ToCode(pBuilderContext, pCodeWriter, this);
             }

@@ -206,7 +206,7 @@ namespace Coreflow.Web.Controllers
 
                 if (ccm.Parent != null)
                 {
-                    ccm.Parent.CodeCreatorModels.RemoveAll(c => c == ccm);
+                    ccm.Parent.CodeCreatorModelsFirst.RemoveAll(c => c == ccm);
                 }
                 else
                 {
@@ -275,7 +275,7 @@ namespace Coreflow.Web.Controllers
 
                 if (cc is ICodeCreatorContainerCreator)
                 {
-                    modes.CodeCreatorModels = new List<CodeCreatorModel>();
+                    modes.CodeCreatorModelsFirst = new List<CodeCreatorModel>();
                 }
 
                 UpdateCodeCreatorModel(wfDefModel, destAfter, destContainer, modes);
@@ -300,11 +300,11 @@ namespace Coreflow.Web.Controllers
                 List<CodeCreatorModel> codecreators = new List<CodeCreatorModel>();
 
                 if (sourceModel.Parent != null)
-                    sourceModel.Parent.CodeCreatorModels.RemoveAll(c => c == sourceModel);
+                    sourceModel.Parent.CodeCreatorModelsFirst.RemoveAll(c => c == sourceModel);
 
                 sourceModel.Parent = destModel.Parent;
 
-                foreach (var entry in destModel.Parent.CodeCreatorModels)
+                foreach (var entry in destModel.Parent.CodeCreatorModelsFirst)
                 {
                     codecreators.Add(entry);
 
@@ -314,18 +314,18 @@ namespace Coreflow.Web.Controllers
                     }
                 }
 
-                destModel.Parent.CodeCreatorModels = codecreators;
+                destModel.Parent.CodeCreatorModelsFirst = codecreators;
             }
             else if (destContainer.HasValue) //insert cc on first entry of an container
             {
                 CodeCreatorModel destContainerModel = WorkflowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, destContainer.Value) as CodeCreatorModel;
 
                 if (sourceModel.Parent != null)
-                    sourceModel.Parent.CodeCreatorModels.RemoveAll(c => c == sourceModel);
+                    sourceModel.Parent.CodeCreatorModelsFirst.RemoveAll(c => c == sourceModel);
 
                 sourceModel.Parent = destContainerModel;
 
-                destContainerModel.CodeCreatorModels.Insert(0, sourceModel);
+                destContainerModel.CodeCreatorModelsFirst.Insert(0, sourceModel);
             }
             else //insert cc if wf is empty
             {
@@ -335,8 +335,5 @@ namespace Coreflow.Web.Controllers
                 wfDefModel.CodeCreatorModel = sourceModel;
             }
         }
-
-
-
     }
 }
