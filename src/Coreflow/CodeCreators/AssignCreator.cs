@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Coreflow.Helper;
 using Coreflow.Interfaces;
 using Coreflow.Objects;
 
@@ -33,7 +34,7 @@ namespace Coreflow.CodeCreators
                 new CodeCreatorParameter() {
                  Direction = VariableDirection.Out,
                  Name = "Left",
-                 Type = typeof(CSharpCode)
+                 Type = typeof(LeftSideCSharpCode)
                 },
                 new CodeCreatorParameter() {
                  Direction = VariableDirection.In,

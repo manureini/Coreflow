@@ -4,20 +4,20 @@ using System.Linq;
 
 namespace Coreflow.Interfaces
 {
-    public class OutputVariableNameCreator : OutputVariableCodeInlineCreator
+    public class LeftSideVariableNameCreator : OutputVariableCodeInlineCreator
     {
-        public OutputVariableNameCreator()
+        public LeftSideVariableNameCreator()
         {
         }
 
-        public OutputVariableNameCreator(string pName, string pVariableName) : this()
+        public LeftSideVariableNameCreator(string pName, string pVariableName) : this()
         {
             Name = pName;
             Code = pVariableName;
             VariableIdentifier = pName;
         }
 
-        public OutputVariableNameCreator(string pName, string pVariableName, Guid pIdentifier) : this(pName, pVariableName)
+        public LeftSideVariableNameCreator(string pName, string pVariableName, Guid pIdentifier) : this(pName, pVariableName)
         {
             Identifier = pIdentifier;
         }
@@ -33,7 +33,7 @@ namespace Coreflow.Interfaces
 
             bool existing = pBuilderContext.CurrentSymbols.Any(s => s.Name == Code);
 
-            pCodeWriter.AppendLineTop($"out {(!existing ? "var " : " ")}{Code}");
+            pCodeWriter.AppendLineTop($"{(!existing ? "var " : " ")}{Code}");
         }
     }
 }

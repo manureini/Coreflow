@@ -1,4 +1,5 @@
-﻿using Coreflow.Interfaces;
+﻿using Coreflow.Helper;
+using Coreflow.Interfaces;
 using Coreflow.Objects;
 using Coreflow.Web.Extensions;
 using Coreflow.Web.Models;
@@ -117,9 +118,14 @@ namespace Coreflow.Web.Controllers
                             bool isSimpleVariableName = !argument.Code.Trim().Contains(" ") && !argument.Code.Contains("\"");
 
                             if (isSimpleVariableName)
-                                parametrized.Arguments.Add(new OutputVariableNameCreator(argument.Name, argument.Code, argument.Guid));
-
-                            else parametrized.Arguments.Add(new OutputVariableCodeInlineCreator(argument.Name, argument.Code, argument.Guid));
+                            {
+                                if (param.Type == typeof(LeftSideCSharpCode))
+                                    parametrized.Arguments.Add(new LeftSideVariableNameCreator(argument.Name, argument.Code, argument.Guid));
+                                else
+                                    parametrized.Arguments.Add(new OutputVariableNameCreator(argument.Name, argument.Code, argument.Guid));
+                            }
+                            else
+                                parametrized.Arguments.Add(new OutputVariableCodeInlineCreator(argument.Name, argument.Code, argument.Guid));
                         }
 
                         //TODO InOut
