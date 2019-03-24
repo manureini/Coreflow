@@ -44,6 +44,7 @@ namespace Coreflow.Helper
                     }
 
                 workflow.Run();
+                ret.ExecutedInstance = workflow;
             }
 
             return ret;

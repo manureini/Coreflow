@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
- 
+
 namespace Coreflow.Web.Controllers
 {
     [Authorize]
@@ -33,6 +33,9 @@ namespace Coreflow.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
+            if (User?.Identity.IsAuthenticated ?? false)
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+       
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 

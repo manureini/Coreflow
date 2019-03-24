@@ -4,6 +4,6 @@
     {
         public WorkflowCompileResult CompileResult { get; internal set; }
 
-       
+        public ICompiledWorkflow ExecutedInstance { get; internal set; }
     }
 }

@@ -26,6 +26,7 @@ namespace Coreflow.Web.Controllers
             WorkflowDefinition wfdef = Program.CoreflowInstance.WorkflowDefinitionFactory.Create("new");
 
             wfdef.Arguments.Add(new WorkflowArguments("test", typeof(string), VariableDirection.In, ""));
+            wfdef.Arguments.Add(new WorkflowArguments("result", typeof(string), VariableDirection.Out, ""));
 
             Program.CoreflowInstance.WorkflowDefinitionStorage.Remove(wfdef.Identifier);
             Program.CoreflowInstance.WorkflowDefinitionStorage.Add(wfdef);

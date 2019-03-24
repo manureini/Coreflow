@@ -32,9 +32,11 @@ namespace Coreflow.Web.Controllers
             Program.CoreflowInstance.WorkflowDefinitionStorage.Remove(wfDef.Identifier);
             Program.CoreflowInstance.WorkflowDefinitionStorage.Add(wfDef);
 
-            WorkflowInvoker.Invoke(wfDef);
+            WorkflowInvokeResult invokeResult = WorkflowInvoker.Invoke(wfDef);
 
-            return Json(new Response(true, "ok"));
+            string result = invokeResult.ExecutedInstance.GetType().GetField("result").GetValue(invokeResult.ExecutedInstance) as string;
+
+            return Json(new Response(false, result));
         }
 
         [HttpPost]

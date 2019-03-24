@@ -119,6 +119,8 @@ namespace Coreflow.Web.Controllers
 
                             if (isSimpleVariableName)
                             {
+                                argument.Name = argument.Name.Trim();
+
                                 if (param.Type == typeof(LeftSideCSharpCode))
                                     parametrized.Arguments.Add(new LeftSideVariableNameCreator(argument.Name, argument.Code, argument.Guid));
                                 else
