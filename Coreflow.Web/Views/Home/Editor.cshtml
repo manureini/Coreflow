@@ -34,7 +34,7 @@
 
         @if (item != null)
         {
-            bool isContainer = item.CodeCreatorModelsFirst != null;
+            bool isContainer = item.CodeCreatorModels != null;
 
             <div class="codecreator @if (isContainer) { @("codecreator-container"); }" data-id="@item.Identifier" data-type="@item.Type" title="@item.Type">
 
@@ -44,16 +44,33 @@
 
                 @if (isContainer)
                 {
-                    <div class="codecreator-container-top"></div>
-                }
-
-                @if (item.CodeCreatorModelsFirst != null)
-                {
-                    @foreach (CodeCreatorModel creator in item.CodeCreatorModelsFirst)
+                    @if (item.SequenceCount > 1)
                     {
-                        @PrintCodeCreatorModel(creator);
+                        @Html.Raw("<div class=\"codecreator-container-sequences\">");
+                    }
+
+                    @for (int i = 0; i < item.SequenceCount; i++)
+                    {
+                        <div class="codecreator-container-sequence">
+                            <div class="codecreator-container-start" data-index="@i"></div>
+
+                            @if (item.CodeCreatorModels != null && item.CodeCreatorModels.Count > i)
+                            {
+                                @foreach (var creator in item.CodeCreatorModels[i])
+                                {
+                                    @PrintCodeCreatorModel(creator);
+                                }
+                            }
+
+                        </div>
+                    }
+
+                    @if (item.SequenceCount > 1)
+                    {
+                        @Html.Raw("</div>");
                     }
                 }
+
 
                 @if (item.Parameters != null)
                 {

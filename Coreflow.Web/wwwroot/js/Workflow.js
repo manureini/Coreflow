@@ -255,8 +255,6 @@ $(window).resize(function () {
 
 function RecalculateBoxSizes() {
 
-    
-
     $("#editor-center").css("left", $("#codecreator-panel").width() + 20);
     $("#editor-center").width($(window).width() - $("#codecreator-panel").width() - $("#parameter-box").width() - 20);
 
@@ -286,9 +284,12 @@ function createDropSpace(event, ui, selected) {
     $(".codecreator")
         .not(selected)  //can't add on it's own
         .not($(selected).prev(".codecreator")) //can't add one before
+      /*  .filter(function (i, e) {
+            return $(e).parent().parent().hasClass("codecreator-container"); // only possible if parent is codecreator container
+        })*/
         .filter(function (i, e) {
-            return $(e).parent().hasClass("codecreator-container"); // only possible if parent is codecreator container
-        })
+            return !$(e).parent().hasId("main");
+        })   
         .filter(function (i, e) {
             return !$(e).hasClass("ui-draggable-dragging") && !$(e).parents().hasClass("ui-draggable-dragging"); // no dropspace inside currently dragging div
         })
@@ -296,10 +297,10 @@ function createDropSpace(event, ui, selected) {
             return !$(e).hasClass("old-position") && !$(e).parents().hasClass("old-position"); // no dropspace inside old position div
         })
         .after(GetCodeCreatorSpaceHtml());
-
-
+    
+  
     //no childrens are in code container yet
-    $("#main .codecreator-container-top")
+    $("#main .codecreator-container-start")
         .filter(function (i, e) {
             return !$(e).parent().children().filter(".codecreator").first().is(selected); //currently selected is not the first
         })
@@ -316,6 +317,7 @@ function createDropSpace(event, ui, selected) {
     if ($("#main").children().length == 0) {
         $("#main").append(GetCodeCreatorSpaceHtml());
     }
+  
 
     SetDroppable($(".codecreator-space"));
 }
@@ -429,7 +431,12 @@ function SetDroppable(element) {
 
             var sourceId = $(ui.draggable).data("id");
             var destAfterId = $(this).prev().data("id");
-            var destContainerId = $(this).parent().data("id");
+            var destContainerId = $(this).closest(".codecreator-container").data("id");
+            var sequenceIndex = $(this).prev(".codecreator-container-start").data("index");
+
+            if (destAfterId == 0) {
+                destAfterId = null;
+            }
 
             ui.draggable.css('top', '').css('left', '');
 
@@ -441,13 +448,13 @@ function SetDroppable(element) {
 
                 SetDraggable($(this).prev());
 
-                SubmitCreateCodeCreator($(this).prev(), destAfterId, destContainerId, $(ui.draggable).data('type'));
+                SubmitCreateCodeCreator($(this).prev(), destAfterId, destContainerId, sequenceIndex, $(ui.draggable).data('type'));
                 return;
             }
 
             $(this).before(ui.draggable);
 
-            SubmitMoveAfter(sourceId, destAfterId, destContainerId);
+            SubmitMoveAfter(sourceId, destAfterId, destContainerId, sequenceIndex);
         },
 
         over: function (event, ui) {

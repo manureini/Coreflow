@@ -31,6 +31,7 @@ namespace Coreflow
             CodeCreatorStorage.AddCodeCreator(new AssignCreator());
             CodeCreatorStorage.AddCodeCreator(new TerminateCreator());
             CodeCreatorStorage.AddCodeCreator(new IfCreator());
+            CodeCreatorStorage.AddCodeCreator(new IfElseCreator());
         }
 
         public void Dispose()

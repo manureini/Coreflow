@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 namespace Coreflow.CodeCreators
 {
-    /*
-    public class IfElseCreator : AbstractSequenceCreator, IParametrized
+    public class IfElseCreator : AbstractDualSequenceCreator, IParametrized
     {
         public List<IArgument> Arguments { get; set; } = new List<IArgument>();
 
@@ -17,7 +16,7 @@ namespace Coreflow.CodeCreators
         {
         }
 
-        public override string Name => "If";
+        public override string Name => "If Else";
 
         public override string Icon => "fa-check-double";
 
@@ -25,15 +24,21 @@ namespace Coreflow.CodeCreators
         {
             AddInitializeCode(pBuilderContext, pCodeBuilder);
 
-            pCodeBuilder.AppendLine("if(");
+            pCodeBuilder.AppendLineTop("if(");
 
             Arguments[0].ToCode(pBuilderContext, pCodeBuilder, pContainer);
 
-            pCodeBuilder.AppendLine(") {");
+            pCodeBuilder.AppendLineTop(") {");
 
-            AddCodeCreatorsCode(pBuilderContext, pCodeBuilder);
+            pCodeBuilder.AppendLineBottom("}");
 
-            pCodeBuilder.AppendLine("}");
+            AddFirstCodeCreatorsCode(pBuilderContext, pCodeBuilder);
+
+            pCodeBuilder.AppendLineTop(" else {");
+
+            pCodeBuilder.AppendLineBottom("}");
+
+            AddSecondCodeCreatorsCode(pBuilderContext, pCodeBuilder);
         }
 
         public CodeCreatorParameter[] GetParameters()
@@ -45,5 +50,5 @@ namespace Coreflow.CodeCreators
                 }
             };
         }
-    } */
+    }
 }

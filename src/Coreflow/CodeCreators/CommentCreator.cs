@@ -13,6 +13,8 @@ namespace Coreflow.CodeCreators
 
         public List<List<ICodeCreator>> CodeCreators { get; set; } = new List<List<ICodeCreator>>();
 
+        public int SequenceCount { get; } = 1;
+
         public void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pParentContainer = null)
         {
             pCodeWriter.WriteIdentifierTagTop(this);

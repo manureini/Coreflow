@@ -17,12 +17,14 @@ namespace Coreflow.Web.Models
 
         public string Type { get; set; }
 
+        public int SequenceCount { get; set; }
+
         public List<CodeCreatorParameterModel> Parameters { get; set; }
 
         public List<ArgumentModel> Arguments { get; set; }
 
         public CodeCreatorModel Parent { get; set; }
 
-        public List<CodeCreatorModel> CodeCreatorModelsFirst { get; set; }
+        public Dictionary<int, List<CodeCreatorModel>> CodeCreatorModels { get; set; }
     }
 }

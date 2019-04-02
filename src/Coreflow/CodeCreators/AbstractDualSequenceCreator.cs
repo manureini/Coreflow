@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Coreflow.CodeCreators
 {
-    public abstract class AbstractSingleSequenceCreator : ICodeCreatorContainerCreator, IUiDesignable
+    public abstract class AbstractDualSequenceCreator : ICodeCreatorContainerCreator, IUiDesignable
     {
         public List<List<ICodeCreator>> CodeCreators { get; set; } = new List<List<ICodeCreator>>();
 
@@ -18,18 +18,19 @@ namespace Coreflow.CodeCreators
 
         public virtual string Icon => "fa-tasks";
 
-        public int SequenceCount { get; } = 1;
+        public int SequenceCount { get; } = 2;
 
-        public AbstractSingleSequenceCreator()
+        public AbstractDualSequenceCreator()
         {
         }
 
-        public AbstractSingleSequenceCreator(ICodeCreatorContainerCreator pParentContainerCreator)
+        public AbstractDualSequenceCreator(ICodeCreatorContainerCreator pParentContainerCreator)
         {
             ParentContainerCreator = pParentContainerCreator;
         }
 
         public abstract void ToSequenceCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer);
+
 
         public void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer)
         {
@@ -38,8 +39,8 @@ namespace Coreflow.CodeCreators
             pCodeBuilder.WriteIdentifierTagTop(this);
             pCodeBuilder.WriteContainerTagTop(this);
 
-            pCodeBuilder.AppendLineTop("{");
 
+            pCodeBuilder.AppendLineTop("{");
             pCodeBuilder.AppendLineBottom("}");
 
             ToSequenceCode(pBuilderContext, pCodeBuilder, pContainer);
@@ -47,7 +48,7 @@ namespace Coreflow.CodeCreators
 
         protected void AddInitializeCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeBuilder)
         {
-            foreach (IVariableCreator varCreator in CodeCreators.First().Select(a => a as IVariableCreator).Where(a => a != null))
+            foreach (IVariableCreator varCreator in CodeCreators.SelectMany(a => a).Select(a => a as IVariableCreator).Where(a => a != null))
             {
                 IVariableCreator existing = WorkflowBuilderHelper.GetVariableCreatorInScope(this, varCreator, c => c.VariableIdentifier == varCreator.VariableIdentifier && pBuilderContext.HasLocalVariableName(c));
                 if (existing != null)
@@ -60,13 +61,22 @@ namespace Coreflow.CodeCreators
             }
         }
 
-        protected void AddCodeCreatorsCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter)
+        protected void AddFirstCodeCreatorsCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter)
         {
             if (CodeCreators.Count >= 1)
                 foreach (ICodeCreator c in CodeCreators.First())
                 {
                     c.ToCode(pBuilderContext, pCodeWriter, this);
                 }
+        }
+
+        protected void AddSecondCodeCreatorsCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter)
+        {
+            if (CodeCreators.Count >= 2)
+                foreach (ICodeCreator c in CodeCreators.Skip(1).First())
+            {
+                c.ToCode(pBuilderContext, pCodeWriter, this);
+            }
         }
     }
 }

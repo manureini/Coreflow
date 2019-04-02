@@ -7,5 +7,7 @@ namespace Coreflow.Interfaces
         ICodeCreatorContainerCreator ParentContainerCreator { get; set; }
 
         List<List<ICodeCreator>> CodeCreators { get; set; }
+
+        int SequenceCount { get; }
     }
 }

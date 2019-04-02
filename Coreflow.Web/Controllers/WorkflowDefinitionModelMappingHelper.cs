@@ -33,6 +33,7 @@ namespace Coreflow.Web.Controllers
 
         public static WorkflowDefinition GenerateWorkflowDefinition(WorkflowDefinitionModel pWorkflowDefinitionModel)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             WorkflowDefinition ret = new WorkflowDefinition()
             {
                 Name = pWorkflowDefinitionModel.Name,
@@ -40,6 +41,7 @@ namespace Coreflow.Web.Controllers
                 Identifier = pWorkflowDefinitionModel.Identifier,
                 Arguments = pWorkflowDefinitionModel.Arguments
             };
+#pragma warning restore CS0618 // Type or member is obsolete
 
             ret.ReferencedAssemblies = new List<Assembly>();
 

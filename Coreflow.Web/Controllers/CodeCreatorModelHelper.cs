@@ -60,16 +60,23 @@ namespace Coreflow.Web.Controllers
                 }
             }
 
-            if (pCodeCreator is ICodeCreatorContainerCreator)
+            if (pCodeCreator is ICodeCreatorContainerCreator container)
             {
-                ret.CodeCreatorModelsFirst = new List<CodeCreatorModel>();
-                ICodeCreatorContainerCreator container = pCodeCreator as ICodeCreatorContainerCreator;
+                ret.CodeCreatorModels = new Dictionary<int, List<CodeCreatorModel>>();
 
+                int i = 0;
                 foreach (var listcc in container.CodeCreators)
                 {
+                    List<CodeCreatorModel> models = new List<CodeCreatorModel>();
+
                     foreach (ICodeCreator cc in listcc)
-                        ret.CodeCreatorModelsFirst.Add(CreateModel(cc, ret, pWorkflowDefinition));
+                        models.Add(CreateModel(cc, ret, pWorkflowDefinition));
+
+                    ret.CodeCreatorModels.Add(i, models);
+                    i++;
                 }
+
+                ret.SequenceCount = container.SequenceCount;
             }
 
             return ret;
@@ -139,16 +146,17 @@ namespace Coreflow.Web.Controllers
             {
                 container.CodeCreators = new List<List<ICodeCreator>>();
 
-                if (pCodeCreatorModel.CodeCreatorModelsFirst != null)
+                if (pCodeCreatorModel.CodeCreatorModels != null)
                 {
-                    List<ICodeCreator> first = new List<ICodeCreator>();
-
-                    foreach (CodeCreatorModel ccmodel in pCodeCreatorModel.CodeCreatorModelsFirst)
+                    foreach (var ccModels in pCodeCreatorModel.CodeCreatorModels)
                     {
-                        first.Add(CreateCode(ccmodel, pWorkflowDefinition));
-                    }
+                        List<ICodeCreator> list = new List<ICodeCreator>();
 
-                    container.CodeCreators.Add(first);
+                        foreach (CodeCreatorModel ccmodel in ccModels.Value)
+                            list.Add(CreateCode(ccmodel, pWorkflowDefinition));
+
+                        container.CodeCreators.Add(list);
+                    }
                 }
             }
 

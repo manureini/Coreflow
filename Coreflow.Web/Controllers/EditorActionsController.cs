@@ -176,12 +176,16 @@ namespace Coreflow.Web.Controllers
                 Guid destContainer = Guid.Parse(pData.DestinationContainerId);
                 Guid? destAfter = null;
 
+                int? sequenceIndex = null;
+                if (int.TryParse(pData.SequenceIndex, out int sindex))
+                    sequenceIndex = sindex;
+
                 if (pData.DestinationAfterId != null)
                     destAfter = Guid.Parse(pData.DestinationAfterId);
 
                 CodeCreatorModel sourceModel = WorkflowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, source) as CodeCreatorModel;
 
-                UpdateCodeCreatorModel(wfDefModel, destAfter, destContainer, sourceModel);
+                UpdateCodeCreatorModel(wfDefModel, destAfter, destContainer, sequenceIndex, sourceModel);
 
                 serialized = WorkflowDefinitionModelSerializer.Serialize(wfDefModel);
                 HttpContext.Session.SetString("WorkflowModel", serialized);
@@ -208,7 +212,7 @@ namespace Coreflow.Web.Controllers
 
                 if (ccm.Parent != null)
                 {
-                    ccm.Parent.CodeCreatorModelsFirst.RemoveAll(c => c == ccm);
+                    ccm.Parent.CodeCreatorModels.ForEach(l => l.Value.RemoveAll(c => c == ccm));
                 }
                 else
                 {
@@ -246,6 +250,9 @@ namespace Coreflow.Web.Controllers
                 if (pData.DestinationAfterId != null)
                     destAfter = Guid.Parse(pData.DestinationAfterId);
 
+                int? sequenceIndex = null;
+                if (int.TryParse(pData.SequenceIndex, out int sindex))
+                    sequenceIndex = sindex;
 
                 CodeCreatorModel modes = new CodeCreatorModel()
                 {
@@ -277,10 +284,10 @@ namespace Coreflow.Web.Controllers
 
                 if (cc is ICodeCreatorContainerCreator)
                 {
-                    modes.CodeCreatorModelsFirst = new List<CodeCreatorModel>();
+                    modes.CodeCreatorModels = new Dictionary<int, List<CodeCreatorModel>>();
                 }
 
-                UpdateCodeCreatorModel(wfDefModel, destAfter, destContainer, modes);
+                UpdateCodeCreatorModel(wfDefModel, destAfter, destContainer, sequenceIndex, modes);
 
                 serialized = WorkflowDefinitionModelSerializer.Serialize(wfDefModel);
                 HttpContext.Session.SetString("WorkflowModel", serialized);
@@ -293,20 +300,34 @@ namespace Coreflow.Web.Controllers
             }
         }
 
-        private static void UpdateCodeCreatorModel(WorkflowDefinitionModel wfDefModel, Guid? pDestinationAfterId, Guid? destContainer, CodeCreatorModel sourceModel)
+        private static void UpdateCodeCreatorModel(WorkflowDefinitionModel pWfDefModel, Guid? pDestinationAfterId, Guid? pDestContainer, int? pDestSequenceIndex, CodeCreatorModel sourceModel)
         {
-            if (pDestinationAfterId.HasValue) //insert cc after something in an existing container
+            if (pDestinationAfterId.HasValue) //insert cc after something
             {
-                CodeCreatorModel destModel = WorkflowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, pDestinationAfterId.Value) as CodeCreatorModel;
+                CodeCreatorModel destModel = WorkflowDefinitionModelIdentifiableHelper.FindIIdentifiable(pWfDefModel, pDestinationAfterId.Value) as CodeCreatorModel;
 
                 List<CodeCreatorModel> codecreators = new List<CodeCreatorModel>();
 
                 if (sourceModel.Parent != null)
-                    sourceModel.Parent.CodeCreatorModelsFirst.RemoveAll(c => c == sourceModel);
+                    sourceModel.Parent.CodeCreatorModels.ForEach(l => l.Value.RemoveAll(c => c == sourceModel));
 
                 sourceModel.Parent = destModel.Parent;
 
-                foreach (var entry in destModel.Parent.CodeCreatorModelsFirst)
+                var sequenceEntry = destModel.Parent.CodeCreatorModels.First(m => m.Value.Any(x => x.Identifier == pDestinationAfterId));
+
+                List<CodeCreatorModel> sequence = sequenceEntry.Value;
+
+                /*
+                int afterIndex = sequence.FindIndex(c => c.Identifier == pDestinationAfterId);
+
+                if (afterIndex > 0)
+                    afterIndex--;
+
+                sequence.Insert(afterIndex, sourceModel);
+                */
+
+
+                foreach (var entry in sequence)
                 {
                     codecreators.Add(entry);
 
@@ -316,25 +337,41 @@ namespace Coreflow.Web.Controllers
                     }
                 }
 
-                destModel.Parent.CodeCreatorModelsFirst = codecreators;
+                destModel.Parent.CodeCreatorModels[sequenceEntry.Key] = codecreators;
             }
-            else if (destContainer.HasValue) //insert cc on first entry of an container
+            else if (pDestContainer.HasValue) //insert cc on first entry of an container
             {
-                CodeCreatorModel destContainerModel = WorkflowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, destContainer.Value) as CodeCreatorModel;
+                CodeCreatorModel destContainerModel = WorkflowDefinitionModelIdentifiableHelper.FindIIdentifiable(pWfDefModel, pDestContainer.Value) as CodeCreatorModel;
 
                 if (sourceModel.Parent != null)
-                    sourceModel.Parent.CodeCreatorModelsFirst.RemoveAll(c => c == sourceModel);
+                    sourceModel.Parent.CodeCreatorModels.ForEach(l => l.Value.RemoveAll(c => c == sourceModel));
 
                 sourceModel.Parent = destContainerModel;
 
-                destContainerModel.CodeCreatorModelsFirst.Insert(0, sourceModel);
+                if (destContainerModel.SequenceCount < pDestSequenceIndex.Value || pDestSequenceIndex.Value < 0)
+                    throw new Exception("pDestSequenceIndex invalid");
+
+                List<CodeCreatorModel> sequence = new List<CodeCreatorModel>();
+
+                sequence.Add(sourceModel);
+
+                if (destContainerModel.CodeCreatorModels.ContainsKey(pDestSequenceIndex.Value) && destContainerModel.CodeCreatorModels[pDestSequenceIndex.Value].Count > 0)
+                {
+                    foreach (var entry in destContainerModel.CodeCreatorModels[pDestSequenceIndex.Value])
+                    {
+                        sequence.Add(entry);
+                    }
+                }
+
+                destContainerModel.CodeCreatorModels.Remove(pDestSequenceIndex.Value);
+                destContainerModel.CodeCreatorModels.Add(pDestSequenceIndex.Value, sequence);
             }
             else //insert cc if wf is empty
             {
-                if (wfDefModel.CodeCreatorModel != null)
+                if (pWfDefModel.CodeCreatorModel != null)
                     throw new InvalidOperationException("CodeCreatorModel must be null");
 
-                wfDefModel.CodeCreatorModel = sourceModel;
+                pWfDefModel.CodeCreatorModel = sourceModel;
             }
         }
     }

@@ -105,11 +105,12 @@ function SubmitWorkflowReferencedNamespaceChanged(pAddValue, pValue) {
     });
 }
 
-function SubmitMoveAfter(sourceId, destinationAfterId, destinationContainerId) {
+function SubmitMoveAfter(sourceId, destinationAfterId, destinationContainerId, sequenceIndex) {
     var postData = {};
     postData["SourceId"] = sourceId;
     postData["DestinationAfterId"] = destinationAfterId;
     postData["DestinationContainerId"] = destinationContainerId;
+    postData["SequenceIndex"] = sequenceIndex;
 
     $.ajax({
         url: "Action/CodeCreatorMoved",
@@ -128,12 +129,13 @@ function SubmitMoveAfter(sourceId, destinationAfterId, destinationContainerId) {
     });
 }
 
-function SubmitCreateCodeCreator(newCodeCreator, destinationAfterId, destinationContainerId, type) {
+function SubmitCreateCodeCreator(newCodeCreator, destinationAfterId, destinationContainerId, sequenceIndex, type) {
     var postData = {};
 
     postData["DestinationAfterId"] = destinationAfterId;
     postData["DestinationContainerId"] = destinationContainerId;
     postData["Type"] = type;
+    postData["SequenceIndex"] = sequenceIndex;
 
     $.ajax({
         url: "Action/CodeCreatorCreated",
