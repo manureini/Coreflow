@@ -1,16 +1,23 @@
 ﻿using Coreflow.Helper;
 using Coreflow.Interfaces;
 using System;
+using System.Linq;
 using System.Text;
 
 namespace Coreflow.Objects
 {
     public class WorkflowCodeWriter
     {
-        private readonly StringBuilder mTopStringBuilder = new StringBuilder();
-        private readonly StringBuilder mBottomStringBuilder = new StringBuilder();
+        private StringBuilder mTopStringBuilder = new StringBuilder();
+        private StringBuilder mBottomStringBuilder = new StringBuilder();
 
         internal WorkflowCodeWriter() { }
+
+        public void SetStringBuilder(StringBuilder pTmpTopStringBuilder, StringBuilder pTmpBottomStringBuilder)
+        {
+            mTopStringBuilder = pTmpTopStringBuilder;
+            mBottomStringBuilder = pTmpBottomStringBuilder;
+        }
 
         public void AppendTop(string pCode)
         {
@@ -47,6 +54,20 @@ namespace Coreflow.Objects
             mTopStringBuilder.Remove(mTopStringBuilder.Length - 1, 1);
         }
 
+        public void ReplaceTop(string pOldValue, string pNewValue)
+        {
+            string top = ToStringTop();
+            top = top.Replace(pOldValue, pNewValue);
+            mTopStringBuilder = new StringBuilder(top);
+        }
+
+        public void ReplaceBottom(string pOldValue, string pNewValue)
+        {
+            string bottom = ToStringBottom();
+            bottom = bottom.Replace(pOldValue, pNewValue);
+            mBottomStringBuilder = new StringBuilder(bottom);
+        }
+
         public string ToStringTop()
         {
             return mTopStringBuilder.ToString();
@@ -54,12 +75,12 @@ namespace Coreflow.Objects
 
         public string ToStringBottom()
         {
-            return mBottomStringBuilder.ToString();
+            return string.Join(Environment.NewLine, mBottomStringBuilder.ToString().Split(Environment.NewLine).Reverse());
         }
 
         public override string ToString()
         {
-            return mTopStringBuilder.ToString() + mBottomStringBuilder.ToString();
+            return ToStringTop() + ToStringBottom();
         }
     }
 }

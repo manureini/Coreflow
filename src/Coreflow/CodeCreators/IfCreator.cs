@@ -24,7 +24,7 @@ namespace Coreflow.CodeCreators
         {
             AddInitializeCode(pBuilderContext, pCodeBuilder);
 
-            pCodeBuilder.AppendLineTop("if(");
+            pCodeBuilder.AppendLineTop("if (");
 
             Arguments[0].ToCode(pBuilderContext, pCodeBuilder, pContainer);
 

@@ -1,6 +1,6 @@
 ﻿namespace Coreflow.Web.Models
 {
-    public class DeleteCodeCreatorData
+    public class IdData
     {
         public string Id { get; set; }
     }

@@ -199,7 +199,7 @@ namespace Coreflow.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult CodeCreatorDeleted([FromBody] DeleteCodeCreatorData pData)
+        public JsonResult CodeCreatorDeleted([FromBody] IdData pData)
         {
             try
             {
@@ -282,9 +282,10 @@ namespace Coreflow.Web.Controllers
                     }
                 }
 
-                if (cc is ICodeCreatorContainerCreator)
+                if (cc is ICodeCreatorContainerCreator container)
                 {
                     modes.CodeCreatorModels = new Dictionary<int, List<CodeCreatorModel>>();
+                    modes.SequenceCount = container.SequenceCount;
                 }
 
                 UpdateCodeCreatorModel(wfDefModel, destAfter, destContainer, sequenceIndex, modes);
@@ -372,6 +373,26 @@ namespace Coreflow.Web.Controllers
                     throw new InvalidOperationException("CodeCreatorModel must be null");
 
                 pWfDefModel.CodeCreatorModel = sourceModel;
+            }
+        }
+
+        [HttpPost]
+        public JsonResult GetGeneratedCode([FromBody] IdData pData)
+        {
+            try
+            {
+                string serialized = HttpContext.Session.GetString("WorkflowModel");
+                WorkflowDefinitionModel wfDefModel = WorkflowDefinitionModelSerializer.DeSerialize(serialized);
+
+                WorkflowDefinition wfDef = WorkflowDefinitionModelMappingHelper.GenerateWorkflowDefinition(wfDefModel);
+
+                WorkflowCode code = wfDef.GenerateWorkflowCode();
+
+                return Json(new Response(true, code.Code));
+            }
+            catch (Exception e)
+            {
+                return Json(new Response(false, e.ToString()));
             }
         }
     }

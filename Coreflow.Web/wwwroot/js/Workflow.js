@@ -247,6 +247,10 @@ $(function () {
         $(".tab-content .active").removeClass("active");
         $(".tab-content .show").removeClass("show");
     });
+        
+    $("#btnShowGeneratedCode").click(function () {
+        SubmitGetGeneratedCode("todo guid");
+    });
 });
 
 $(window).resize(function () {

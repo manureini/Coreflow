@@ -30,13 +30,18 @@ namespace Coreflow.CodeCreators
 
             pCodeBuilder.AppendLineTop(") {");
 
-            pCodeBuilder.AppendLineBottom("}");
+            string removeComment = "/* remove " + Identifier + "*/ }";
+
+            pCodeBuilder.AppendLineBottom(removeComment);
+            pCodeBuilder.AppendLineBottom();
 
             AddFirstCodeCreatorsCode(pBuilderContext, pCodeBuilder);
 
-            pCodeBuilder.AppendLineTop(" else {");
+            pCodeBuilder.AppendLineTop("} else {");
 
             pCodeBuilder.AppendLineBottom("}");
+
+            pCodeBuilder.ReplaceBottom(removeComment, "");
 
             AddSecondCodeCreatorsCode(pBuilderContext, pCodeBuilder);
         }

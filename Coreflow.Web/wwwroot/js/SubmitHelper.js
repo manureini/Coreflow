@@ -208,3 +208,30 @@ function SubmitRunWorkflow() {
 }
 
 
+function SubmitGetGeneratedCode(id) {
+    var postData = {};
+    postData["Id"] = id;
+
+    $.ajax({
+        url: "Action/GetGeneratedCode",
+        type: 'post',
+        data: JSON.stringify(postData),
+        contentType: "application/json",
+        success: function (data) {
+
+            var dialog = document.getElementById("dialog");
+
+            dialog.showModal();
+
+            dialogeditor.setValue(data.message);
+            dialogeditor.layout();
+
+
+            navigator.clipboard.writeText(data.message);
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+}
