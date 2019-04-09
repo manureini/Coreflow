@@ -50,7 +50,7 @@ namespace Coreflow.CodeCreators
         {
             foreach (IVariableCreator varCreator in CodeCreators.SelectMany(a => a).Select(a => a as IVariableCreator).Where(a => a != null))
             {
-                IVariableCreator existing = FlowBuilderHelper.GetVariableCreatorInScope(this, varCreator, c => c.VariableIdentifier == varCreator.VariableIdentifier && pBuilderContext.HasLocalVariableName(c));
+                IVariableCreator existing = FlowBuilderHelper.GetVariableCreatorInInitialScope(this, varCreator, c => c.VariableIdentifier == varCreator.VariableIdentifier && pBuilderContext.HasLocalVariableName(c));
                 if (existing != null)
                 {
                     pBuilderContext.SetLocalVariableName(varCreator, pBuilderContext.GetLocalVariableName(existing));

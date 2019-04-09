@@ -16,9 +16,27 @@ namespace Coreflow
             return pFlows.Select(w => GenerateFlowCode(w));
         }
 
+        private static void SetParentContainer(ICodeCreator pCodeCreator, ICodeCreatorContainerCreator pParent = null)
+        {
+            if (pCodeCreator is ICodeCreatorContainerCreator container)
+            {
+                container.ParentContainerCreator = pParent;
+
+                foreach (var entry in container.CodeCreators)
+                {
+                    foreach (var cc in entry)
+                    {
+                        SetParentContainer(cc, container);
+                    }
+                }
+            }
+        }
+
         public static FlowCode GenerateFlowCode(FlowDefinition pFlow)
         {
             FlowCode ret = new FlowCode();
+
+            SetParentContainer(pFlow.CodeCreator);
 
             var wfReferencesDict = ReferenceHelper.GetMetadataReferences(pFlow);
 
@@ -89,18 +107,19 @@ namespace Coreflow
             return ret;
         }
 
-        public static IVariableCreator GetVariableCreatorInScope(ICodeCreatorContainerCreator pContainer, ICodeCreator pCodeCreator, Func<IVariableCreator, bool> pFilter)
+        public static IVariableCreator GetVariableCreatorInInitialScope(ICodeCreatorContainerCreator pContainer, ICodeCreator pCodeCreator, Func<IVariableCreator, bool> pFilter)
         {
             if (pContainer == null)
                 return null;
 
-            List<ICodeCreator> ccontainer = pContainer.CodeCreators.FirstOrDefault(cl => cl.Contains(pCodeCreator));
+            foreach (var cclist in pContainer.CodeCreators)
+            {
+                IVariableCreator found = cclist.Select(v => v as IVariableCreator).Where(v => v != null).FirstOrDefault(pFilter);
+                if (found != null)
+                    return found;
+            }
 
-            IVariableCreator found = ccontainer.Select(v => v as IVariableCreator).Where(v => v != null).FirstOrDefault(pFilter);
-            if (found != null)
-                return found;
-
-            return GetVariableCreatorInScope(pContainer.ParentContainerCreator, pContainer, pFilter);
+            return GetVariableCreatorInInitialScope(pContainer.ParentContainerCreator, pContainer, pFilter);
         }
 
 
