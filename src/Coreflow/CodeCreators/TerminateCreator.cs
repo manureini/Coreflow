@@ -12,7 +12,7 @@ namespace Coreflow.CodeCreators
 
         public string Icon => "fa-times";
 
-        public void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer = null)
+        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer = null)
         {
             pCodeWriter.WriteIdentifierTagTop(this);
             pCodeWriter.AppendLineTop("return;");

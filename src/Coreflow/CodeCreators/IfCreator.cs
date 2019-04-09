@@ -20,7 +20,7 @@ namespace Coreflow.CodeCreators
 
         public override string Icon => "fa-check";
 
-        public override void ToSequenceCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer)
+        public override void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer)
         {
             AddInitializeCode(pBuilderContext, pCodeBuilder);
 

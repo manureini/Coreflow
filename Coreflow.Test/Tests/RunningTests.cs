@@ -23,39 +23,39 @@ namespace Coreflow.Test
 
 
         [TestMethod]
-        public void StartEmptyWorkflow()
+        public void StartEmptyFlow()
         {
-            WorkflowDefinition wfdef = mCoreflow.WorkflowDefinitionFactory.Create("empty");
+            FlowDefinition wfdef = mCoreflow.FlowDefinitionFactory.Create("empty");
 
-            WorkflowInvoker.Invoke(wfdef);
+            FlowInvoker.Invoke(wfdef);
 
             wfdef.ReferencedAssemblies.Clear();
-            WorkflowInvoker.Invoke(wfdef);
+            FlowInvoker.Invoke(wfdef);
 
             wfdef.ReferencedAssemblies = null;
-            WorkflowInvoker.Invoke(wfdef);
+            FlowInvoker.Invoke(wfdef);
         }
 
 
         [TestMethod]
-        public void CreateCodeTestWorkflow1()
+        public void CreateCodeTestFlow1()
         {
-            WorkflowDefinition wfdef = TestWorkflows.GetTestWorkflow1(mCoreflow);
+            FlowDefinition wfdef = TestFlows.GetTestFlow1(mCoreflow);
 
-            WorkflowCompileResult compileResult = wfdef.GenerateWorkflowCode().Compile();
+            FlowCompileResult compileResult = wfdef.GenerateFlowCode().Compile();
 
-            Console.WriteLine(compileResult.WorkflowCode.Code);
+            Console.WriteLine(compileResult.FlowCode.Code);
         }
 
 
         [TestMethod]
-        public void StartTestWorkflow1()
+        public void StartTestFlow1()
         {
-            WorkflowDefinition wfdef = TestWorkflows.GetTestWorkflow1(mCoreflow);
+            FlowDefinition wfdef = TestFlows.GetTestFlow1(mCoreflow);
 
-            WorkflowCompileResult compileResult = wfdef.GenerateWorkflowCode().Compile();
+            FlowCompileResult compileResult = wfdef.GenerateFlowCode().Compile();
 
-            Type workflowtype = compileResult.ResultAssembly.GetTypes().First(t => typeof(ICompiledWorkflow).IsAssignableFrom(t));
+            Type Flowtype = compileResult.ResultAssembly.GetTypes().First(t => typeof(ICompiledFlow).IsAssignableFrom(t));
 
             Stopwatch stopwatch = new Stopwatch();
 
@@ -63,7 +63,7 @@ namespace Coreflow.Test
 
             stopwatch.Start();
 
-            ICompiledWorkflow wf = Activator.CreateInstance(workflowtype) as ICompiledWorkflow;
+            ICompiledFlow wf = Activator.CreateInstance(Flowtype) as ICompiledFlow;
             wf.Run();
 
             stopwatch.Stop();
@@ -72,15 +72,15 @@ namespace Coreflow.Test
         }
 
         [TestMethod]
-        public void CheckResultTestWorkflow1()
+        public void CheckResultTestFlow1()
         {
-            WorkflowDefinition wfdef = TestWorkflows.GetTestWorkflow1(mCoreflow);
+            FlowDefinition wfdef = TestFlows.GetTestFlow1(mCoreflow);
 
-            WorkflowCompileResult compileResult = wfdef.GenerateWorkflowCode().Compile();
+            FlowCompileResult compileResult = wfdef.GenerateFlowCode().Compile();
 
-            Type workflowtype = compileResult.ResultAssembly.GetTypes().First(t => typeof(ICompiledWorkflow).IsAssignableFrom(t));
+            Type Flowtype = compileResult.ResultAssembly.GetTypes().First(t => typeof(ICompiledFlow).IsAssignableFrom(t));
 
-            ICompiledWorkflow wf = Activator.CreateInstance(workflowtype) as ICompiledWorkflow;
+            ICompiledFlow wf = Activator.CreateInstance(Flowtype) as ICompiledFlow;
             wf.Run();
 
             int result = (int)wf.GetType().GetField("Result").GetValue(wf);

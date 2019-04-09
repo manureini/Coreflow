@@ -10,7 +10,7 @@ namespace Coreflow.Web
 
         public static void Main(string[] args)
         {
-            CoreflowInstance = new Coreflow(new SimpleWorkflowDefinitionFileStorage(@"C:\tmp\workflows"));
+            CoreflowInstance = new Coreflow(new SimpleFlowDefinitionFileStorage(@"C:\tmp\Flows"));
             CreateWebHostBuilder(args).Build().Run();
         }
 

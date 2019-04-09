@@ -20,16 +20,16 @@ namespace Coreflow.Helper
             }
         }
 
-        public static IDictionary<Assembly, MetadataReference> GetMetadataReferences(WorkflowDefinition pWorkflowDefinition)
+        public static IDictionary<Assembly, MetadataReference> GetMetadataReferences(FlowDefinition pFlowDefinition)
         {
             Dictionary<Assembly, MetadataReference> ret = new Dictionary<Assembly, MetadataReference>();
 
-            foreach (string ns in pWorkflowDefinition.ReferencedNamespaces)
+            foreach (string ns in pFlowDefinition.ReferencedNamespaces)
             {
                 IEnumerable<Assembly> assemblies = Enumerable.Empty<Assembly>();
 
-                if (pWorkflowDefinition.ReferencedAssemblies != null)
-                    assemblies = pWorkflowDefinition.ReferencedAssemblies.Where(a => a.GetTypes().FirstOrDefault(t => t.Namespace == ns) != null);
+                if (pFlowDefinition.ReferencedAssemblies != null)
+                    assemblies = pFlowDefinition.ReferencedAssemblies.Where(a => a.GetTypes().FirstOrDefault(t => t.Namespace == ns) != null);
 
                 if (assemblies.Count() == 0)
                     assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetTypes().FirstOrDefault(t => t.Namespace == ns) != null);

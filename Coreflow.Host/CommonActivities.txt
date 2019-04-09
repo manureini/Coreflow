@@ -8,9 +8,9 @@ ChangeLogRedirectToMemoryActivty
 CommitCollectedLogsToDatabaseActivity
 
 
-DxWorkflowInstanceAddMetadataActivity
-DxWorkflowInstanceGetMetadataActivity
-RunWorkflowSyncActivity
+DxFlowInstanceAddMetadataActivity
+DxFlowInstanceGetMetadataActivity
+RunFlowSyncActivity
 
 ConnectToNetworkShare
         SharedPath

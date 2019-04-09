@@ -22,7 +22,7 @@ namespace Coreflow.Interfaces
             Identifier = pIdentifier;
         }
 
-        public override void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer = null)
+        public override void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer = null)
         {
             pCodeWriter.WriteIdentifierTagTop(this);
 

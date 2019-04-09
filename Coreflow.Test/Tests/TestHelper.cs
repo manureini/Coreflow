@@ -9,7 +9,7 @@ namespace Coreflow.Test.Tests
     {
         internal static Coreflow InitCoreflow()
         {
-            MemoryWorkflowDefinitionStorage storage = new MemoryWorkflowDefinitionStorage();
+            MemoryFlowDefinitionStorage storage = new MemoryFlowDefinitionStorage();
             Coreflow ret = new Coreflow(storage);
                         
             ret.CodeCreatorStorage.AddCodeActivity(typeof(AdderActivity));

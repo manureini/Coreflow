@@ -21,18 +21,18 @@ namespace Coreflow.Web.Controllers
     {
 
         [HttpPost]
-        public JsonResult RunWorkflow()
+        public JsonResult RunFlow()
         {
-            string serialized = HttpContext.Session.GetString("WorkflowModel");
-            WorkflowDefinitionModel wfDefModel = WorkflowDefinitionModelSerializer.DeSerialize(serialized);
+            string serialized = HttpContext.Session.GetString("FlowModel");
+            FlowDefinitionModel wfDefModel = FlowDefinitionModelSerializer.DeSerialize(serialized);
 
-            WorkflowDefinition wfDef = WorkflowDefinitionModelMappingHelper.GenerateWorkflowDefinition(wfDefModel);
+            FlowDefinition wfDef = FlowDefinitionModelMappingHelper.GenerateFlowDefinition(wfDefModel);
 
             //TODO
-            Program.CoreflowInstance.WorkflowDefinitionStorage.Remove(wfDef.Identifier);
-            Program.CoreflowInstance.WorkflowDefinitionStorage.Add(wfDef);
+            Program.CoreflowInstance.FlowDefinitionStorage.Remove(wfDef.Identifier);
+            Program.CoreflowInstance.FlowDefinitionStorage.Add(wfDef);
 
-            WorkflowInvokeResult invokeResult = WorkflowInvoker.Invoke(wfDef);
+            FlowInvokeResult invokeResult = FlowInvoker.Invoke(wfDef);
 
             string result = invokeResult.ExecutedInstance.GetType().GetField("result").GetValue(invokeResult.ExecutedInstance) as string;
 
@@ -44,10 +44,10 @@ namespace Coreflow.Web.Controllers
         {
             try
             {
-                string serialized = HttpContext.Session.GetString("WorkflowModel");
-                WorkflowDefinitionModel wfDefModel = WorkflowDefinitionModelSerializer.DeSerialize(serialized);
+                string serialized = HttpContext.Session.GetString("FlowModel");
+                FlowDefinitionModel wfDefModel = FlowDefinitionModelSerializer.DeSerialize(serialized);
 
-                CodeCreatorModel ccmodel = WorkflowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, Guid.Parse(pData.CreatorGuid)) as CodeCreatorModel;
+                CodeCreatorModel ccmodel = FlowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, Guid.Parse(pData.CreatorGuid)) as CodeCreatorModel;
 
                 if (ccmodel.Arguments == null)
                     ccmodel.Arguments = new List<ArgumentModel>();
@@ -61,12 +61,12 @@ namespace Coreflow.Web.Controllers
 
                 am.Code = pData.NewValue;
 
-                WorkflowDefinition wfDef = WorkflowDefinitionModelMappingHelper.GenerateWorkflowDefinition(wfDefModel);
-                WorkflowCode code = wfDef.GenerateWorkflowCode();
-                WorkflowCompileResult result = code.Compile();
+                FlowDefinition wfDef = FlowDefinitionModelMappingHelper.GenerateFlowDefinition(wfDefModel);
+                FlowCode code = wfDef.GenerateFlowCode();
+                FlowCompileResult result = code.Compile();
 
-                serialized = WorkflowDefinitionModelSerializer.Serialize(wfDefModel);
-                HttpContext.Session.SetString("WorkflowModel", serialized);
+                serialized = FlowDefinitionModelSerializer.Serialize(wfDefModel);
+                HttpContext.Session.SetString("FlowModel", serialized);
 
                 return Json(new GuidListResponse(true, "ok", result.ErrorCodeCreators));
             }
@@ -81,15 +81,15 @@ namespace Coreflow.Web.Controllers
         {
             try
             {
-                string serialized = HttpContext.Session.GetString("WorkflowModel");
-                WorkflowDefinitionModel wfDefModel = WorkflowDefinitionModelSerializer.DeSerialize(serialized);
+                string serialized = HttpContext.Session.GetString("FlowModel");
+                FlowDefinitionModel wfDefModel = FlowDefinitionModelSerializer.DeSerialize(serialized);
 
-                CodeCreatorModel ccmodel = WorkflowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, Guid.Parse(pData.CreatorGuid)) as CodeCreatorModel;
+                CodeCreatorModel ccmodel = FlowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, Guid.Parse(pData.CreatorGuid)) as CodeCreatorModel;
 
                 ccmodel.UserDisplayName = pData.NewValue;
 
-                serialized = WorkflowDefinitionModelSerializer.Serialize(wfDefModel);
-                HttpContext.Session.SetString("WorkflowModel", serialized);
+                serialized = FlowDefinitionModelSerializer.Serialize(wfDefModel);
+                HttpContext.Session.SetString("FlowModel", serialized);
 
                 return Json(new Response(true, "ok"));
             }
@@ -101,12 +101,12 @@ namespace Coreflow.Web.Controllers
 
 
         [HttpPost]
-        public JsonResult WorkflowReferencedAssemblyChanged([FromBody] WorkflowReferencedAssemblyChangedData pData)
+        public JsonResult FlowReferencedAssemblyChanged([FromBody] FlowReferencedAssemblyChangedData pData)
         {
             try
             {
-                string serialized = HttpContext.Session.GetString("WorkflowModel");
-                WorkflowDefinitionModel wfDefModel = WorkflowDefinitionModelSerializer.DeSerialize(serialized);
+                string serialized = HttpContext.Session.GetString("FlowModel");
+                FlowDefinitionModel wfDefModel = FlowDefinitionModelSerializer.DeSerialize(serialized);
 
                 if (pData.AddValue)
                 {
@@ -124,8 +124,8 @@ namespace Coreflow.Web.Controllers
                     wfDefModel.ReferencedAssemblies.Remove(pData.Value);
                 }
 
-                serialized = WorkflowDefinitionModelSerializer.Serialize(wfDefModel);
-                HttpContext.Session.SetString("WorkflowModel", serialized);
+                serialized = FlowDefinitionModelSerializer.Serialize(wfDefModel);
+                HttpContext.Session.SetString("FlowModel", serialized);
 
                 return Json(new Response(true, "ok"));
             }
@@ -137,12 +137,12 @@ namespace Coreflow.Web.Controllers
 
 
         [HttpPost]
-        public JsonResult WorkflowReferencedNamespaceChanged([FromBody] WorkflowReferencedNamespaceChangedData pData)
+        public JsonResult FlowReferencedNamespaceChanged([FromBody] FlowReferencedNamespaceChangedData pData)
         {
             try
             {
-                string serialized = HttpContext.Session.GetString("WorkflowModel");
-                WorkflowDefinitionModel wfDefModel = WorkflowDefinitionModelSerializer.DeSerialize(serialized);
+                string serialized = HttpContext.Session.GetString("FlowModel");
+                FlowDefinitionModel wfDefModel = FlowDefinitionModelSerializer.DeSerialize(serialized);
 
                 if (pData.AddValue)
                 {
@@ -153,8 +153,8 @@ namespace Coreflow.Web.Controllers
                     wfDefModel.ReferencedNamespaces.Remove(pData.Value);
                 }
 
-                serialized = WorkflowDefinitionModelSerializer.Serialize(wfDefModel);
-                HttpContext.Session.SetString("WorkflowModel", serialized);
+                serialized = FlowDefinitionModelSerializer.Serialize(wfDefModel);
+                HttpContext.Session.SetString("FlowModel", serialized);
 
                 return Json(new Response(true, "ok"));
             }
@@ -169,8 +169,8 @@ namespace Coreflow.Web.Controllers
         {
             try
             {
-                string serialized = HttpContext.Session.GetString("WorkflowModel");
-                WorkflowDefinitionModel wfDefModel = WorkflowDefinitionModelSerializer.DeSerialize(serialized);
+                string serialized = HttpContext.Session.GetString("FlowModel");
+                FlowDefinitionModel wfDefModel = FlowDefinitionModelSerializer.DeSerialize(serialized);
 
                 Guid source = Guid.Parse(pData.SourceId);
                 Guid destContainer = Guid.Parse(pData.DestinationContainerId);
@@ -183,12 +183,12 @@ namespace Coreflow.Web.Controllers
                 if (pData.DestinationAfterId != null)
                     destAfter = Guid.Parse(pData.DestinationAfterId);
 
-                CodeCreatorModel sourceModel = WorkflowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, source) as CodeCreatorModel;
+                CodeCreatorModel sourceModel = FlowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, source) as CodeCreatorModel;
 
                 UpdateCodeCreatorModel(wfDefModel, destAfter, destContainer, sequenceIndex, sourceModel);
 
-                serialized = WorkflowDefinitionModelSerializer.Serialize(wfDefModel);
-                HttpContext.Session.SetString("WorkflowModel", serialized);
+                serialized = FlowDefinitionModelSerializer.Serialize(wfDefModel);
+                HttpContext.Session.SetString("FlowModel", serialized);
 
                 return Json(new Response(true, "ok"));
             }
@@ -203,12 +203,12 @@ namespace Coreflow.Web.Controllers
         {
             try
             {
-                string serialized = HttpContext.Session.GetString("WorkflowModel");
-                WorkflowDefinitionModel wfDefModel = WorkflowDefinitionModelSerializer.DeSerialize(serialized);
+                string serialized = HttpContext.Session.GetString("FlowModel");
+                FlowDefinitionModel wfDefModel = FlowDefinitionModelSerializer.DeSerialize(serialized);
 
                 Guid id = Guid.Parse(pData.Id);
 
-                CodeCreatorModel ccm = WorkflowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, id) as CodeCreatorModel;
+                CodeCreatorModel ccm = FlowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, id) as CodeCreatorModel;
 
                 if (ccm.Parent != null)
                 {
@@ -219,8 +219,8 @@ namespace Coreflow.Web.Controllers
                     wfDefModel.CodeCreatorModel = null;
                 }
 
-                serialized = WorkflowDefinitionModelSerializer.Serialize(wfDefModel);
-                HttpContext.Session.SetString("WorkflowModel", serialized);
+                serialized = FlowDefinitionModelSerializer.Serialize(wfDefModel);
+                HttpContext.Session.SetString("FlowModel", serialized);
 
                 return Json(new Response(true, "ok"));
             }
@@ -238,8 +238,8 @@ namespace Coreflow.Web.Controllers
                 GuidListResponse ret = new GuidListResponse();
                 ret.IsSuccess = true;
 
-                string serialized = HttpContext.Session.GetString("WorkflowModel");
-                WorkflowDefinitionModel wfDefModel = WorkflowDefinitionModelSerializer.DeSerialize(serialized);
+                string serialized = HttpContext.Session.GetString("FlowModel");
+                FlowDefinitionModel wfDefModel = FlowDefinitionModelSerializer.DeSerialize(serialized);
 
                 Guid? destContainer = null;
                 Guid? destAfter = null;
@@ -290,8 +290,8 @@ namespace Coreflow.Web.Controllers
 
                 UpdateCodeCreatorModel(wfDefModel, destAfter, destContainer, sequenceIndex, modes);
 
-                serialized = WorkflowDefinitionModelSerializer.Serialize(wfDefModel);
-                HttpContext.Session.SetString("WorkflowModel", serialized);
+                serialized = FlowDefinitionModelSerializer.Serialize(wfDefModel);
+                HttpContext.Session.SetString("FlowModel", serialized);
 
                 return Json(ret);
             }
@@ -301,11 +301,11 @@ namespace Coreflow.Web.Controllers
             }
         }
 
-        private static void UpdateCodeCreatorModel(WorkflowDefinitionModel pWfDefModel, Guid? pDestinationAfterId, Guid? pDestContainer, int? pDestSequenceIndex, CodeCreatorModel sourceModel)
+        private static void UpdateCodeCreatorModel(FlowDefinitionModel pWfDefModel, Guid? pDestinationAfterId, Guid? pDestContainer, int? pDestSequenceIndex, CodeCreatorModel sourceModel)
         {
             if (pDestinationAfterId.HasValue) //insert cc after something
             {
-                CodeCreatorModel destModel = WorkflowDefinitionModelIdentifiableHelper.FindIIdentifiable(pWfDefModel, pDestinationAfterId.Value) as CodeCreatorModel;
+                CodeCreatorModel destModel = FlowDefinitionModelIdentifiableHelper.FindIIdentifiable(pWfDefModel, pDestinationAfterId.Value) as CodeCreatorModel;
 
                 List<CodeCreatorModel> codecreators = new List<CodeCreatorModel>();
 
@@ -342,7 +342,7 @@ namespace Coreflow.Web.Controllers
             }
             else if (pDestContainer.HasValue) //insert cc on first entry of an container
             {
-                CodeCreatorModel destContainerModel = WorkflowDefinitionModelIdentifiableHelper.FindIIdentifiable(pWfDefModel, pDestContainer.Value) as CodeCreatorModel;
+                CodeCreatorModel destContainerModel = FlowDefinitionModelIdentifiableHelper.FindIIdentifiable(pWfDefModel, pDestContainer.Value) as CodeCreatorModel;
 
                 if (sourceModel.Parent != null)
                     sourceModel.Parent.CodeCreatorModels.ForEach(l => l.Value.RemoveAll(c => c == sourceModel));
@@ -381,12 +381,12 @@ namespace Coreflow.Web.Controllers
         {
             try
             {
-                string serialized = HttpContext.Session.GetString("WorkflowModel");
-                WorkflowDefinitionModel wfDefModel = WorkflowDefinitionModelSerializer.DeSerialize(serialized);
+                string serialized = HttpContext.Session.GetString("FlowModel");
+                FlowDefinitionModel wfDefModel = FlowDefinitionModelSerializer.DeSerialize(serialized);
 
-                WorkflowDefinition wfDef = WorkflowDefinitionModelMappingHelper.GenerateWorkflowDefinition(wfDefModel);
+                FlowDefinition wfDef = FlowDefinitionModelMappingHelper.GenerateFlowDefinition(wfDefModel);
 
-                WorkflowCode code = wfDef.GenerateWorkflowCode();
+                FlowCode code = wfDef.GenerateFlowCode();
 
                 return Json(new Response(true, code.Code));
             }

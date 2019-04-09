@@ -29,9 +29,9 @@ namespace Coreflow.CodeCreators
             ParentContainerCreator = pParentContainerCreator;
         }
 
-        public abstract void ToSequenceCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer);
+        public abstract void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer);
 
-        public void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer)
+        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer)
         {
             pBuilderContext.UpdateCurrentSymbols();
 
@@ -45,11 +45,11 @@ namespace Coreflow.CodeCreators
             ToSequenceCode(pBuilderContext, pCodeBuilder, pContainer);
         }
 
-        protected void AddInitializeCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeBuilder)
+        protected void AddInitializeCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder)
         {
             foreach (IVariableCreator varCreator in CodeCreators.First().Select(a => a as IVariableCreator).Where(a => a != null))
             {
-                IVariableCreator existing = WorkflowBuilderHelper.GetVariableCreatorInScope(this, varCreator, c => c.VariableIdentifier == varCreator.VariableIdentifier && pBuilderContext.HasLocalVariableName(c));
+                IVariableCreator existing = FlowBuilderHelper.GetVariableCreatorInScope(this, varCreator, c => c.VariableIdentifier == varCreator.VariableIdentifier && pBuilderContext.HasLocalVariableName(c));
                 if (existing != null)
                 {
                     pBuilderContext.SetLocalVariableName(varCreator, pBuilderContext.GetLocalVariableName(existing));
@@ -60,7 +60,7 @@ namespace Coreflow.CodeCreators
             }
         }
 
-        protected void AddCodeCreatorsCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter)
+        protected void AddCodeCreatorsCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
             if (CodeCreators.Count >= 1)
                 foreach (ICodeCreator c in CodeCreators.First())

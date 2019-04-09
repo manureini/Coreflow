@@ -16,7 +16,7 @@ Auskommentieren durch Rechtsklick
 
 
 
-Ein serialisierter Workflow kann UI Zustände speichern. Der Core kann diese aber nicht lesen oder verarbeiten
+Ein serialisierter Flow kann UI Zustände speichern. Der Core kann diese aber nicht lesen oder verarbeiten
 
 Sequenz umbenennbar
 
@@ -33,13 +33,13 @@ Core:
 
 Versioning
 
-Workflow Parameter: Keine Reflection weil teuer sondern Dictinary in ICompiledWorkflow
+Flow Parameter: Keine Reflection weil teuer sondern Dictinary in ICompiledFlow
 
 
 
 
 
-Workflow Code von Anfang und Ende nach Innen generieren
+Flow Code von Anfang und Ende nach Innen generieren
 
 
 

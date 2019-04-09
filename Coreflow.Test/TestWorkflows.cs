@@ -7,14 +7,14 @@ using System.Collections.Generic;
 
 namespace Coreflow.Test
 {
-    public static class TestWorkflows
+    public static class TestFlows
     {
-        public static WorkflowDefinition GetTestWorkflow1(Coreflow pCoreflow)
+        public static FlowDefinition GetTestFlow1(Coreflow pCoreflow)
         {
-            WorkflowDefinition wf = pCoreflow.WorkflowDefinitionFactory.Create("test");
+            FlowDefinition wf = pCoreflow.FlowDefinitionFactory.Create("test");
 
-            wf.Arguments.Add(new WorkflowArguments("pInput", typeof(string), VariableDirection.In, "\"DefaultInputValue\""));
-            wf.Arguments.Add(new WorkflowArguments("Result", typeof(int), VariableDirection.Out));
+            wf.Arguments.Add(new FlowArguments("pInput", typeof(string), VariableDirection.In, "\"DefaultInputValue\""));
+            wf.Arguments.Add(new FlowArguments("Result", typeof(int), VariableDirection.Out));
 
             SequenceCreator sequence = new SequenceCreator(null);
 

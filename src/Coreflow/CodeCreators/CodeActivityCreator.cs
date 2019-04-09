@@ -22,7 +22,7 @@ namespace Coreflow.CodeCreators
         {
             get
             {
-                var attr = typeof(T).GetCustomAttribute<UiDesignAttribute>();
+                var attr = typeof(T).GetCustomAttribute<DisplayMetaAttribute>();
 
                 if (attr != null && !string.IsNullOrWhiteSpace(attr.DisplayName))
                     return attr.DisplayName;
@@ -35,16 +35,16 @@ namespace Coreflow.CodeCreators
         {
             get
             {
-                var attr = typeof(T).GetCustomAttribute<UiDesignAttribute>();
+                var attr = typeof(T).GetCustomAttribute<DisplayMetaAttribute>();
 
                 if (attr != null && !string.IsNullOrWhiteSpace(attr.Icon))
                     return attr.Icon;
 
-                return UiDesignAttribute.DEFAULT_ICON;
+                return DisplayMetaAttribute.DEFAULT_ICON;
             }
         }
 
-        public void Initialize(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter)
+        public void Initialize(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
             pCodeWriter.WriteIdentifierTagTop(this);
 
@@ -59,7 +59,7 @@ namespace Coreflow.CodeCreators
             }
         }
 
-        public void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer)
+        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer)
         {
             pBuilderContext.UpdateCurrentSymbols();
 
@@ -99,7 +99,7 @@ namespace Coreflow.CodeCreators
                 Direction = pParameterInfo.IsOut ? VariableDirection.Out : VariableDirection.In
             };
 
-            var attr = pParameterInfo.GetCustomAttribute<UiDesignAttribute>();
+            var attr = pParameterInfo.GetCustomAttribute<DisplayMetaAttribute>();
             ret.DisplayName = attr.DisplayName;
 
             return ret;

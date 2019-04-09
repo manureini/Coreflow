@@ -17,11 +17,11 @@ namespace Coreflow.Test
         }
 
         [TestMethod]
-        public void SerializeTestWorkflow1()
+        public void SerializeTestFlow1()
         {
-            WorkflowDefinition wfdef = TestWorkflows.GetTestWorkflow1(mCoreflow);
+            FlowDefinition wfdef = TestFlows.GetTestFlow1(mCoreflow);
 
-            string xml = WorkflowDefinitionSerializer.Serialize(wfdef);
+            string xml = FlowDefinitionSerializer.Serialize(wfdef);
 
             Assert.IsNotNull(xml);
             Assert.IsTrue(xml.Length > 10);
@@ -29,16 +29,16 @@ namespace Coreflow.Test
 
 
         [TestMethod]
-        public void DeserializeTestWorkflow1()
+        public void DeserializeTestFlow1()
         {
-            WorkflowDefinition wfdef = TestWorkflows.GetTestWorkflow1(mCoreflow);
+            FlowDefinition wfdef = TestFlows.GetTestFlow1(mCoreflow);
 
-            string xml = WorkflowDefinitionSerializer.Serialize(wfdef);
+            string xml = FlowDefinitionSerializer.Serialize(wfdef);
 
             Assert.IsNotNull(xml);
             Assert.IsTrue(xml.Length > 10);
 
-            WorkflowDefinition deserializedWfDef = WorkflowDefinitionSerializer.DeSerialize(xml, mCoreflow);
+            FlowDefinition deserializedWfDef = FlowDefinitionSerializer.DeSerialize(xml, mCoreflow);
 
             Assert.IsNotNull(deserializedWfDef.Coreflow);
             Assert.AreEqual(wfdef.Identifier, deserializedWfDef.Identifier);

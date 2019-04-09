@@ -15,7 +15,7 @@ namespace Coreflow.CodeCreators
 
         public override string Name => "Sequence";
 
-        public override void ToSequenceCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer)
+        public override void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer)
         {
             AddInitializeCode(pBuilderContext, pCodeWriter);
             AddCodeCreatorsCode(pBuilderContext, pCodeWriter);

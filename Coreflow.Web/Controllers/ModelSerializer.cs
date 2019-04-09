@@ -10,23 +10,23 @@ using System.Xml.Linq;
 
 namespace Coreflow.Web.Controllers
 {
-    public static class WorkflowDefinitionModelSerializer
+    public static class FlowDefinitionModelSerializer
     {
         private static IExtendedXmlSerializer Serializer = new ConfigurationContainer()
                                              .Emit(EmitBehaviors.Always)
-                                             .CustomSerializer<WorkflowArguments, WorkflowArgumentSerializer>()
+                                             .CustomSerializer<FlowArguments, FlowArgumentSerializer>()
                                              .CustomSerializer<CodeCreatorParameterModel, CodeCreatorParameterModelSerializer>()
                                              .EnableReferences()
                                              .Create();
 
-        public static string Serialize(WorkflowDefinitionModel pWorkflowDefinition)
+        public static string Serialize(FlowDefinitionModel pFlowDefinition)
         {
-            return Serializer.Serialize(new XmlWriterSettings() { Indent = true }, pWorkflowDefinition);
+            return Serializer.Serialize(new XmlWriterSettings() { Indent = true }, pFlowDefinition);
         }
 
-        public static WorkflowDefinitionModel DeSerialize(string pWorkflowDefinition)
+        public static FlowDefinitionModel DeSerialize(string pFlowDefinition)
         {
-            return Serializer.Deserialize<WorkflowDefinitionModel>(pWorkflowDefinition);
+            return Serializer.Deserialize<FlowDefinitionModel>(pFlowDefinition);
         }
     }
 

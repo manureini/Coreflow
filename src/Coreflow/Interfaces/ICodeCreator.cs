@@ -5,6 +5,6 @@ namespace Coreflow
 {
     public interface ICodeCreator : IIdentifiable
     {
-        void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pParentContainer = null);
+        void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pParentContainer = null);
     }
 }

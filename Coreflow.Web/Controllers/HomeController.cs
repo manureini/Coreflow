@@ -23,13 +23,13 @@ namespace Coreflow.Web.Controllers
 
         public IActionResult Create()
         {
-            WorkflowDefinition wfdef = Program.CoreflowInstance.WorkflowDefinitionFactory.Create("new");
+            FlowDefinition wfdef = Program.CoreflowInstance.FlowDefinitionFactory.Create("new");
 
-            wfdef.Arguments.Add(new WorkflowArguments("test", typeof(string), VariableDirection.In, ""));
-            wfdef.Arguments.Add(new WorkflowArguments("result", typeof(string), VariableDirection.Out, ""));
+            wfdef.Arguments.Add(new FlowArguments("test", typeof(string), VariableDirection.In, ""));
+            wfdef.Arguments.Add(new FlowArguments("result", typeof(string), VariableDirection.Out, ""));
 
-            Program.CoreflowInstance.WorkflowDefinitionStorage.Remove(wfdef.Identifier);
-            Program.CoreflowInstance.WorkflowDefinitionStorage.Add(wfdef);
+            Program.CoreflowInstance.FlowDefinitionStorage.Remove(wfdef.Identifier);
+            Program.CoreflowInstance.FlowDefinitionStorage.Add(wfdef);
 
             return RedirectToAction(nameof(Editor), new { id = wfdef.Identifier });
         }
@@ -37,31 +37,31 @@ namespace Coreflow.Web.Controllers
         public IActionResult Editor(Guid id)
         {
             if (id == Guid.Empty)
-                return RedirectToAction(nameof(Workflows));
+                return RedirectToAction(nameof(Flows));
 
-            WorkflowDefinition wfDef = Program.CoreflowInstance.WorkflowDefinitionStorage.GetWorkflowDefinitions().FirstOrDefault(wf => wf.Identifier == id);
+            FlowDefinition wfDef = Program.CoreflowInstance.FlowDefinitionStorage.GetFlowDefinitions().FirstOrDefault(wf => wf.Identifier == id);
 
-            //   WorkflowDefinition wfDef = Program.CoreflowInstance.WorkflowDefinitionFactory.Create("test");
+            //   FlowDefinition wfDef = Program.CoreflowInstance.FlowDefinitionFactory.Create("test");
 
-            var workflowDefinitionModel = WorkflowDefinitionModelMappingHelper.GenerateModel(wfDef);
+            var FlowDefinitionModel = FlowDefinitionModelMappingHelper.GenerateModel(wfDef);
 
-            string serialized = WorkflowDefinitionModelSerializer.Serialize(workflowDefinitionModel);
+            string serialized = FlowDefinitionModelSerializer.Serialize(FlowDefinitionModel);
 
-            HttpContext.Session.SetString("WorkflowModel", serialized);
+            HttpContext.Session.SetString("FlowModel", serialized);
 
-            return View(workflowDefinitionModel);
+            return View(FlowDefinitionModel);
         }
 
-        public IActionResult Workflows()
+        public IActionResult Flows()
         {
-            var workflows = Program.CoreflowInstance.WorkflowDefinitionStorage.GetWorkflowDefinitions();
-            return View(workflows);
+            var Flows = Program.CoreflowInstance.FlowDefinitionStorage.GetFlowDefinitions();
+            return View(Flows);
         }
 
-        public IActionResult DeleteWorkflow(Guid id)
+        public IActionResult DeleteFlow(Guid id)
         {
-            Program.CoreflowInstance.WorkflowDefinitionStorage.Remove(id);
-            return RedirectToAction(nameof(Workflows));
+            Program.CoreflowInstance.FlowDefinitionStorage.Remove(id);
+            return RedirectToAction(nameof(Flows));
         }
 
         public IActionResult Privacy()

@@ -13,15 +13,15 @@ namespace Coreflow
     {
         public CodeCreatorStorage CodeCreatorStorage { get; }
 
-        public WorkflowDefinitionFactory WorkflowDefinitionFactory { get; }
+        public FlowDefinitionFactory FlowDefinitionFactory { get; }
 
-        public IWorkflowDefinitionStorage WorkflowDefinitionStorage { get; }
+        public IFlowDefinitionStorage FlowDefinitionStorage { get; }
 
-        public Coreflow(IWorkflowDefinitionStorage pWorkflowDefinitionStorage)
+        public Coreflow(IFlowDefinitionStorage pFlowDefinitionStorage)
         {
-            WorkflowDefinitionStorage = pWorkflowDefinitionStorage;
+            FlowDefinitionStorage = pFlowDefinitionStorage;
             CodeCreatorStorage = new CodeCreatorStorage(this);
-            WorkflowDefinitionFactory = new WorkflowDefinitionFactory(this);
+            FlowDefinitionFactory = new FlowDefinitionFactory(this);
 
             CodeCreatorStorage.AddCodeCreator(new CodeActivityCreator<ConsoleWriteLineActivity>());
             CodeCreatorStorage.AddCodeCreator(new ForLoopCreator());
@@ -36,7 +36,7 @@ namespace Coreflow
 
         public void Dispose()
         {
-            WorkflowDefinitionStorage.Dispose();
+            FlowDefinitionStorage.Dispose();
         }
     }
 }

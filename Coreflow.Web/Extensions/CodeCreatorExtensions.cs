@@ -28,7 +28,7 @@ namespace Coreflow.Web.Extensions
                 throw new NotSupportedException($"Icon '{desingable.Icon}' is not supported");
             }
 
-            return "fa " + UiDesignAttribute.DEFAULT_ICON;
+            return "fa " + DisplayMetaAttribute.DEFAULT_ICON;
         }
     }
 }

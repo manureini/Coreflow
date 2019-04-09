@@ -14,7 +14,7 @@ namespace Coreflow
                 {"pInput", "testinput!!!!!!!!!!!!!!!!!!!!!" }
             };
 
-            //WorkflowInvoker.Invoke(wf, arguments);
+            //FlowInvoker.Invoke(wf, arguments);
 
             Thread.Sleep(3000);
         }

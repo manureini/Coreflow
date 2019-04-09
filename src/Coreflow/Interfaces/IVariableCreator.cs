@@ -4,7 +4,7 @@ namespace Coreflow.Interfaces
 {
     public interface IVariableCreator : ICodeCreator, IIdentifiable
     {
-        void Initialize(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter);
+        void Initialize(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter);
 
         string VariableIdentifier { get; }
     }

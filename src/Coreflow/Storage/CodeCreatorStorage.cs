@@ -51,7 +51,7 @@ namespace Coreflow.Storage
 
         private void AddNamespaceToFactory(Type pType)
         {
-            mCoreflow.WorkflowDefinitionFactory.AddDefaultReferencedNamespace(pType.Namespace);
+            mCoreflow.FlowDefinitionFactory.AddDefaultReferencedNamespace(pType.Namespace);
         }
 
         public void RemoveCodeCreator(Type pType)

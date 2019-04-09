@@ -14,7 +14,7 @@ namespace Coreflow.Web.Controllers
 
         private const string USER_DISPLAY_NAME = "UserDisplayName";
 
-        public static CodeCreatorModel CreateModel(ICodeCreator pCodeCreator, CodeCreatorModel pParent, WorkflowDefinition pWorkflowDefinition)
+        public static CodeCreatorModel CreateModel(ICodeCreator pCodeCreator, CodeCreatorModel pParent, FlowDefinition pFlowDefinition)
         {
             if (pCodeCreator == null)
                 return null;
@@ -28,9 +28,9 @@ namespace Coreflow.Web.Controllers
                 Parent = pParent
             };
 
-            if (pWorkflowDefinition != null && pWorkflowDefinition.Metadata != null && pWorkflowDefinition.Metadata.ContainsKey(ret.Identifier))
+            if (pFlowDefinition != null && pFlowDefinition.Metadata != null && pFlowDefinition.Metadata.ContainsKey(ret.Identifier))
             {
-                var metadata = pWorkflowDefinition.Metadata[ret.Identifier];
+                var metadata = pFlowDefinition.Metadata[ret.Identifier];
 
                 if (metadata.ContainsKey(USER_DISPLAY_NAME))
                     ret.UserDisplayName = metadata[USER_DISPLAY_NAME].ToString();
@@ -70,7 +70,7 @@ namespace Coreflow.Web.Controllers
                     List<CodeCreatorModel> models = new List<CodeCreatorModel>();
 
                     foreach (ICodeCreator cc in listcc)
-                        models.Add(CreateModel(cc, ret, pWorkflowDefinition));
+                        models.Add(CreateModel(cc, ret, pFlowDefinition));
 
                     ret.CodeCreatorModels.Add(i, models);
                     i++;
@@ -82,7 +82,7 @@ namespace Coreflow.Web.Controllers
             return ret;
         }
 
-        public static ICodeCreator CreateCode(CodeCreatorModel pCodeCreatorModel, WorkflowDefinition pWorkflowDefinition)
+        public static ICodeCreator CreateCode(CodeCreatorModel pCodeCreatorModel, FlowDefinition pFlowDefinition)
         {
             if (pCodeCreatorModel == null)
                 return null;
@@ -92,18 +92,18 @@ namespace Coreflow.Web.Controllers
 
             ret.Identifier = pCodeCreatorModel.Identifier;
 
-            if (pWorkflowDefinition != null && pCodeCreatorModel.UserDisplayName != null)
+            if (pFlowDefinition != null && pCodeCreatorModel.UserDisplayName != null)
             {
                 //TODO helper
                 //TODO init here?
-                if (pWorkflowDefinition.Metadata == null)
-                    pWorkflowDefinition.Metadata = new Dictionary<Guid, Dictionary<string, object>>();
+                if (pFlowDefinition.Metadata == null)
+                    pFlowDefinition.Metadata = new Dictionary<Guid, Dictionary<string, object>>();
 
-                if (!pWorkflowDefinition.Metadata.ContainsKey(pCodeCreatorModel.Identifier))
-                    pWorkflowDefinition.Metadata.Add(pCodeCreatorModel.Identifier, new Dictionary<string, object>());
+                if (!pFlowDefinition.Metadata.ContainsKey(pCodeCreatorModel.Identifier))
+                    pFlowDefinition.Metadata.Add(pCodeCreatorModel.Identifier, new Dictionary<string, object>());
 
-                pWorkflowDefinition.Metadata[ret.Identifier].Remove(USER_DISPLAY_NAME);
-                pWorkflowDefinition.Metadata[ret.Identifier].Add(USER_DISPLAY_NAME, pCodeCreatorModel.UserDisplayName);
+                pFlowDefinition.Metadata[ret.Identifier].Remove(USER_DISPLAY_NAME);
+                pFlowDefinition.Metadata[ret.Identifier].Add(USER_DISPLAY_NAME, pCodeCreatorModel.UserDisplayName);
             }
 
             if (ret is IParametrized parametrized)
@@ -153,7 +153,7 @@ namespace Coreflow.Web.Controllers
                         List<ICodeCreator> list = new List<ICodeCreator>();
 
                         foreach (CodeCreatorModel ccmodel in ccModels.Value)
-                            list.Add(CreateCode(ccmodel, pWorkflowDefinition));
+                            list.Add(CreateCode(ccmodel, pFlowDefinition));
 
                         container.CodeCreators.Add(list);
                     }

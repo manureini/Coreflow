@@ -1,4 +1,4 @@
-﻿@model WorkflowDefinitionModel
+﻿@model FlowDefinitionModel
 @*
     @{
         ViewData["Title"] = "About";
@@ -21,7 +21,7 @@
     <script type="text/javascript" src="@Url.Content("/lib/monaco-editor/min/vs/editor/editor.main.js")"></script>
 
     <script type="text/javascript" src="@Url.Content("/js/SubmitHelper.js")"></script>
-    <script type="text/javascript" src="@Url.Content("/js/Workflow.js")"></script>
+    <script type="text/javascript" src="@Url.Content("/js/Flow.js")"></script>
 }
 
 
@@ -156,7 +156,7 @@
     </div>
 
     <div id="control-panel" class="panel border-panel">
-        <input type="button" id="RunWorkflowbtn" value="Run Workflow">
+        <input type="button" id="RunFlowbtn" value="Run Flow">
 
         <button type="button" id="btnShowGeneratedCode" class="btn btn-primary">
             Show generated code

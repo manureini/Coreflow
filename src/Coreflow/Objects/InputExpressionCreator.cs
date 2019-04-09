@@ -32,11 +32,11 @@ namespace Coreflow.Interfaces
             Identifier = pIdentifier;
         }
 
-        public void Initialize(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodeWriter)
+        public void Initialize(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
         }
 
-        public void ToCode(WorkflowBuilderContext pBuilderContext, WorkflowCodeWriter pCodewriter, ICodeCreatorContainerCreator pContainer = null)
+        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodewriter, ICodeCreatorContainerCreator pContainer = null)
         {
             pCodewriter.WriteIdentifierTagTop(this);
 

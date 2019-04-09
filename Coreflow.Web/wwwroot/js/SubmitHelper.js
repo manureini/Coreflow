@@ -61,13 +61,13 @@ function SubmitUserDisplayNameChanged(creatorGuid, newValue) {
 }
 
 
-function SubmitWorkflowReferencedAssemblyChanged(pAddValue, pValue) {
+function SubmitFlowReferencedAssemblyChanged(pAddValue, pValue) {
     var postData = {};
     postData["AddValue"] = pAddValue;
     postData["Value"] = pValue;
 
     $.ajax({
-        url: "Action/WorkflowReferencedAssemblyChanged",
+        url: "Action/FlowReferencedAssemblyChanged",
         type: 'post',
         data: JSON.stringify(postData),
         contentType: "application/json",
@@ -83,13 +83,13 @@ function SubmitWorkflowReferencedAssemblyChanged(pAddValue, pValue) {
     });
 }
 
-function SubmitWorkflowReferencedNamespaceChanged(pAddValue, pValue) {
+function SubmitFlowReferencedNamespaceChanged(pAddValue, pValue) {
     var postData = {};
     postData["AddValue"] = pAddValue;
     postData["Value"] = pValue;
 
     $.ajax({
-        url: "Action/WorkflowReferencedNamespaceChanged",
+        url: "Action/FlowReferencedNamespaceChanged",
         type: 'post',
         data: JSON.stringify(postData),
         contentType: "application/json",
@@ -186,12 +186,12 @@ function SubmitDeleteCodeCreator(id) {
     });
 }
 
-function SubmitRunWorkflow() {
+function SubmitRunFlow() {
 
     var postData = {};
 
     $.ajax({
-        url: "Action/RunWorkflow",
+        url: "Action/RunFlow",
         type: 'post',
         data: JSON.stringify(postData),
         contentType: "application/json",
