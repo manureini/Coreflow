@@ -20,6 +20,14 @@ namespace Coreflow.CodeCreators
 
         public int SequenceCount { get; } = 2;
 
+        protected string RemoveLabelAndCloseBracket
+        {
+            get
+            {
+                return "/* remove " + Identifier + "*/ }";
+            }
+        }
+
         public AbstractDualSequenceCreator()
         {
         }
@@ -39,14 +47,14 @@ namespace Coreflow.CodeCreators
             pCodeBuilder.WriteIdentifierTagTop(this);
             pCodeBuilder.WriteContainerTagTop(this);
 
-
             pCodeBuilder.AppendLineTop("{");
             pCodeBuilder.AppendLineBottom("}");
 
+            AddInitializeCode(pBuilderContext, pCodeBuilder);
             ToSequenceCode(pBuilderContext, pCodeBuilder, pContainer);
         }
 
-        protected void AddInitializeCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder)
+        protected virtual void AddInitializeCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
             foreach (IVariableCreator varCreator in CodeCreators.SelectMany(a => a).Select(a => a as IVariableCreator).Where(a => a != null))
             {
@@ -57,26 +65,39 @@ namespace Coreflow.CodeCreators
                     continue;
                 }
 
-                varCreator.Initialize(pBuilderContext, pCodeBuilder);
+                varCreator.Initialize(pBuilderContext, pCodeWriter);
             }
         }
 
         protected void AddFirstCodeCreatorsCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
+            pCodeWriter.AppendLineTop("{");
+
+            pCodeWriter.AppendLineBottom(RemoveLabelAndCloseBracket);
+            pCodeWriter.AppendLineBottom();
+
             if (CodeCreators.Count >= 1)
                 foreach (ICodeCreator c in CodeCreators.First())
                 {
                     c.ToCode(pBuilderContext, pCodeWriter, this);
                 }
+
+            pCodeWriter.AppendLineTop("}");
         }
 
         protected void AddSecondCodeCreatorsCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
+            pCodeWriter.AppendLineTop("{");
+
+            pCodeWriter.AppendLineBottom("}");
+
+            pCodeWriter.ReplaceBottom(RemoveLabelAndCloseBracket, "");
+
             if (CodeCreators.Count >= 2)
                 foreach (ICodeCreator c in CodeCreators.Skip(1).First())
-            {
-                c.ToCode(pBuilderContext, pCodeWriter, this);
-            }
+                {
+                    c.ToCode(pBuilderContext, pCodeWriter, this);
+                }
         }
     }
 }

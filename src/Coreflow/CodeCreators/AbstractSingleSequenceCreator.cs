@@ -33,19 +33,22 @@ namespace Coreflow.CodeCreators
 
         public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer)
         {
+            if (CodeCreators.Count > 1)
+                throw new Exception("Inconsistent Data");
+
             pBuilderContext.UpdateCurrentSymbols();
 
             pCodeBuilder.WriteIdentifierTagTop(this);
             pCodeBuilder.WriteContainerTagTop(this);
 
             pCodeBuilder.AppendLineTop("{");
-
             pCodeBuilder.AppendLineBottom("}");
 
+            AddInitializeCode(pBuilderContext, pCodeBuilder);
             ToSequenceCode(pBuilderContext, pCodeBuilder, pContainer);
         }
 
-        protected void AddInitializeCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder)
+        protected virtual void AddInitializeCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder)
         {
             foreach (IVariableCreator varCreator in CodeCreators.First().Select(a => a as IVariableCreator).Where(a => a != null))
             {
@@ -62,6 +65,9 @@ namespace Coreflow.CodeCreators
 
         protected void AddCodeCreatorsCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
+            pCodeWriter.AppendLineTop("{");
+            pCodeWriter.AppendLineBottom("}");
+
             if (CodeCreators.Count >= 1)
                 foreach (ICodeCreator c in CodeCreators.First())
                 {

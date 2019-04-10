@@ -17,7 +17,6 @@ namespace Coreflow.CodeCreators
 
         public override void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer)
         {
-            AddInitializeCode(pBuilderContext, pCodeWriter);
             AddCodeCreatorsCode(pBuilderContext, pCodeWriter);
         }
     }

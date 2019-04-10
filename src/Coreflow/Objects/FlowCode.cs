@@ -8,6 +8,8 @@ namespace Coreflow.Objects
     {
         public string Code { get; set; }
 
+        public string FormattedCode => FlowBuilderHelper.FormatCode(Code);
+
         public IEnumerable<MetadataReference> ReferencedAssemblies { get; set; }
 
         public FlowCompileResult Compile()

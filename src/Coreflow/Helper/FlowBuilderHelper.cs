@@ -1,9 +1,13 @@
 ﻿using Coreflow.Helper;
 using Coreflow.Interfaces;
 using Coreflow.Objects;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Formatting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Coreflow
 {
@@ -122,38 +126,25 @@ namespace Coreflow
             return GetVariableCreatorInInitialScope(pContainer.ParentContainerCreator, pContainer, pFilter);
         }
 
-
-
-        /*
-        public static IVariableCreator GetVariableCreatorInScope(ICodeCreatorContainerCreator pContainer, ICodeCreator pCodeCreator, Func<IVariableCreator, bool> pFilter)
+        public static string FormatCode(string pCode)
         {
-            if (pContainer == null)
-                return null;
+            return FormatCode(FlowCompilerHelper.ParseText(pCode));
+        }
 
-            List<ICodeCreator> ccontainer = pContainer.CodeCreators.FirstOrDefault(
-                cl => cl.Contains(pCodeCreator) ||
-                cl.Select(v => v as IParametrized).Where(v => v != null).Any(c => c.Arguments.Contains(pCodeCreator)));
+        private static string FormatCode(SyntaxTree pSyntaxTree)
+        {
+            var workspace = new AdhocWorkspace();
 
-            IVariableCreator found = ccontainer.Select(v => v as IVariableCreator).Where(v => v != null).FirstOrDefault(pFilter);
-            if (found != null)
-                return found;
+            SyntaxNode formattedNode = Formatter.Format(pSyntaxTree.GetRoot(), workspace);
 
-            var parametrizedCc = ccontainer.Select(v => v as IParametrized).Where(v => v != null);
+            var sb = new StringBuilder();
 
-            foreach (var cc in parametrizedCc)
+            using (var writer = new StringWriter(sb))
             {
-                found = cc.Arguments.Select(a => a as IVariableCreator).Where(v => v != null).FirstOrDefault(pFilter);
-
-                if (found == pCodeCreator)
-                    return null;
-
-                if (found != null)
-                    return found;
+                formattedNode.WriteTo(writer);
             }
 
-            return GetVariableCreatorInScope(pContainer.ParentContainerCreator, pContainer, pFilter);
-        } */
-
-
+            return sb.ToString();
+        }
     }
 }

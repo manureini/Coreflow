@@ -388,7 +388,7 @@ namespace Coreflow.Web.Controllers
 
                 FlowCode code = wfDef.GenerateFlowCode();
 
-                return Json(new Response(true, code.Code));
+                return Json(new Response(true, code.FormattedCode));
             }
             catch (Exception e)
             {

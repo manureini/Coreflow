@@ -22,15 +22,9 @@ namespace Coreflow.CodeCreators
 
         public override void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer)
         {
-            AddInitializeCode(pBuilderContext, pCodeBuilder);
-
             pCodeBuilder.AppendLineTop("if (");
-
             Arguments[0].ToCode(pBuilderContext, pCodeBuilder, pContainer);
-
-            pCodeBuilder.AppendLineTop(") {");
-
-            pCodeBuilder.AppendLineBottom("}");
+            pCodeBuilder.AppendLineTop(")");
 
             AddCodeCreatorsCode(pBuilderContext, pCodeBuilder);
         }

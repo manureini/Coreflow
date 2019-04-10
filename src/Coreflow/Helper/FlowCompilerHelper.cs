@@ -155,23 +155,7 @@ namespace Coreflow.Helper
 
             return CSharpCompilation.Create(assemblyName, options: options);
         }
-
-        private static string FormatCode(SyntaxTree pSyntaxTree)
-        {
-            var workspace = new AdhocWorkspace();
-
-            SyntaxNode formattedNode = Formatter.Format(pSyntaxTree.GetRoot(), workspace);
-
-            var sb = new StringBuilder();
-
-            using (var writer = new StringWriter(sb))
-            {
-                formattedNode.WriteTo(writer);
-            }
-
-            return sb.ToString();
-        }
-
+             
         private static Guid GetIdentifier(string[] pCode, int pLineOfCode)
         {
             for (pLineOfCode--; pLineOfCode > 0; pLineOfCode--)
