@@ -63,9 +63,28 @@ namespace Coreflow.Objects
 
         public void ReplaceBottom(string pOldValue, string pNewValue)
         {
-            string bottom = ToStringBottom();
+            string bottom = mBottomStringBuilder.ToString();
             bottom = bottom.Replace(pOldValue, pNewValue);
             mBottomStringBuilder = new StringBuilder(bottom);
+        }
+
+        public void RemoveBottom(int pIndex)
+        {
+            /*     string bottom = ToStringBottom();
+                 bottom = bottom.Remove(pIndex, mBottomStringBuilder.Length - pIndex);
+                 mBottomStringBuilder = new StringBuilder(bottom);*/
+
+            mBottomStringBuilder.Remove(pIndex, mBottomStringBuilder.Length - pIndex);
+        }
+
+        public int GetButtomIndex()
+        {
+            return mBottomStringBuilder.Length;
+        }
+
+        public string SubstringButtom(int pIndex)
+        {
+            return Reverse(mBottomStringBuilder.ToString().Substring(pIndex));
         }
 
         public string ToStringTop()
@@ -75,12 +94,17 @@ namespace Coreflow.Objects
 
         public string ToStringBottom()
         {
-            return string.Join(Environment.NewLine, mBottomStringBuilder.ToString().Split(Environment.NewLine).Reverse());
+            return Reverse(mBottomStringBuilder.ToString());
+        }
+
+        private string Reverse(string pStr)
+        {
+            return string.Join(Environment.NewLine, pStr.Split(Environment.NewLine).Reverse());
         }
 
         public override string ToString()
         {
-            return ToStringTop() + ToStringBottom();
+            return ToStringTop() + Environment.NewLine + Environment.NewLine + ToStringBottom();
         }
     }
 }

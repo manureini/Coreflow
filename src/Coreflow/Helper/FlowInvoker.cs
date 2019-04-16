@@ -43,7 +43,20 @@ namespace Coreflow.Helper
                         }
                     }
 
+                ret.Instance = new FlowInstance()
+                {
+                    DefinitionIdentifier = pFlow.Identifier,
+                    StartTime = DateTime.UtcNow,
+                    Identifier = Guid.NewGuid()
+                };
+
+                pFlow.Coreflow.FlowInstanceStorage.Add(ret.Instance);
+
                 Flow.Run();
+
+                ret.Instance.EndTime = DateTime.UtcNow;
+                pFlow.Coreflow.FlowInstanceStorage.Update(ret.Instance);
+
                 ret.ExecutedInstance = Flow;
             }
 

@@ -80,18 +80,24 @@ namespace Coreflow.Objects
 
         static SyntaxNode GetNode(SyntaxTree tree, int lineNumber)
         {
-            while (lineNumber > 0)
-            {
-                var lineSpan = tree.GetText().Lines[lineNumber].Span;
-                SyntaxNode ret = tree.GetRoot().DescendantNodes(lineSpan).FirstOrDefault(n => lineSpan.Contains(n.Span));
+            /*  while (lineNumber > 0)
+              {
+                  var lineSpan = tree.GetText().Lines[lineNumber].Span;
 
-                if (ret != null)
-                    return ret;
+                  var ret = tree.GetRoot().FindNode(lineSpan);
 
-                lineNumber--;
-            }
+                  if (ret != null)
+                      return ret;
 
-            return null;
+                  lineNumber--;
+              }
+
+              return null;*/
+
+
+            var lineSpan = tree.GetText().Lines[lineNumber].Span;
+
+            return tree.GetRoot().FindNode(lineSpan);
         }
 
 

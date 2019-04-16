@@ -47,8 +47,8 @@ namespace Coreflow.CodeCreators
             pCodeBuilder.WriteIdentifierTagTop(this);
             pCodeBuilder.WriteContainerTagTop(this);
 
-            pCodeBuilder.AppendLineTop("{");
-            pCodeBuilder.AppendLineBottom("}");
+            pCodeBuilder.AppendLineTop("{ /* DualContainer */");
+            pCodeBuilder.AppendLineBottom("} /* DualContainer */ ");
 
             AddInitializeCode(pBuilderContext, pCodeBuilder);
             ToSequenceCode(pBuilderContext, pCodeBuilder, pContainer);
@@ -56,48 +56,49 @@ namespace Coreflow.CodeCreators
 
         protected virtual void AddInitializeCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
-            foreach (IVariableCreator varCreator in CodeCreators.SelectMany(a => a).Select(a => a as IVariableCreator).Where(a => a != null))
-            {
-                IVariableCreator existing = FlowBuilderHelper.GetVariableCreatorInInitialScope(this, varCreator, c => c.VariableIdentifier == varCreator.VariableIdentifier && pBuilderContext.HasLocalVariableName(c));
-                if (existing != null)
+            if (CodeCreators.Count > 0)
+                foreach (IVariableCreator varCreator in CodeCreators.SelectMany(a => a).Select(a => a as IVariableCreator).Where(a => a != null))
                 {
-                    pBuilderContext.SetLocalVariableName(varCreator, pBuilderContext.GetLocalVariableName(existing));
-                    continue;
-                }
+                    IVariableCreator existing = FlowBuilderHelper.GetVariableCreatorInInitialScope(this, varCreator, c => c.VariableIdentifier == varCreator.VariableIdentifier && pBuilderContext.HasLocalVariableName(c));
+                    if (existing != null)
+                    {
+                        pBuilderContext.SetLocalVariableName(varCreator, pBuilderContext.GetLocalVariableName(existing));
+                        continue;
+                    }
 
-                varCreator.Initialize(pBuilderContext, pCodeWriter);
-            }
+                    varCreator.Initialize(pBuilderContext, pCodeWriter);
+                }
         }
 
         protected void AddFirstCodeCreatorsCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
-            pCodeWriter.AppendLineTop("{");
+            pCodeWriter.AppendLineTop("{ /* first */ ");
 
             pCodeWriter.AppendLineBottom(RemoveLabelAndCloseBracket);
             pCodeWriter.AppendLineBottom();
 
-            if (CodeCreators.Count >= 1)
-                foreach (ICodeCreator c in CodeCreators.First())
+            if (CodeCreators.Count > 0 && CodeCreators[0] != null)
+                foreach (ICodeCreator c in CodeCreators[0])
                 {
-                    c.ToCode(pBuilderContext, pCodeWriter, this);
+                    AbstractSingleSequenceCreator.ProcessCodeCreator(pBuilderContext, pCodeWriter, c, this);
                 }
 
-            pCodeWriter.AppendLineTop("}");
+            pCodeWriter.ReplaceBottom(RemoveLabelAndCloseBracket, "");
+            pCodeWriter.AppendLineTop("} /* first */");
         }
 
         protected void AddSecondCodeCreatorsCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
-            pCodeWriter.AppendLineTop("{");
+            pCodeWriter.AppendLineTop("{ /* second */");
 
-            pCodeWriter.AppendLineBottom("}");
+            pCodeWriter.AppendLineBottom("} /* second */");
 
-            pCodeWriter.ReplaceBottom(RemoveLabelAndCloseBracket, "");
-
-            if (CodeCreators.Count >= 2)
-                foreach (ICodeCreator c in CodeCreators.Skip(1).First())
+            if (CodeCreators.Count > 1 && CodeCreators[1] != null)
+                foreach (ICodeCreator c in CodeCreators[1])
                 {
-                    c.ToCode(pBuilderContext, pCodeWriter, this);
+                    AbstractSingleSequenceCreator.ProcessCodeCreator(pBuilderContext, pCodeWriter, c, this);
                 }
         }
+
     }
 }

@@ -39,7 +39,7 @@ namespace Coreflow.Web.Controllers
             if (id == Guid.Empty)
                 return RedirectToAction(nameof(Flows));
 
-            FlowDefinition wfDef = Program.CoreflowInstance.FlowDefinitionStorage.GetFlowDefinitions().FirstOrDefault(wf => wf.Identifier == id);
+            FlowDefinition wfDef = Program.CoreflowInstance.FlowDefinitionStorage.GetDefinitions().FirstOrDefault(wf => wf.Identifier == id);
 
             //   FlowDefinition wfDef = Program.CoreflowInstance.FlowDefinitionFactory.Create("test");
 
@@ -54,7 +54,13 @@ namespace Coreflow.Web.Controllers
 
         public IActionResult Flows()
         {
-            var Flows = Program.CoreflowInstance.FlowDefinitionStorage.GetFlowDefinitions();
+            var Flows = Program.CoreflowInstance.FlowDefinitionStorage.GetDefinitions();
+            return View(Flows);
+        }
+
+        public IActionResult Instances()
+        {
+            var Flows = Program.CoreflowInstance.FlowInstanceStorage.GetInstances();
             return View(Flows);
         }
 

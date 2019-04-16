@@ -5,5 +5,7 @@
         public FlowCompileResult CompileResult { get; internal set; }
 
         public ICompiledFlow ExecutedInstance { get; internal set; }
+
+        public FlowInstance Instance { get; internal set; }
     }
 }

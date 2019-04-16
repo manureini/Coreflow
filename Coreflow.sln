@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coreflow", "src\Coreflow\Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coreflow.Web", "Coreflow.Web\Coreflow.Web.csproj", "{85B8801A-2959-47E8-B313-7EAC6317F6F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coreflow.Host", "Coreflow.Host\Coreflow.Host.csproj", "{47CFFCD6-A897-47C0-9442-078D9D8453D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coreflow.Host", "Coreflow.Host\Coreflow.Host.csproj", "{47CFFCD6-A897-47C0-9442-078D9D8453D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coreflow.Test", "Coreflow.Test\Coreflow.Test.csproj", "{4F4B4886-DD72-44B1-A69E-9CDFE1773809}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coreflow.Test", "Coreflow.Test\Coreflow.Test.csproj", "{4F4B4886-DD72-44B1-A69E-9CDFE1773809}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

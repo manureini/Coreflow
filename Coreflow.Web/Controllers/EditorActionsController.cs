@@ -27,6 +27,7 @@ namespace Coreflow.Web.Controllers
             FlowDefinitionModel wfDefModel = FlowDefinitionModelSerializer.DeSerialize(serialized);
 
             FlowDefinition wfDef = FlowDefinitionModelMappingHelper.GenerateFlowDefinition(wfDefModel);
+            wfDef.Coreflow = Program.CoreflowInstance;
 
             //TODO
             Program.CoreflowInstance.FlowDefinitionStorage.Remove(wfDef.Identifier);

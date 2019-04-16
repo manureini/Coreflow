@@ -54,6 +54,8 @@ namespace Coreflow
 
             cw.AppendLineTop("namespace DynamicGeneratedFlow" + pFlow.Identifier.ToString().ToVariableName() + " {");
 
+            cw.AppendLineBottom("} /* Namespace */"); //Close Namespace
+
             foreach (string import in pFlow.ReferencedNamespaces.Distinct())
             {
                 cw.AppendLineTop($"using {import};");
@@ -68,6 +70,9 @@ namespace Coreflow
             cw.AppendLineTop("public class wf_" + pFlow.Name.Replace(" ", "") + " : " + nameof(ICompiledFlow) + "  {");
 
             cw.AppendLineTop();
+
+            cw.AppendLineBottom("} /* Class */"); //Close Class
+
 
             cw.AppendLineTop($"public Guid {INSTANCE_ID_PARAMETER_NAME} = Guid.NewGuid();");
 
@@ -90,14 +95,9 @@ namespace Coreflow
             cw.AppendLineTop();
 
             cw.AppendLineTop("public void Run() { ");
-
-
-            cw.AppendLineBottom("}"); //Close Run
-
-            cw.AppendLineBottom("}"); //Close Class
-
-            cw.AppendLineBottom("}"); //Close Namespace
-
+            
+            cw.AppendLineBottom("} /* Run */"); //Close Run
+            
 
             if (pFlow.CodeCreator != null)
             {

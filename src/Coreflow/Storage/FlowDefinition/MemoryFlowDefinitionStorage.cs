@@ -19,7 +19,7 @@ namespace Coreflow.Storage
             mFlowDefinitions = null;
         }
 
-        public IEnumerable<FlowDefinition> GetFlowDefinitions()
+        public IEnumerable<FlowDefinition> GetDefinitions()
         {
             return mFlowDefinitions;
         }

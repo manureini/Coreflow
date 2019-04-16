@@ -17,9 +17,13 @@ namespace Coreflow
 
         public IFlowDefinitionStorage FlowDefinitionStorage { get; }
 
-        public Coreflow(IFlowDefinitionStorage pFlowDefinitionStorage)
+        public IFlowInstanceStorage FlowInstanceStorage { get; }
+
+        public Coreflow(IFlowDefinitionStorage pFlowDefinitionStorage, IFlowInstanceStorage pFlowInstanceStorage)
         {
             FlowDefinitionStorage = pFlowDefinitionStorage;
+            FlowInstanceStorage = pFlowInstanceStorage;
+
             CodeCreatorStorage = new CodeCreatorStorage(this);
             FlowDefinitionFactory = new FlowDefinitionFactory(this);
 

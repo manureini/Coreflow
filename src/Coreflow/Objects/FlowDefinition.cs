@@ -25,7 +25,7 @@ namespace Coreflow
         public Guid Identifier { get; set; } = Guid.NewGuid();
 
         // not serialized
-        public Coreflow Coreflow { get; internal set; }
+        public Coreflow Coreflow { get; set; }
 
         [Obsolete("Only serializer")]
         public FlowDefinition()

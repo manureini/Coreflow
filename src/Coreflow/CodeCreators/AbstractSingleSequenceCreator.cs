@@ -41,8 +41,8 @@ namespace Coreflow.CodeCreators
             pCodeBuilder.WriteIdentifierTagTop(this);
             pCodeBuilder.WriteContainerTagTop(this);
 
-            pCodeBuilder.AppendLineTop("{");
-            pCodeBuilder.AppendLineBottom("}");
+            pCodeBuilder.AppendLineTop("{ /* SingleContainer */");
+            pCodeBuilder.AppendLineBottom("} /* SingleContainer */ ");
 
             AddInitializeCode(pBuilderContext, pCodeBuilder);
             ToSequenceCode(pBuilderContext, pCodeBuilder, pContainer);
@@ -50,29 +50,47 @@ namespace Coreflow.CodeCreators
 
         protected virtual void AddInitializeCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder)
         {
-            foreach (IVariableCreator varCreator in CodeCreators.First().Select(a => a as IVariableCreator).Where(a => a != null))
-            {
-                IVariableCreator existing = FlowBuilderHelper.GetVariableCreatorInInitialScope(this, varCreator, c => c.VariableIdentifier == varCreator.VariableIdentifier && pBuilderContext.HasLocalVariableName(c));
-                if (existing != null)
+            if (CodeCreators.Count > 0)
+                foreach (IVariableCreator varCreator in CodeCreators.First().Select(a => a as IVariableCreator).Where(a => a != null))
                 {
-                    pBuilderContext.SetLocalVariableName(varCreator, pBuilderContext.GetLocalVariableName(existing));
-                    continue;
-                }
+                    IVariableCreator existing = FlowBuilderHelper.GetVariableCreatorInInitialScope(this, varCreator, c => c.VariableIdentifier == varCreator.VariableIdentifier && pBuilderContext.HasLocalVariableName(c));
+                    if (existing != null)
+                    {
+                        pBuilderContext.SetLocalVariableName(varCreator, pBuilderContext.GetLocalVariableName(existing));
+                        continue;
+                    }
 
-                varCreator.Initialize(pBuilderContext, pCodeBuilder);
-            }
+                    varCreator.Initialize(pBuilderContext, pCodeBuilder);
+                }
         }
 
         protected void AddCodeCreatorsCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
             pCodeWriter.AppendLineTop("{");
+
             pCodeWriter.AppendLineBottom("}");
 
-            if (CodeCreators.Count >= 1)
+            if (CodeCreators.Count > 0)
                 foreach (ICodeCreator c in CodeCreators.First())
                 {
-                    c.ToCode(pBuilderContext, pCodeWriter, this);
+                    ProcessCodeCreator(pBuilderContext, pCodeWriter, c, this);
                 }
+        }
+
+        internal static void ProcessCodeCreator(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreator c, ICodeCreatorContainerCreator pContainer)
+        {
+            //   pCodeWriter.AppendLineTop("/* start part */");
+            int index = pCodeWriter.GetButtomIndex();
+
+            c.ToCode(pBuilderContext, pCodeWriter, pContainer);
+
+            string bottomPart = pCodeWriter.SubstringButtom(index);
+
+            pCodeWriter.AppendLineTop(bottomPart);
+            pCodeWriter.AppendLineTop();
+
+            pCodeWriter.RemoveBottom(index);
+            //     pCodeWriter.AppendLineTop("/* end part */");
         }
     }
 }

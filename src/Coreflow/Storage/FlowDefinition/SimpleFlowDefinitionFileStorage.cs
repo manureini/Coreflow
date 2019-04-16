@@ -25,7 +25,7 @@ namespace Coreflow.Storage
             File.WriteAllText(filename, text);
         }
 
-        public IEnumerable<FlowDefinition> GetFlowDefinitions()
+        public IEnumerable<FlowDefinition> GetDefinitions()
         {
             List<FlowDefinition> ret = new List<FlowDefinition>();
 
