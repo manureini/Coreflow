@@ -218,17 +218,15 @@ function SubmitGetGeneratedCode(id) {
         data: JSON.stringify(postData),
         contentType: "application/json",
         success: function (data) {
-
-            var dialog = document.getElementById("dialog");
-
-            dialog.showModal();
+            $('#modalEditor').modal('show');
 
             dialogeditor.setValue(data.message);
-            dialogeditor.layout();
 
+            setTimeout(function () {
+                dialogeditor.layout();
+            }, 200);
 
-            navigator.clipboard.writeText(data.message);
-
+            //navigator.clipboard.writeText(data.message);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             alert(errorThrown);

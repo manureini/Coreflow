@@ -13,22 +13,8 @@ function generateUuid() {
 var dialogeditor;
 var currentParamEditor;
 
-$(this).delay(500).queue(function () {
-    dialogeditor = monaco.editor.create(document.getElementById("dialog-editor"), {
-        value: "",
-        language: 'csharp',
-        theme: 'vs-dark',
-
-        scrollBeyondLastLine: false,
-        scrollbar: {
-            horizontalScrollbarSize: 0,
-            verticalScrollbarSize: 0
-        },
-    });
-});
-
-
 $(function () {
+
 
     $(".codecreator").disableSelection();
     $(".codecreator-space").disableSelection();
@@ -96,19 +82,18 @@ $(function () {
 
                 $(this).dblclick(function () {
 
-                    var dialog = document.getElementById("dialog");
-
-                    dialog.showModal();
-
+                    $('#modalEditor').modal('show');
                     currentParamEditor = editor;
 
                     var text = currentParamEditor.getValue();
 
                     dialogeditor.setValue(text);
-                    dialogeditor.layout();
 
-                    $(document.getElementById("close-dialog")).click(function (e) {
-                        dialog.close();
+                    setTimeout(function () {
+                        dialogeditor.layout();
+                    }, 200);
+
+                    $(document).one("modalEditorClosed", function () {
                         currentParamEditor.setValue(dialogeditor.getValue());
                     });
 
@@ -247,9 +232,28 @@ $(function () {
         $(".tab-content .active").removeClass("active");
         $(".tab-content .show").removeClass("show");
     });
-        
+
+
     $("#btnShowGeneratedCode").click(function () {
         SubmitGetGeneratedCode("todo guid");
+    });
+
+    $("#modalEditor").on('hidden.bs.modal', function () {
+        $(this).trigger("modalEditorClosed");
+    });
+
+    $(this).delay(50).queue(function () {
+        dialogeditor = monaco.editor.create(document.getElementById("dialog-editor"), {
+            value: "",
+            language: 'csharp',
+            theme: 'vs-dark',
+
+            scrollBeyondLastLine: false,
+            scrollbar: {
+                horizontalScrollbarSize: 0,
+                verticalScrollbarSize: 0
+            },
+        });
     });
 });
 
@@ -288,12 +292,12 @@ function createDropSpace(event, ui, selected) {
     $(".codecreator")
         .not(selected)  //can't add on it's own
         .not($(selected).prev(".codecreator")) //can't add one before
-      /*  .filter(function (i, e) {
-            return $(e).parent().parent().hasClass("codecreator-container"); // only possible if parent is codecreator container
-        })*/
+        /*  .filter(function (i, e) {
+              return $(e).parent().parent().hasClass("codecreator-container"); // only possible if parent is codecreator container
+          })*/
         .filter(function (i, e) {
             return !$(e).parent().hasId("main");
-        })   
+        })
         .filter(function (i, e) {
             return !$(e).hasClass("ui-draggable-dragging") && !$(e).parents().hasClass("ui-draggable-dragging"); // no dropspace inside currently dragging div
         })
@@ -301,8 +305,8 @@ function createDropSpace(event, ui, selected) {
             return !$(e).hasClass("old-position") && !$(e).parents().hasClass("old-position"); // no dropspace inside old position div
         })
         .after(GetCodeCreatorSpaceHtml());
-    
-  
+
+
     //no childrens are in code container yet
     $("#main .codecreator-container-start")
         .filter(function (i, e) {
@@ -321,7 +325,7 @@ function createDropSpace(event, ui, selected) {
     if ($("#main").children().length == 0) {
         $("#main").append(GetCodeCreatorSpaceHtml());
     }
-  
+
 
     SetDroppable($(".codecreator-space"));
 }
@@ -349,9 +353,7 @@ function SetDraggable(element) {
 
             var y = $(this).offset().top;
             oldScrollPosition = $(document).scrollTop();
-
-            //    var oldScreenPosition = $(this).offset().top - $(document).scrollTop();
-
+            
             $("#main").css("padding-bottom", "100vh");
             $("#center-box").hide();
 
@@ -376,32 +378,12 @@ function SetDraggable(element) {
             //This is a workaround for chrome. It scrolls sometimes 20px wrong. Is there a bug with margin: 20px?
             $('html, body').animate({
                 scrollTop: (oldScrollPosition + yOffsetChanged)
-            }, 2);
-
-
-            /*
-            var element = $(this);
-
-            //This is a workaround for chrome. It scrolls sometimes 20px wrong. Is there a bug with margin: 20px?
-            setTimeout(function () {
-
-                var newScreenPosition = element.offset().top - $(document).scrollTop();
-                var wrongScrolled = oldScreenPosition - newScreenPosition;
-                if (wrongScrolled != 0) {
-                    console.log("Fix wrong scrolled: " + wrongScrolled);
-
-                    $('html, body').animate({
-                        scrollTop: ($(document).scrollTop() - wrongScrolled)
-                    }, 1);
-                }
-
-            }, 3);*/
+            }, 2);    
         },
 
         drag: function (event, ui) {
             ui.position.top += offsetY;
             ui.position.left += offsetX;
-
         },
 
         cursor: "grabbing",
