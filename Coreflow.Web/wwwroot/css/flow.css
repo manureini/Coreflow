@@ -205,8 +205,8 @@ body, .panel, .table {
 
 #hidden-span {
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     white-space: nowrap;
     overflow: hidden;
     width: 1px;
