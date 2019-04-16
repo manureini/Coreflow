@@ -70,10 +70,6 @@ namespace Coreflow.Objects
 
         public void RemoveBottom(int pIndex)
         {
-            /*     string bottom = ToStringBottom();
-                 bottom = bottom.Remove(pIndex, mBottomStringBuilder.Length - pIndex);
-                 mBottomStringBuilder = new StringBuilder(bottom);*/
-
             mBottomStringBuilder.Remove(pIndex, mBottomStringBuilder.Length - pIndex);
         }
 
@@ -104,7 +100,7 @@ namespace Coreflow.Objects
 
         public override string ToString()
         {
-            return ToStringTop() + Environment.NewLine + Environment.NewLine + ToStringBottom();
+            return ToStringTop() + Environment.NewLine + "/* !!! Center !!!*/" + Environment.NewLine + ToStringBottom();
         }
     }
 }
