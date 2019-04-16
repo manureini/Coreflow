@@ -100,7 +100,7 @@ namespace Coreflow.Objects
 
         public override string ToString()
         {
-            return ToStringTop() + Environment.NewLine + "/* !!! Center !!!*/" + Environment.NewLine + ToStringBottom();
+            return ToStringTop() + Environment.NewLine + "/* !!! --------------------------------------------------------------- !!!*/" + Environment.NewLine + ToStringBottom();
         }
     }
 }
