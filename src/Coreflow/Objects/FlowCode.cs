@@ -12,6 +12,8 @@ namespace Coreflow.Objects
 
         public IEnumerable<MetadataReference> ReferencedAssemblies { get; set; }
 
+        public FlowDefinition Definition { get; set; }
+
         public FlowCompileResult Compile()
         {
             return FlowCompilerHelper.CompileFlowCode(this);

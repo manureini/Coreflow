@@ -25,9 +25,6 @@ namespace Coreflow.Web.Controllers
         {
             FlowDefinition wfdef = Program.CoreflowInstance.FlowDefinitionFactory.Create("new");
 
-            wfdef.Arguments.Add(new FlowArguments("test", typeof(string), VariableDirection.In, ""));
-            wfdef.Arguments.Add(new FlowArguments("result", typeof(string), VariableDirection.Out, ""));
-
             Program.CoreflowInstance.FlowDefinitionStorage.Remove(wfdef.Identifier);
             Program.CoreflowInstance.FlowDefinitionStorage.Add(wfdef);
 
@@ -40,8 +37,6 @@ namespace Coreflow.Web.Controllers
                 return RedirectToAction(nameof(Flows));
 
             FlowDefinition wfDef = Program.CoreflowInstance.FlowDefinitionStorage.GetDefinitions().FirstOrDefault(wf => wf.Identifier == id);
-
-            //   FlowDefinition wfDef = Program.CoreflowInstance.FlowDefinitionFactory.Create("test");
 
             var FlowDefinitionModel = FlowDefinitionModelMappingHelper.GenerateModel(wfDef);
 

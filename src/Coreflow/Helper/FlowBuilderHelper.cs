@@ -36,13 +36,14 @@ namespace Coreflow
             }
         }
 
-        public static FlowCode GenerateFlowCode(FlowDefinition pFlow)
+        public static FlowCode GenerateFlowCode(FlowDefinition pFlowDefinition)
         {
             FlowCode ret = new FlowCode();
+            ret.Definition = pFlowDefinition;
 
-            SetParentContainer(pFlow.CodeCreator);
+            SetParentContainer(pFlowDefinition.CodeCreator);
 
-            var wfReferencesDict = ReferenceHelper.GetMetadataReferences(pFlow);
+            var wfReferencesDict = ReferenceHelper.GetMetadataReferences(pFlowDefinition);
 
             ret.ReferencedAssemblies = wfReferencesDict.Values;
 
@@ -52,22 +53,22 @@ namespace Coreflow
             FlowBuilderContext context = new FlowBuilderContext(cw, ret.ReferencedAssemblies.ToList());
 
 
-            cw.AppendLineTop("namespace DynamicGeneratedFlow" + pFlow.Identifier.ToString().ToVariableName() + " {");
+            cw.AppendLineTop("namespace DynamicGeneratedFlow" + pFlowDefinition.Identifier.ToString().ToVariableName() + " {");
 
             cw.AppendLineBottom("} /* Namespace */"); //Close Namespace
 
-            foreach (string import in pFlow.ReferencedNamespaces.Distinct())
+            foreach (string import in pFlowDefinition.ReferencedNamespaces.Distinct())
             {
                 cw.AppendLineTop($"using {import};");
             }
 
             cw.AppendLineTop();
 
-            cw.WriteIdentifierTagTop(pFlow);
-            cw.WriteContainerTagTop(pFlow);
+            cw.WriteIdentifierTagTop(pFlowDefinition);
+            cw.WriteContainerTagTop(pFlowDefinition);
 
             //Currently idk which letters needs an escape
-            cw.AppendLineTop("public class wf_" + pFlow.Name.Replace(" ", "") + " : " + nameof(ICompiledFlow) + "  {");
+            cw.AppendLineTop("public class wf_" + pFlowDefinition.Name.Replace(" ", "") + " : " + nameof(ICompiledFlow) + "  {");
 
             cw.AppendLineTop();
 
@@ -78,8 +79,8 @@ namespace Coreflow
 
             cw.AppendLineTop();
 
-            if (pFlow.Arguments != null)
-                foreach (FlowArguments parameter in pFlow.Arguments)
+            if (pFlowDefinition.Arguments != null)
+                foreach (FlowArguments parameter in pFlowDefinition.Arguments)
                 {
                     if (!wfReferencesDict.ContainsKey(parameter.Type.Assembly))
                         throw new ArgumentException($"Flow has parameter with type {parameter.Type}, but does not reference assembly {parameter.Type.Assembly.FullName}");
@@ -92,19 +93,53 @@ namespace Coreflow
                     cw.AppendLineTop($"public {parameter.Type.FullName} {parameter.Name} = {value};");
                 }
 
+
+
+            cw.AppendLineTop();
+
+
+            cw.AppendLineTop("public void SetArguments(IDictionary<string, object> pArguments) {");
+
+            if (pFlowDefinition.Arguments != null)
+                foreach (FlowArguments arg in pFlowDefinition.Arguments)
+                {
+                    cw.AppendLineTop("if (pArguments.ContainsKey(\"" + arg.Name + "\"))  { " + arg.Name + " = (" + arg.Type.FullName + ")pArguments[\"" + arg.Name + "\"];  }");
+                }
+
+            cw.AppendLineTop("}");
+
+            cw.AppendLineTop();
+
+
+            cw.AppendLineTop("public IDictionary<string, object> GetArguments() {");
+            cw.AppendLineTop("Dictionary<string, object> ret = new Dictionary<string, object>();");
+
+            if (pFlowDefinition.Arguments != null)
+                foreach (FlowArguments arg in pFlowDefinition.Arguments)
+                {
+                    cw.AppendLineTop("ret.Add(\"" + arg.Name + "\", " + arg.Name + ");");
+                }
+
+            cw.AppendLineTop("return ret;");
+            cw.AppendLineTop("}");
+
+            cw.AppendLineTop();
+
+            cw.AppendLineTop("Guid ICompiledFlow.InstanceId => InstanceId;");
+
             cw.AppendLineTop();
 
             cw.AppendLineTop("public void Run() { ");
-            
-            cw.AppendLineBottom("} /* Run */"); //Close Run
-            
 
-            if (pFlow.CodeCreator != null)
+            cw.AppendLineBottom("} /* Run */"); //Close Run
+
+
+            if (pFlowDefinition.CodeCreator != null)
             {
-                if (pFlow.CodeCreator is IVariableCreator ccv)
+                if (pFlowDefinition.CodeCreator is IVariableCreator ccv)
                     ccv.Initialize(context, cw);
 
-                pFlow.CodeCreator.ToCode(context, cw);
+                pFlowDefinition.CodeCreator.ToCode(context, cw);
             }
 
             ret.Code = cw.ToString();

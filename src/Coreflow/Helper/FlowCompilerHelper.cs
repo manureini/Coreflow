@@ -135,6 +135,13 @@ namespace Coreflow.Helper
             ret.Successful = true;
             ret.ResultAssembly = Assembly.Load(stream.ToArray());
 
+
+            IEnumerable<Type> flows = ret.ResultAssembly.GetTypes().Where(t => typeof(ICompiledFlow).IsAssignableFrom(t));
+
+            Type flowType = flows.First();
+
+            ret.InstanceFactory = new FlowInstanceFactory(pFlowCode.Definition.Coreflow, pFlowCode.Definition.Identifier, flowType);
+
             return ret;
         }
 
@@ -155,7 +162,7 @@ namespace Coreflow.Helper
 
             return CSharpCompilation.Create(assemblyName, options: options);
         }
-             
+
         private static Guid GetIdentifier(string[] pCode, int pLineOfCode)
         {
             for (pLineOfCode--; pLineOfCode > 0; pLineOfCode--)

@@ -7,8 +7,12 @@ namespace Coreflow.Web.Models
 {
     public class FlowArgumentChangedData
     {
-        public string CreatorGuid { get; set; }
+        public bool AddValue { get; set; }
 
-        public string NewValue { get; set; }
+        public string Name { get; set; }
+
+        public string Type { get; set; }
+
+        public string Value { get; set; }
     }
 }

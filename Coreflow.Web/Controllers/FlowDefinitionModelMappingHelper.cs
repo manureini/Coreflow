@@ -19,7 +19,7 @@ namespace Coreflow.Web.Controllers
                 Identifier = pFlowDefinition.Identifier,
                 CodeCreatorModel = CodeCreatorModelHelper.CreateModel(pFlowDefinition.CodeCreator, null, pFlowDefinition),
                 CodeCreators = Program.CoreflowInstance.CodeCreatorStorage.GetAllCodeCreators().ToDictionary(k => k.Key.FullName, v => CodeCreatorModelHelper.CreateModel(v.Value, null, null)),
-                Arguments = pFlowDefinition.Arguments
+                Arguments = pFlowDefinition.Arguments ?? new List<Objects.FlowArguments>()
             };
 
             foreach (CodeCreatorModel ccm in ret.CodeCreators.Values)

@@ -226,6 +226,27 @@ $(function () {
         SubmitFlowReferencedAssemblyChanged(false, $(this).data("id"));
     });
 
+    $(document).on("click", ".add-argument", function () {
+        var name = $("#add-argument-name").val();
+        var type = $("#add-argument-type").val();
+        var expression = $("#add-argument-expression").val();
+
+        $("#add-argument-name").val("");
+        $("#add-argument-type").val("");
+        $("#add-argument-expression").val("");
+
+        var newRow = "<tr><td><i class=\"fa fa-trash clickable remove-argument\" data-id=\"" + name + "\"></i></td><td>" + name + "</td><td>" + type + "</td><td>" + expression + "</td></tr>";
+        $("#table-arguments tbody tr:nth-last-child(1)").before(newRow);
+
+        SubmitFlowArgumentChanged(true, name, type, expression);
+    });
+    $(document).on("click", ".remove-argument", function () {
+        $(this).closest("tr").remove();
+        SubmitFlowArgumentChanged(false, $(this).data("id"));
+    });
+
+
+
 
     $(document).on("click", ".nav a.active", function (e) {
         $(this).removeClass("active");
@@ -353,7 +374,7 @@ function SetDraggable(element) {
 
             var y = $(this).offset().top;
             oldScrollPosition = $(document).scrollTop();
-            
+
             $("#main").css("padding-bottom", "100vh");
             $("#center-box").hide();
 
@@ -378,7 +399,7 @@ function SetDraggable(element) {
             //This is a workaround for chrome. It scrolls sometimes 20px wrong. Is there a bug with margin: 20px?
             $('html, body').animate({
                 scrollTop: (oldScrollPosition + yOffsetChanged)
-            }, 2);    
+            }, 2);
         },
 
         drag: function (event, ui) {

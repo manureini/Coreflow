@@ -178,10 +178,10 @@
 
             </div>
             <div id="menu1" class="tab-pane fade">
-
-                <table>
+                <table id="table-arguments">
                     <thead>
                         <tr>
+                            <td></td>
                             <td width="30%">Name</td>
                             <td width="30%">Type</td>
                             <td width="30%">Value</td>
@@ -191,15 +191,20 @@
                         @foreach (var u in Model.Arguments)
                         {
                             <tr>
+                                <td><i class="fa fa-trash clickable remove-argument" data-id="@u.Name"></i></td>
                                 <td>@u.Name</td>
                                 <td>@u.Type</td>
                                 <td>@u.Expression</td>
                             </tr>
                         }
-
+                    <tr>
+                        <td><i class="fa fa-plus clickable add-argument"></i></td>
+                        <td><input id="add-argument-name" type="text" placeholder="Name" /></td>
+                        <td><input id="add-argument-type" type="text" placeholder="Type" /></td>
+                        <td><input id="add-argument-expression" type="text" placeholder="Value" /></td>
+                    </tr>
                     </tbody>
                 </table>
-
             </div>
             <div id="menu2" class="tab-pane fade">
                 <ul>

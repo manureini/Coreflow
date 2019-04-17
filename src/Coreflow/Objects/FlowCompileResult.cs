@@ -17,7 +17,8 @@ namespace Coreflow.Objects
 
         public IDictionary<Guid, string> ErrorCodeCreators { get; internal set; }
 
+        public FlowInstanceFactory InstanceFactory { get; internal set; }
+
         internal FlowCompileResult() { }
- 
     }
 }

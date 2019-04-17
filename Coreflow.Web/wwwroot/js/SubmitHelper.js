@@ -105,6 +105,31 @@ function SubmitFlowReferencedNamespaceChanged(pAddValue, pValue) {
     });
 }
 
+function SubmitFlowArgumentChanged(pAddValue, pName, pType, pValue) {
+    var postData = {};
+    postData["AddValue"] = pAddValue;
+    postData["Name"] = pName;
+    postData["Type"] = pType;
+    postData["Value"] = pValue;
+
+    $.ajax({
+        url: "Action/FlowArgumentChanged",
+        type: 'post',
+        data: JSON.stringify(postData),
+        contentType: "application/json",
+        success: function (data) {
+            if (data.isSuccess) {
+                return;
+            }
+            alert(data.message);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+}
+
+
 function SubmitMoveAfter(sourceId, destinationAfterId, destinationContainerId, sequenceIndex) {
     var postData = {};
     postData["SourceId"] = sourceId;

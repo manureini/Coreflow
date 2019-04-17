@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -33,9 +34,32 @@ namespace Coreflow.Web.Controllers
             Program.CoreflowInstance.FlowDefinitionStorage.Remove(wfDef.Identifier);
             Program.CoreflowInstance.FlowDefinitionStorage.Add(wfDef);
 
-            FlowInvokeResult invokeResult = FlowInvoker.Invoke(wfDef);
+            // FlowInvokeResult invokeResult = FlowInvoker.Invoke(wfDef);
 
-            string result = invokeResult.ExecutedInstance.GetType().GetField("result").GetValue(invokeResult.ExecutedInstance) as string;
+            var factory = wfDef.GenerateFlowCode().Compile().InstanceFactory;
+
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
+            for (int i = 0; i < 1_000_000; i++)
+            {
+                var resultArgs = factory.RunInstance(new Dictionary<string, object>()
+                {
+                    { "a", 1 },
+                    {"b", 2 }
+                });
+            }
+
+            sw.Stop();
+
+
+            Console.WriteLine("Elapsed:" + sw.ElapsedMilliseconds);
+
+
+
+            string result = "";
+            //  string result = invokeResult.ExecutedInstance.GetType().GetField("result").GetValue(invokeResult.ExecutedInstance) as string;
 
             return Json(new Response(false, result));
         }
@@ -164,6 +188,37 @@ namespace Coreflow.Web.Controllers
                 return Json(new Response(false, e.ToString()));
             }
         }
+
+
+        [HttpPost]
+        public JsonResult FlowArgumentChanged([FromBody] FlowArgumentChangedData pData)
+        {
+            try
+            {
+                string serialized = HttpContext.Session.GetString("FlowModel");
+                FlowDefinitionModel wfDefModel = FlowDefinitionModelSerializer.DeSerialize(serialized);
+
+                if (pData.AddValue)
+                {
+                    Type type = Type.GetType(pData.Type);
+                    wfDefModel.Arguments.Add(new FlowArguments(pData.Name, type, VariableDirection.In, pData.Value));
+                }
+                else
+                {
+                    wfDefModel.Arguments.RemoveAll(a => a.Name == pData.Name);
+                }
+
+                serialized = FlowDefinitionModelSerializer.Serialize(wfDefModel);
+                HttpContext.Session.SetString("FlowModel", serialized);
+
+                return Json(new Response(true, "ok"));
+            }
+            catch (Exception e)
+            {
+                return Json(new Response(false, e.ToString()));
+            }
+        }
+
 
         [HttpPost]
         public JsonResult CodeCreatorMoved([FromBody] MoveAfterData pData)
@@ -318,16 +373,6 @@ namespace Coreflow.Web.Controllers
                 var sequenceEntry = destModel.Parent.CodeCreatorModels.First(m => m.Value.Any(x => x.Identifier == pDestinationAfterId));
 
                 List<CodeCreatorModel> sequence = sequenceEntry.Value;
-
-                /*
-                int afterIndex = sequence.FindIndex(c => c.Identifier == pDestinationAfterId);
-
-                if (afterIndex > 0)
-                    afterIndex--;
-
-                sequence.Insert(afterIndex, sourceModel);
-                */
-
 
                 foreach (var entry in sequence)
                 {
