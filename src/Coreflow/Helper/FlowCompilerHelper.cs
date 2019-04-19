@@ -22,7 +22,7 @@ namespace Coreflow.Helper
         private static Regex mIdRegex = new Regex(@"\/\/#id *([a-zA-Z0-9-]*)");
         private static Regex mContainerRegex = new Regex(@"\/\/#Container");
 
-        private static List<MetadataReference> mGeneratedAssemblies = new List<MetadataReference>();
+        private static Dictionary<Guid, MetadataReference> mGeneratedAssemblies = new Dictionary<Guid, MetadataReference>();
 
         public static FlowCompileResult CompileFlowCode(FlowCode pFlowCode)
         {
@@ -39,7 +39,7 @@ namespace Coreflow.Helper
 
             Compilation compilation = CreateLibraryCompilation(assemblyName, false)
                .AddReferences(pFlowCode.ReferencedAssemblies)
-               .AddReferences(mGeneratedAssemblies)
+               .AddReferences(mGeneratedAssemblies.Values)
                .AddSyntaxTrees(syntaxTree);
 
             var stream = new MemoryStream();
@@ -138,7 +138,17 @@ namespace Coreflow.Helper
 
             ret.ResultAssembly = Assembly.LoadFile(Path.GetFullPath(asmFilename));
 
-            mGeneratedAssemblies.Add(MetadataReference.CreateFromFile(asmFilename));
+
+            Guid flowIdentifier = pFlowCode.Definition.Identifier;
+
+            if (mGeneratedAssemblies.ContainsKey(flowIdentifier))
+            {
+                mGeneratedAssemblies.Remove(flowIdentifier);
+                //try to unload old assembly
+            }
+
+            mGeneratedAssemblies.Add(flowIdentifier, MetadataReference.CreateFromFile(asmFilename));
+
 
             IEnumerable<Type> flows = ret.ResultAssembly.GetTypes().Where(t => typeof(ICompiledFlow).IsAssignableFrom(t));
 
