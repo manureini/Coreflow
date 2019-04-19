@@ -1,4 +1,5 @@
-﻿using Coreflow.Objects;
+﻿using Coreflow.Interfaces;
+using Coreflow.Objects;
 using ExtendedXmlSerializer.Configuration;
 using ExtendedXmlSerializer.ExtensionModel.Content;
 using ExtendedXmlSerializer.ExtensionModel.Xml;
@@ -61,6 +62,37 @@ namespace Coreflow.Helper
         }
     }
 
+    /*
+    public class InputExpressionCreatorSerializer : IExtendedXmlCustomSerializer<InputExpressionCreator>
+    {
+        public InputExpressionCreator Deserialize(XElement xElement)
+        {
+            var xIdentifier = xElement.Attribute("Identifier");
+            var xVariableIdentifier = xElement.Attribute("VariableIdentifier");
+            var xCode = xElement.Attribute("Code");
+            var xName = xElement.Attribute("Name");
+            var xType = xElement.Attribute("Type");
+
+            return new InputExpressionCreator()
+            {
+                Identifier = Guid.Parse(xIdentifier.Value),
+                VariableIdentifier = xVariableIdentifier.Value,
+                Code = xCode.Value,
+                Name = xName.Value,
+                Type = xType.Value
+            };
+        }
+
+        public void Serializer(XmlWriter xmlWriter, InputExpressionCreator obj)
+        {
+            xmlWriter.WriteAttributeString("Identifier", obj.Identifier.ToString());
+            xmlWriter.WriteAttributeString("VariableIdentifier", obj.VariableIdentifier);
+            xmlWriter.WriteAttributeString("Code", obj.Code);
+            xmlWriter.WriteAttributeString("Name", obj.Name);
+            xmlWriter.WriteAttributeString("Type", obj.Type.AssemblyQualifiedName);
+        }
+    }*/
+
     public class CodeCreatorParameterSerializer : IExtendedXmlCustomSerializer<CodeCreatorParameter>
     {
         public CodeCreatorParameter Deserialize(XElement element)
@@ -71,7 +103,7 @@ namespace Coreflow.Helper
             var xCategory = element.Attribute("Category");
             var xDirection = element.Attribute("Direction");
 
-            return new CodeCreatorParameter(xName.Value, xDisplayName.Value, Type.GetType(xType.Value), xCategory.Value, Enum.Parse<VariableDirection>(xDirection.Value));
+            return new CodeCreatorParameter(xName.Value, xDisplayName.Value, TypeHelper.SearchType(xType.Value), xCategory.Value, Enum.Parse<VariableDirection>(xDirection.Value));
         }
 
         public void Serializer(XmlWriter writer, CodeCreatorParameter obj)

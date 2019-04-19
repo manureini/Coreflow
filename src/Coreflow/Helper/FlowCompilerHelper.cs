@@ -1,4 +1,5 @@
-﻿using Coreflow.Objects;
+﻿using Coreflow.Interfaces;
+using Coreflow.Objects;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

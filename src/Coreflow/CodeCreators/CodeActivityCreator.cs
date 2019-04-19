@@ -48,7 +48,7 @@ namespace Coreflow.CodeCreators
         {
             pCodeWriter.WriteIdentifierTagTop(this);
 
-            string typeName = typeof(T).Name;
+            string typeName = typeof(T).FullName;
             string variableName = pBuilderContext.CreateLocalVariableName(this);
 
             pCodeWriter.AppendLineTop($"{typeName} {variableName} = new {typeName}();");
@@ -96,11 +96,14 @@ namespace Coreflow.CodeCreators
                 Category = "Default",
                 Name = pParameterInfo.Name,
                 Type = pParameterInfo.ParameterType,
-                Direction = pParameterInfo.IsOut ? VariableDirection.Out : VariableDirection.In
+                Direction = pParameterInfo.IsOut ? VariableDirection.Out : VariableDirection.In,
+                DisplayName = pParameterInfo.Name
             };
 
             var attr = pParameterInfo.GetCustomAttribute<DisplayMetaAttribute>();
-            ret.DisplayName = attr.DisplayName;
+
+            if (attr != null)
+                ret.DisplayName = attr.DisplayName;
 
             return ret;
         }

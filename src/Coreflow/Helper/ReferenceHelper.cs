@@ -24,6 +24,7 @@ namespace Coreflow.Helper
         {
             Dictionary<Assembly, MetadataReference> ret = new Dictionary<Assembly, MetadataReference>();
 
+            /*
             foreach (string ns in pFlowDefinition.ReferencedNamespaces)
             {
                 IEnumerable<Assembly> assemblies = Enumerable.Empty<Assembly>();
@@ -40,7 +41,15 @@ namespace Coreflow.Helper
                 foreach (Assembly assembly in assemblies)
                     if (!ret.ContainsKey(assembly))
                         ret.Add(assembly, MetadataReference.CreateFromFile(assembly.Location));
+            }*/
+
+
+
+            foreach (var assembly in pFlowDefinition.ReferencedAssemblies)
+            {
+                ret.Add(assembly, MetadataReference.CreateFromFile(assembly.Location));
             }
+
 
             return ret;
         }

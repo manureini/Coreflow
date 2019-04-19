@@ -68,7 +68,9 @@ namespace Coreflow
             cw.WriteContainerTagTop(pFlowDefinition);
 
             //Currently idk which letters needs an escape
-            cw.AppendLineTop("public class wf_" + pFlowDefinition.Name.Replace(" ", "") + " : " + nameof(ICompiledFlow) + "  {");
+            cw.AppendLineTop("public class wf_" + pFlowDefinition.Name.Replace(" ", "") + " : " + typeof(ICompiledFlow).FullName + "  {");
+
+
 
             cw.AppendLineTop();
 
@@ -125,7 +127,7 @@ namespace Coreflow
 
             cw.AppendLineTop();
 
-            cw.AppendLineTop("Guid ICompiledFlow.InstanceId => InstanceId;");
+            cw.AppendLineTop("Guid Coreflow.Interfaces.ICompiledFlow.InstanceId => InstanceId;");
 
             cw.AppendLineTop();
 

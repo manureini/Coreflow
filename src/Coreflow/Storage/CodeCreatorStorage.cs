@@ -39,6 +39,11 @@ namespace Coreflow.Storage
             pCodeCreatorType.ForEach(t => AddCodeCreator(t, pAddReferencesAndNamespace));
         }
 
+        public void AddCodeActivity(IEnumerable<Type> pCodeActivityTypes, bool pAddReferencesAndNamespace = true)
+        {
+            pCodeActivityTypes.ForEach(t => AddCodeActivity(t, pAddReferencesAndNamespace));
+        }
+
         public void AddCodeActivity(Type pCodeActivityType, bool pAddReferencesAndNamespace = true)
         {
             Type generic = typeof(CodeActivityCreator<>).MakeGenericType(pCodeActivityType);

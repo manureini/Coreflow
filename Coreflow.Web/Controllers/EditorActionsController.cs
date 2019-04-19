@@ -38,24 +38,11 @@ namespace Coreflow.Web.Controllers
 
             var factory = wfDef.GenerateFlowCode().Compile().InstanceFactory;
 
-            Stopwatch sw = new Stopwatch();
-
-            sw.Start();
-
-            for (int i = 0; i < 1_000_000; i++)
-            {
-                var resultArgs = factory.RunInstance(new Dictionary<string, object>()
+            var resultArgs = factory.RunInstance(new Dictionary<string, object>()
                 {
                     { "a", 1 },
                     {"b", 2 }
                 });
-            }
-
-            sw.Stop();
-
-
-            Console.WriteLine("Elapsed:" + sw.ElapsedMilliseconds);
-
 
 
             string result = "";

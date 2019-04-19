@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Coreflow
+namespace Coreflow.Interfaces
 {
     public interface ICompiledFlow
     {

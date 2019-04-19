@@ -87,7 +87,8 @@ namespace Coreflow.Web.Controllers
             if (pCodeCreatorModel == null)
                 return null;
 
-            Type type = Type.GetType(pCodeCreatorModel.Type);
+            Type type = TypeHelper.SearchType(pCodeCreatorModel.Type);
+
             ICodeCreator ret = Activator.CreateInstance(type) as ICodeCreator;
 
             ret.Identifier = pCodeCreatorModel.Identifier;
@@ -119,7 +120,7 @@ namespace Coreflow.Web.Controllers
                         var argument = pCodeCreatorModel.Arguments[i];
 
                         if (param.Direction == VariableDirection.In)
-                            parametrized.Arguments.Add(new InputExpressionCreator(argument.Name, argument.Code, argument.Guid));
+                            parametrized.Arguments.Add(new InputExpressionCreator(argument.Name, argument.Code, argument.Guid, param.Type));
                         else if (param.Direction == VariableDirection.Out)
                         {
                             bool isSimpleVariableName = !argument.Code.Trim().Contains(" ") && !argument.Code.Contains("\"");

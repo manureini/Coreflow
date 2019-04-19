@@ -1,4 +1,6 @@
-﻿namespace Coreflow.Objects
+﻿using Coreflow.Interfaces;
+
+namespace Coreflow.Objects
 {
     public class FlowInvokeResult
     {

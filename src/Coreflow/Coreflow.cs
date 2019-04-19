@@ -5,7 +5,9 @@ using Coreflow.Objects;
 using Coreflow.Storage;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Coreflow
 {
@@ -19,7 +21,29 @@ namespace Coreflow
 
         public IFlowInstanceStorage FlowInstanceStorage { get; }
 
-        public Coreflow(IFlowDefinitionStorage pFlowDefinitionStorage, IFlowInstanceStorage pFlowInstanceStorage)
+
+        static Coreflow()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
+        }
+
+        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            string toFindName = new AssemblyName(args.Name).FullName;
+
+            if (toFindName.Contains(".resources"))
+                return null;
+
+            foreach (Assembly an in AppDomain.CurrentDomain.GetAssemblies())
+                if (an.GetName().FullName == toFindName)
+                    return an;
+
+            return null;
+        }
+
+
+        public Coreflow(IFlowDefinitionStorage pFlowDefinitionStorage, IFlowInstanceStorage pFlowInstanceStorage, string pPluginDirectory = null)
         {
             FlowDefinitionStorage = pFlowDefinitionStorage;
             FlowInstanceStorage = pFlowInstanceStorage;
@@ -36,6 +60,17 @@ namespace Coreflow
             CodeCreatorStorage.AddCodeCreator(new TerminateCreator());
             CodeCreatorStorage.AddCodeCreator(new IfCreator());
             CodeCreatorStorage.AddCodeCreator(new IfElseCreator());
+
+            if (pPluginDirectory != null)
+            {
+                Directory.CreateDirectory(pPluginDirectory);
+                foreach (string file in Directory.GetFiles(pPluginDirectory, "*.dll", SearchOption.AllDirectories))
+                {
+                    Assembly asm = Assembly.LoadFile(Path.GetFullPath(file));
+                    CodeCreatorStorage.AddCodeCreator(asm.GetTypes().Where(t => typeof(ICodeCreator).IsAssignableFrom(t)), false);
+                    CodeCreatorStorage.AddCodeActivity(asm.GetTypes().Where(t => typeof(ICodeActivity).IsAssignableFrom(t)), false);
+                }
+            }
         }
 
         public void Dispose()

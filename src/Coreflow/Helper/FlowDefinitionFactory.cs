@@ -21,7 +21,7 @@ namespace Coreflow.Helper
             "System.Linq",
             "System.Reflection",
             "System.Runtime",
-            nameof(Coreflow)
+   //         nameof(Coreflow)
         };
 
         public List<Assembly> DefaultReferencedAssemblies;
