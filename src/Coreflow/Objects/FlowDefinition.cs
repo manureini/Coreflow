@@ -18,7 +18,7 @@ namespace Coreflow
 
         public string Name { get; set; }
 
-        public string Icon => "fa-cogs";
+        public string Icon { get; set; } = "fa-cogs";
 
         public ICodeCreator CodeCreator { get; set; }
 

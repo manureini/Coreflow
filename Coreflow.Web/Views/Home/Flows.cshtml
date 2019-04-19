@@ -16,9 +16,6 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Icon)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Identifier)
             </th>
             <th></th>
@@ -29,10 +26,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Icon)
+                    <i class="@item.Icon.GetIconClassName()"></i> @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Identifier)

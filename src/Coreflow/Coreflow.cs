@@ -2,6 +2,7 @@
 using Coreflow.Helper;
 using Coreflow.Interfaces;
 using Coreflow.Objects;
+using Coreflow.Objects.CodeCreatorFactory;
 using Coreflow.Storage;
 using System;
 using System.Collections.Generic;
@@ -21,11 +22,9 @@ namespace Coreflow
 
         public IFlowInstanceStorage FlowInstanceStorage { get; }
 
-
         static Coreflow()
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-
         }
 
         private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
@@ -51,15 +50,15 @@ namespace Coreflow
             CodeCreatorStorage = new CodeCreatorStorage(this);
             FlowDefinitionFactory = new FlowDefinitionFactory(this);
 
-            CodeCreatorStorage.AddCodeCreator(new CodeActivityCreator<ConsoleWriteLineActivity>());
-            CodeCreatorStorage.AddCodeCreator(new ForLoopCreator());
-            CodeCreatorStorage.AddCodeCreator(new SequenceCreator());
-            CodeCreatorStorage.AddCodeCreator(new InlineCodeCodeCreator());
-            CodeCreatorStorage.AddCodeCreator(new CommentCreator());
-            CodeCreatorStorage.AddCodeCreator(new AssignCreator());
-            CodeCreatorStorage.AddCodeCreator(new TerminateCreator());
-            CodeCreatorStorage.AddCodeCreator(new IfCreator());
-            CodeCreatorStorage.AddCodeCreator(new IfElseCreator());
+            CodeCreatorStorage.AddCodeActivity(typeof(ConsoleWriteLineActivity));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(ForLoopCreator));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(SequenceCreator));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(InlineCodeCodeCreator));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(CommentCreator));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(AssignCreator));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(TerminateCreator));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(IfCreator));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(IfElseCreator));
 
             if (pPluginDirectory != null)
             {
@@ -67,9 +66,14 @@ namespace Coreflow
                 foreach (string file in Directory.GetFiles(pPluginDirectory, "*.dll", SearchOption.AllDirectories))
                 {
                     Assembly asm = Assembly.LoadFile(Path.GetFullPath(file));
-                    CodeCreatorStorage.AddCodeCreator(asm.GetTypes().Where(t => typeof(ICodeCreator).IsAssignableFrom(t)), false);
-                    CodeCreatorStorage.AddCodeActivity(asm.GetTypes().Where(t => typeof(ICodeActivity).IsAssignableFrom(t)), false);
+                    CodeCreatorStorage.AddCodeCreatorDefaultConstructor(asm.GetTypes().Where(t => typeof(ICodeCreator).IsAssignableFrom(t)));
+                    CodeCreatorStorage.AddCodeActivity(asm.GetTypes().Where(t => typeof(ICodeActivity).IsAssignableFrom(t)));
                 }
+            }
+
+            foreach (var flow in FlowDefinitionStorage.GetDefinitions())
+            {
+                CodeCreatorStorage.AddCodeCreatorFactory(new CallFlowCreatorFactory(flow.Identifier, flow.Name, flow.Icon));
             }
         }
 

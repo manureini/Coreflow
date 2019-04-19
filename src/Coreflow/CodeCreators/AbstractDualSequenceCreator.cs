@@ -14,6 +14,8 @@ namespace Coreflow.CodeCreators
 
         public Guid Identifier { get; set; } = Guid.NewGuid();
 
+        public string FactoryIdentifier { get; set; }
+
         public virtual string Name => this.GetType().Name;
 
         public virtual string Icon => "fa-tasks";
@@ -27,6 +29,7 @@ namespace Coreflow.CodeCreators
                 return "/* remove " + Identifier + "*/ }";
             }
         }
+
 
         public AbstractDualSequenceCreator()
         {

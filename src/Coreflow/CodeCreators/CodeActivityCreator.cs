@@ -10,6 +10,8 @@ namespace Coreflow.CodeCreators
 {
     public class CodeActivityCreator<T> : ICodeActivityCreator, IVariableCreator, IUiDesignable, IParametrized where T : ICodeActivity
     {
+        public string FactoryIdentifier { get; set; }
+
         public List<IArgument> Arguments { get; set; } = new List<IArgument>();
 
         public Type CodeActivityType => typeof(T);
@@ -43,6 +45,7 @@ namespace Coreflow.CodeCreators
                 return DisplayMetaAttribute.DEFAULT_ICON;
             }
         }
+
 
         public void Initialize(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {

@@ -22,16 +22,9 @@ namespace Coreflow.Helper
         private static Regex mIdRegex = new Regex(@"\/\/#id *([a-zA-Z0-9-]*)");
         private static Regex mContainerRegex = new Regex(@"\/\/#Container");
 
-        public static FlowCompileResult CompileFlowCode(IEnumerable<FlowCode> pFlowCode, string pAssemblyName = "DynamicCreatedFlowsAssembly")
-        {
-            return CompileFlowCode(new FlowCode
-            {
-                Code = pFlowCode.Select(w => w.Code).Aggregate((o, n) => o + Environment.NewLine + n),
-                ReferencedAssemblies = pFlowCode.SelectMany(w => w.ReferencedAssemblies).Distinct()
-            }, pAssemblyName);
-        }
+        private static List<MetadataReference> mGeneratedAssemblies = new List<MetadataReference>();
 
-        public static FlowCompileResult CompileFlowCode(FlowCode pFlowCode, string pAssemblyName = "DynamicCreatedFlowsAssembly")
+        public static FlowCompileResult CompileFlowCode(FlowCode pFlowCode)
         {
             FlowCompileResult ret = new FlowCompileResult()
             {
@@ -42,8 +35,11 @@ namespace Coreflow.Helper
 
             //  string formattedCode = FormatCode(syntaxTree);        
 
-            Compilation compilation = CreateLibraryCompilation(pAssemblyName, false)
+            string assemblyName = Guid.NewGuid().ToString();
+
+            Compilation compilation = CreateLibraryCompilation(assemblyName, false)
                .AddReferences(pFlowCode.ReferencedAssemblies)
+               .AddReferences(mGeneratedAssemblies)
                .AddSyntaxTrees(syntaxTree);
 
             var stream = new MemoryStream();
@@ -134,14 +130,23 @@ namespace Coreflow.Helper
     */
 
             ret.Successful = true;
-            ret.ResultAssembly = Assembly.Load(stream.ToArray());
 
+            Directory.CreateDirectory("tmp");
+            string asmFilename = Path.Combine("tmp", assemblyName + ".dll");
+
+            File.WriteAllBytes(asmFilename, stream.ToArray());
+
+            ret.ResultAssembly = Assembly.LoadFile(Path.GetFullPath(asmFilename));
+
+            mGeneratedAssemblies.Add(MetadataReference.CreateFromFile(asmFilename));
 
             IEnumerable<Type> flows = ret.ResultAssembly.GetTypes().Where(t => typeof(ICompiledFlow).IsAssignableFrom(t));
 
             Type flowType = flows.First();
 
             ret.InstanceFactory = new FlowInstanceFactory(pFlowCode.Definition.Coreflow, pFlowCode.Definition.Identifier, flowType);
+
+
 
             return ret;
         }

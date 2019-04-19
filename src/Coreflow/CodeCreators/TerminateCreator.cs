@@ -8,6 +8,8 @@ namespace Coreflow.CodeCreators
     {
         public Guid Identifier { get; set; } = Guid.NewGuid();
 
+        public string FactoryIdentifier { get; set; }
+
         public string Name => "Terminate";
 
         public string Icon => "fa-times";

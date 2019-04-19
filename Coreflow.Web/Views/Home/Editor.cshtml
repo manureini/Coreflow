@@ -132,13 +132,13 @@
 
     <div id="codecreator-panel" class="panel border-panel">
 
-        @foreach (var entry in Model.CodeCreators.OrderBy(c => c.Value.DisplayName))
+        @foreach (var entry in Model.CodeCreators.OrderBy(c => c.Type).ThenBy(c => c.DisplayName))
         {
-            <div class="codecreator-panel-parameter" data-type="@entry.Value.Type">
-                <i class="@entry.Value.IconClass"></i> @entry.Value.DisplayName
+            <div class="codecreator-panel-parameter" data-type="@entry.Type">
+                <i class="@entry.IconClass"></i> @entry.DisplayName
 
                 <div class="codecreator-panel-parameter-container">
-                    @PrintCodeCreatorModel(entry.Value)
+                    @PrintCodeCreatorModel(entry)
                 </div>
             </div>
         }
@@ -146,7 +146,7 @@
     </div>
 
     <div id="editor-center" class="panel">
-        <h4>@Model.Name</h4>
+        <h4> <i class="@Model.Icon.GetIconClassName()"></i> @Model.Name</h4>
 
         <div id="main">
             @PrintCodeCreatorModel(@Model.CodeCreatorModel)
@@ -197,12 +197,12 @@
                                 <td>@u.Expression</td>
                             </tr>
                         }
-                    <tr>
-                        <td><i class="fa fa-plus clickable add-argument"></i></td>
-                        <td><input id="add-argument-name" type="text" placeholder="Name" /></td>
-                        <td><input id="add-argument-type" type="text" placeholder="Type" /></td>
-                        <td><input id="add-argument-expression" type="text" placeholder="Value" /></td>
-                    </tr>
+                        <tr>
+                            <td><i class="fa fa-plus clickable add-argument"></i></td>
+                            <td><input id="add-argument-name" type="text" placeholder="Name" /></td>
+                            <td><input id="add-argument-type" type="text" placeholder="Type" /></td>
+                            <td><input id="add-argument-expression" type="text" placeholder="Value" /></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

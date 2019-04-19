@@ -9,6 +9,8 @@ namespace Coreflow.CodeCreators
     {
         public Guid Identifier { get; set; } = Guid.NewGuid();
 
+        public string FactoryIdentifier { get; set; }
+
         public ICodeCreatorContainerCreator ParentContainerCreator { get; set; }
 
         public List<List<ICodeCreator>> CodeCreators { get; set; } = new List<List<ICodeCreator>>();

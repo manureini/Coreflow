@@ -22,10 +22,7 @@ namespace Coreflow.Web.Extensions
         {
             if (pCodeCreator is IUiDesignable desingable)
             {
-                if (desingable.Icon.Contains("fa-"))
-                    return "fa " + desingable.Icon;
-
-                throw new NotSupportedException($"Icon '{desingable.Icon}' is not supported");
+                return desingable.Icon.GetIconClassName();
             }
 
             return "fa " + DisplayMetaAttribute.DEFAULT_ICON;

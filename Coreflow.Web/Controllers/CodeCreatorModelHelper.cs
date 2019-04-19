@@ -1,6 +1,7 @@
 ﻿using Coreflow.Helper;
 using Coreflow.Interfaces;
 using Coreflow.Objects;
+using Coreflow.Storage;
 using Coreflow.Web.Extensions;
 using Coreflow.Web.Models;
 using System;
@@ -11,7 +12,6 @@ namespace Coreflow.Web.Controllers
 {
     public class CodeCreatorModelHelper
     {
-
         private const string USER_DISPLAY_NAME = "UserDisplayName";
 
         public static CodeCreatorModel CreateModel(ICodeCreator pCodeCreator, CodeCreatorModel pParent, FlowDefinition pFlowDefinition)
@@ -25,6 +25,7 @@ namespace Coreflow.Web.Controllers
                 DisplayName = pCodeCreator.GetDisplayName(),
                 IconClass = pCodeCreator.GetIconClassName(),
                 Type = pCodeCreator.GetType().AssemblyQualifiedName,
+                CustomFactory = (pCodeCreator is ICustomFactoryCodeCreator cfcc) ? cfcc.FactoryIdentifier : null,
                 Parent = pParent
             };
 
@@ -87,9 +88,8 @@ namespace Coreflow.Web.Controllers
             if (pCodeCreatorModel == null)
                 return null;
 
-            Type type = TypeHelper.SearchType(pCodeCreatorModel.Type);
-
-            ICodeCreator ret = Activator.CreateInstance(type) as ICodeCreator;
+            ICodeCreatorFactory factory = Program.CoreflowInstance.CodeCreatorStorage.GetFactory(pCodeCreatorModel.Type, pCodeCreatorModel.CustomFactory);
+            ICodeCreator ret = factory.Create();
 
             ret.Identifier = pCodeCreatorModel.Identifier;
 
@@ -163,6 +163,5 @@ namespace Coreflow.Web.Controllers
 
             return ret;
         }
-
     }
 }

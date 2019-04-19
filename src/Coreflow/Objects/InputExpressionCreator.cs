@@ -14,7 +14,10 @@ namespace Coreflow.Interfaces
 
         public string Name { get; set; }
 
+        //Type "Type" and serializer does not work
         public string Type { get; set; }
+
+        public string FactoryIdentifier { get; set; }
 
         public InputExpressionCreator()
         {
@@ -45,6 +48,10 @@ namespace Coreflow.Interfaces
             if (string.IsNullOrWhiteSpace(Code))
             {
                 Type type = TypeHelper.SearchType(Type);
+
+                if (type == typeof(CSharpCode))
+                    return;
+
                 pCodewriter.AppendLineTop("default(" + type.Name + ")");
                 return;
             }

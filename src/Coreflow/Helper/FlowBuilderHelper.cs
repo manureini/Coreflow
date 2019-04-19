@@ -13,7 +13,10 @@ namespace Coreflow
 {
     internal class FlowBuilderHelper
     {
-        private const string INSTANCE_ID_PARAMETER_NAME = "InstanceId";
+        internal const string INSTANCE_ID_PARAMETER_NAME = "InstanceId";
+        internal const string FLOW_NAMESPACE_PREFIX = "FlowNs_";
+        internal const string FLOW_CLASS_PREFIX = "Flow_";
+
 
         public static IEnumerable<FlowCode> GenerateFlowCode(IEnumerable<FlowDefinition> pFlows)
         {
@@ -52,8 +55,9 @@ namespace Coreflow
 
             FlowBuilderContext context = new FlowBuilderContext(cw, ret.ReferencedAssemblies.ToList());
 
+            string flowid = pFlowDefinition.Identifier.ToString().ToVariableName();
 
-            cw.AppendLineTop("namespace DynamicGeneratedFlow" + pFlowDefinition.Identifier.ToString().ToVariableName() + " {");
+            cw.AppendLineTop("namespace " + FLOW_NAMESPACE_PREFIX + flowid + " {");
 
             cw.AppendLineBottom("} /* Namespace */"); //Close Namespace
 
@@ -68,8 +72,7 @@ namespace Coreflow
             cw.WriteContainerTagTop(pFlowDefinition);
 
             //Currently idk which letters needs an escape
-            cw.AppendLineTop("public class wf_" + pFlowDefinition.Name.Replace(" ", "") + " : " + typeof(ICompiledFlow).FullName + "  {");
-
+            cw.AppendLineTop("public class " + FLOW_CLASS_PREFIX + flowid + " : " + typeof(ICompiledFlow).FullName + "  {");
 
 
             cw.AppendLineTop();

@@ -10,6 +10,8 @@ namespace Coreflow.CodeCreators
     {
         public Guid Identifier { get; set; } = Guid.NewGuid();
 
+        public string FactoryIdentifier { get; set; }
+
         public List<IArgument> Arguments { get; set; } = new List<IArgument>();
 
         public string Name => "Assign";

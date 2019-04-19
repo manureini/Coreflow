@@ -17,6 +17,8 @@ namespace Coreflow.Web.Models
 
         public string Type { get; set; }
 
+        public string CustomFactory { get; set; }
+
         public int SequenceCount { get; set; }
 
         public List<CodeCreatorParameterModel> Parameters { get; set; }

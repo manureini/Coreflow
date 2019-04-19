@@ -1,5 +1,7 @@
 ﻿using Coreflow.CodeCreators;
+using Coreflow.Helper;
 using Coreflow.Interfaces;
+using Coreflow.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +10,9 @@ namespace Coreflow.Storage
 {
     public class CodeCreatorStorage
     {
-        private readonly Dictionary<Type, ICodeCreator> mCodeCreators = new Dictionary<Type, ICodeCreator>();
+        private readonly Dictionary<string, ICodeCreatorFactory> mCustomCodeCCreatorFactories = new Dictionary<string, ICodeCreatorFactory>();
+
+        private readonly Dictionary<Type, ICodeCreatorFactory> mDefaultConstructorFactories = new Dictionary<Type, ICodeCreatorFactory>();
 
         private Coreflow mCoreflow;
 
@@ -17,56 +21,49 @@ namespace Coreflow.Storage
             mCoreflow = pCoreflow;
         }
 
-        public void AddCodeCreator(ICodeCreator pCodeCreator, bool pAddReferencesAndNamespace = true)
+        public void AddCodeCreatorFactory(ICodeCreatorFactory pFactory)
         {
-            Type ccType = pCodeCreator.GetType();
-            mCodeCreators.Add(ccType, pCodeCreator);
-
-            if (pAddReferencesAndNamespace)
-                AddNamespaceToFactory(ccType);
+            mCustomCodeCCreatorFactories.Add(pFactory.Identifier, pFactory);
         }
 
-        public void AddCodeCreator(Type pCodeCreatorType, bool pAddReferencesAndNamespace = true)
+        public void AddCodeCreatorDefaultConstructor(Type pCodeCreatorType)
         {
-            if (!(Activator.CreateInstance(pCodeCreatorType) is ICodeCreator cc))
+            if (!typeof(ICodeCreator).IsAssignableFrom(pCodeCreatorType))
                 throw new ArgumentException($"type {pCodeCreatorType.FullName} does not implement {nameof(ICodeCreator)}");
 
-            AddCodeCreator(cc, pAddReferencesAndNamespace);
+            DefaultConstructorCodeCreatorFactory factory = new DefaultConstructorCodeCreatorFactory(pCodeCreatorType);
+            mDefaultConstructorFactories.Add(pCodeCreatorType, factory);
         }
 
-        public void AddCodeCreator(IEnumerable<Type> pCodeCreatorType, bool pAddReferencesAndNamespace = true)
+        public void AddCodeCreatorDefaultConstructor(IEnumerable<Type> pCodeCreatorType)
         {
-            pCodeCreatorType.ForEach(t => AddCodeCreator(t, pAddReferencesAndNamespace));
+            pCodeCreatorType.ForEach(t => AddCodeCreatorDefaultConstructor(t));
         }
 
-        public void AddCodeActivity(IEnumerable<Type> pCodeActivityTypes, bool pAddReferencesAndNamespace = true)
+        public void AddCodeActivity(IEnumerable<Type> pCodeActivityTypes)
         {
-            pCodeActivityTypes.ForEach(t => AddCodeActivity(t, pAddReferencesAndNamespace));
+            pCodeActivityTypes.ForEach(t => AddCodeActivity(t));
         }
 
-        public void AddCodeActivity(Type pCodeActivityType, bool pAddReferencesAndNamespace = true)
+        public void AddCodeActivity(Type pCodeActivityType)
         {
             Type generic = typeof(CodeActivityCreator<>).MakeGenericType(pCodeActivityType);
-            var instance = Activator.CreateInstance(generic) as ICodeActivityCreator;
-            AddCodeCreator(instance, false);
-
-            if (pAddReferencesAndNamespace)
-                AddNamespaceToFactory(pCodeActivityType);
+            AddCodeCreatorDefaultConstructor(generic);
         }
 
-        private void AddNamespaceToFactory(Type pType)
+        public IEnumerable<ICodeCreatorFactory> GetAllFactories()
         {
-            mCoreflow.FlowDefinitionFactory.AddDefaultReferencedNamespace(pType.Namespace);
+            return mCustomCodeCCreatorFactories.Values.Concat(mDefaultConstructorFactories.Values);
         }
 
-        public void RemoveCodeCreator(Type pType)
+        public ICodeCreatorFactory GetFactory(string pType, string pFactoryIdentifier)
         {
-            mCodeCreators.Remove(pType);
-        }
+            Type type = TypeHelper.SearchType(pType);
 
-        public Dictionary<Type, ICodeCreator> GetAllCodeCreators()
-        {
-            return new Dictionary<Type, ICodeCreator>(mCodeCreators);
+            if (mDefaultConstructorFactories.ContainsKey(type))
+                return mDefaultConstructorFactories[type];
+
+            return mCustomCodeCCreatorFactories[pFactoryIdentifier];
         }
     }
 }
