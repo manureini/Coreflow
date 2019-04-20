@@ -39,7 +39,7 @@ namespace Coreflow.Objects
 
         public string CreateLocalVariableName(IVariableCreator pVariableCreator)
         {
-            string variableName = Guid.NewGuid().ToString().ToVariableName();
+            string variableName = pVariableCreator.Identifier.ToString().ToVariableName();
             mLocalObjectNames.Add(pVariableCreator.Identifier, variableName);
             return variableName;
         }

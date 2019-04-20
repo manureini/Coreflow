@@ -45,6 +45,15 @@ namespace Coreflow.Helper
 
             mFullCode = fullcode;
 
+
+            foreach (var factory in mFactories)
+            {
+                factory.Value.Dispose();
+            }
+
+            mFactories.Clear();
+
+
             mAssemblyVersion++; //Interlocked?
 
             string assemblyName = ASSEMBLY_PREFIX + mAssemblyVersion;
@@ -58,8 +67,8 @@ namespace Coreflow.Helper
             {
                 mAssemblyContext.Unload();
 
-                //     GC.Collect();
-                //     GC.WaitForPendingFinalizers();
+                //GC.Collect();
+                //GC.WaitForPendingFinalizers();
             }
 
             mAssemblyContext = new CollectibleAssemblyLoadContext();
@@ -69,13 +78,6 @@ namespace Coreflow.Helper
             result.ResultAssembly.Dispose();
 
             IEnumerable<Type> flows = asm.GetTypes().Where(t => typeof(ICompiledFlow).IsAssignableFrom(t));
-
-            foreach (var factory in mFactories)
-            {
-                factory.Value.Dispose();
-            }
-
-            mFactories.Clear();
 
             foreach (var flowtype in flows)
             {
