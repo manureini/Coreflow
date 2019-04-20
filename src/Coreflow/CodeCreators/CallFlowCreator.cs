@@ -20,7 +20,7 @@ namespace Coreflow.CodeCreators
 
         public string FlowName { get; set; }
 
-        private string mFlowVariableName;
+        public string FlowVariableName { get; set; }
 
         public CallFlowCreator()
         {
@@ -28,7 +28,7 @@ namespace Coreflow.CodeCreators
 
         public CallFlowCreator(Guid pFlowId, string pFlowName, string pFlowIcon)
         {
-            mFlowVariableName = pFlowId.ToString().ToVariableName();
+            FlowVariableName = pFlowId.ToString().ToVariableName();
             FlowName = pFlowName;
             Icon = pFlowIcon;
         }
@@ -42,7 +42,7 @@ namespace Coreflow.CodeCreators
         {
             pBuilderContext.UpdateCurrentSymbols();
 
-            pCodeWriter.AppendLineTop($"var {pBuilderContext.GetLocalVariableName(this)} = new {FlowBuilderHelper.FLOW_NAMESPACE_PREFIX}{mFlowVariableName}.{FlowBuilderHelper.FLOW_CLASS_PREFIX}{mFlowVariableName}();");
+            pCodeWriter.AppendLineTop($"var {pBuilderContext.GetLocalVariableName(this)} = new {FlowBuilderHelper.FLOW_NAMESPACE_PREFIX}{FlowVariableName}.{FlowBuilderHelper.FLOW_CLASS_PREFIX}{FlowVariableName}();");
 
             //TODO parameter
 

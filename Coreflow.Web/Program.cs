@@ -14,7 +14,7 @@ namespace Coreflow.Web
                 new SimpleFlowDefinitionFileStorage(@"Flows"),
                 new MemoryFlowInstanceStorage(),
                 "Plugins");
-
+                      
             CreateWebHostBuilder(args).Build().Run();
         }
 

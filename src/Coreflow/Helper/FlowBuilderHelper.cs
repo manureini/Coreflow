@@ -71,6 +71,8 @@ namespace Coreflow
             cw.WriteIdentifierTagTop(pFlowDefinition);
             cw.WriteContainerTagTop(pFlowDefinition);
 
+            cw.AppendLineTop($"[Coreflow.Objects.FlowIdentifierAttribute(\"{pFlowDefinition.Identifier.ToString()}\")]");
+
             //Currently idk which letters needs an escape
             cw.AppendLineTop("public class " + FLOW_CLASS_PREFIX + flowid + " : " + typeof(ICompiledFlow).FullName + "  {");
 

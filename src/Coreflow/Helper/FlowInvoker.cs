@@ -13,6 +13,7 @@ namespace Coreflow.Helper
         {
             FlowInvokeResult ret = new FlowInvokeResult();
 
+            /*
             FlowCode code = pFlow.GenerateFlowCode();
 
             ret.CompileResult = code.Compile();
@@ -59,7 +60,7 @@ namespace Coreflow.Helper
                 pFlow.Coreflow.FlowInstanceStorage.Update(ret.Instance);
 
                 ret.ExecutedInstance = Flow;
-            }
+            }*/
 
             return ret;
         }

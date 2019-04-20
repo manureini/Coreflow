@@ -154,12 +154,13 @@ function SubmitMoveAfter(sourceId, destinationAfterId, destinationContainerId, s
     });
 }
 
-function SubmitCreateCodeCreator(newCodeCreator, destinationAfterId, destinationContainerId, sequenceIndex, type) {
+function SubmitCreateCodeCreator(newCodeCreator, destinationAfterId, destinationContainerId, sequenceIndex, type, factory) {
     var postData = {};
 
     postData["DestinationAfterId"] = destinationAfterId;
     postData["DestinationContainerId"] = destinationContainerId;
     postData["Type"] = type;
+    postData["CustomFactory"] = factory;
     postData["SequenceIndex"] = sequenceIndex;
 
     $.ajax({

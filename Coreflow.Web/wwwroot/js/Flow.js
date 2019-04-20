@@ -451,11 +451,14 @@ function SetDroppable(element) {
 
                 //$(ui.draggable).html($(ui.draggable).html());
 
+                var type = $(ui.draggable).children().children().data('type');
+                var factory = $(ui.draggable).children().children().data("customfactory")
+
                 $(this).before($(ui.draggable.children()[0]).children());
 
                 SetDraggable($(this).prev());
 
-                SubmitCreateCodeCreator($(this).prev(), destAfterId, destContainerId, sequenceIndex, $(ui.draggable).data('type'));
+                SubmitCreateCodeCreator($(this).prev(), destAfterId, destContainerId, sequenceIndex, type, factory);
                 return;
             }
 

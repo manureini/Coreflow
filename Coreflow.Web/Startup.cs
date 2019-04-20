@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -52,7 +50,7 @@ namespace Coreflow.Web
             });
 
 
-            services.AddDbContext<IdentityDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
+            //   services.AddDbContext<IdentityDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
             services.AddIdentity<IdentityUser, IdentityRole>()
             .AddUserStore<MemoryUserStore>()
@@ -67,15 +65,22 @@ namespace Coreflow.Web
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute())
             );*/
 
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.EnableEndpointRouting = false;
+            }).AddNewtonsoftJson();
 
             services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
             services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider pServiceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider pServiceProvider)
         {
+
+            app.UseDeveloperExceptionPage();
+
+            /*
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -84,7 +89,7 @@ namespace Coreflow.Web
             {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
-            }
+            }*/
 
             app.UseSession();
             //    app.UseHttpsRedirection();
@@ -92,6 +97,7 @@ namespace Coreflow.Web
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+
 
             app.UseMvc(routes =>
             {

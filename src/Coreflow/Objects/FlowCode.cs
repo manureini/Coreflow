@@ -16,7 +16,7 @@ namespace Coreflow.Objects
 
         public FlowCompileResult Compile()
         {
-            return FlowCompilerHelper.CompileFlowCode(this);
+            return FlowCompilerHelper.CompileFlowCode(Code, ReferencedAssemblies);
         }
     }
 }

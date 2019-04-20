@@ -34,9 +34,14 @@ namespace Coreflow.Web.Controllers
             Program.CoreflowInstance.FlowDefinitionStorage.Remove(wfDef.Identifier);
             Program.CoreflowInstance.FlowDefinitionStorage.Add(wfDef);
 
-            // FlowInvokeResult invokeResult = FlowInvoker.Invoke(wfDef);
+            Program.CoreflowInstance.CompileFlows();
+            Program.CoreflowInstance.RunFlow(wfDef.Identifier);
 
-            var factory = wfDef.GenerateFlowCode().Compile().InstanceFactory;
+            /*
+
+          // FlowInvokeResult invokeResult = FlowInvoker.Invoke(wfDef);
+
+          var factory = wfDef.GenerateFlowCode().Compile().InstanceFactory;
 
             var resultArgs = factory.RunInstance(new Dictionary<string, object>()
                 {
@@ -44,7 +49,7 @@ namespace Coreflow.Web.Controllers
                     {"b", 2 }
                 });
 
-
+    */
             string result = "";
             //  string result = invokeResult.ExecutedInstance.GetType().GetField("result").GetValue(invokeResult.ExecutedInstance) as string;
 
@@ -300,6 +305,7 @@ namespace Coreflow.Web.Controllers
                 CodeCreatorModel modes = new CodeCreatorModel()
                 {
                     Type = pData.Type,
+                    CustomFactory = pData.CustomFactory,
                     DisplayName = pData.Type,
                     Identifier = Guid.NewGuid(),
                 };

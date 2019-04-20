@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -11,7 +12,7 @@ namespace Coreflow.Objects
 
         public bool Successful { get; internal set; }
 
-        public Assembly ResultAssembly { get; internal set; }
+        public MemoryStream ResultAssembly { get; internal set; }
 
         public string ErrorMessage { get; internal set; }
 

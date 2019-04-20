@@ -1,4 +1,5 @@
-﻿using Coreflow.Interfaces;
+﻿using Coreflow.Helper;
+using Coreflow.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace Coreflow.Objects
 {
-    public class FlowInstanceFactory
+    public class FlowInstanceFactory : IDisposable
     {
         public delegate ICompiledFlow FlowCreator();
 
@@ -18,13 +19,15 @@ namespace Coreflow.Objects
 
         protected FlowCreator mCreator;
 
-        internal FlowInstanceFactory(Coreflow pCoreFlow, Guid pDefinitionGuid, Type pType)
+        public bool IsDisposed { get; protected set; }
+
+        internal FlowInstanceFactory(Coreflow pCoreFlow, Guid pDefinitionGuid, Type pDynamicFlowType)
         {
             Coreflow = pCoreFlow;
             DefinitionGuid = pDefinitionGuid;
 
-            ConstructorInfo emptyConstructor = pType.GetConstructor(Type.EmptyTypes);
-            var dynamicMethod = new DynamicMethod("CreateInstance", pType, Type.EmptyTypes, true);
+            ConstructorInfo emptyConstructor = pDynamicFlowType.GetConstructor(Type.EmptyTypes);
+            var dynamicMethod = new DynamicMethod("CreateInstance", pDynamicFlowType, Type.EmptyTypes, true);
             ILGenerator ilGenerator = dynamicMethod.GetILGenerator();
             //   ilGenerator.Emit(OpCodes.Nop);
             ilGenerator.Emit(OpCodes.Newobj, emptyConstructor);
@@ -35,6 +38,9 @@ namespace Coreflow.Objects
 
         public ICompiledFlow NewInstance()
         {
+            if (IsDisposed)
+                throw new Exception("Factory is disposed, because no longer up to date");
+
             return mCreator();
         }
 
@@ -59,8 +65,14 @@ namespace Coreflow.Objects
             flowInstance.EndTime = DateTime.UtcNow;
 
             Coreflow.FlowInstanceStorage.Update(flowInstance);
-            
+
             return flow.GetArguments();
+        }
+
+        public void Dispose()
+        {
+            mCreator = null;
+            IsDisposed = true;
         }
     }
 }

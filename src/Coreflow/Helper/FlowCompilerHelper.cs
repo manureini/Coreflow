@@ -22,30 +22,30 @@ namespace Coreflow.Helper
         private static Regex mIdRegex = new Regex(@"\/\/#id *([a-zA-Z0-9-]*)");
         private static Regex mContainerRegex = new Regex(@"\/\/#Container");
 
-        private static Dictionary<Guid, MetadataReference> mGeneratedAssemblies = new Dictionary<Guid, MetadataReference>();
 
-        public static FlowCompileResult CompileFlowCode(FlowCode pFlowCode)
+        public static FlowCompileResult CompileFlowCode(string pCode, IEnumerable<MetadataReference> pReferencedAssemblies, string pAssemblyName = null)
         {
             FlowCompileResult ret = new FlowCompileResult()
             {
-                FlowCode = pFlowCode
+
             };
 
-            SyntaxTree syntaxTree = ParseText(pFlowCode.Code);
+            SyntaxTree syntaxTree = ParseText(pCode);
 
             //  string formattedCode = FormatCode(syntaxTree);        
 
-            string assemblyName = Guid.NewGuid().ToString();
+            pAssemblyName ??= Guid.NewGuid().ToString();
 
-            Compilation compilation = CreateLibraryCompilation(assemblyName, false)
-               .AddReferences(pFlowCode.ReferencedAssemblies)
-               .AddReferences(mGeneratedAssemblies.Values)
+            Compilation compilation = CreateLibraryCompilation(pAssemblyName, false)
+               .AddReferences(pReferencedAssemblies)
                .AddSyntaxTrees(syntaxTree);
 
             var stream = new MemoryStream();
             var emitResult = compilation.Emit(stream);
 
-            string[] codeLines = pFlowCode.Code.Split("\n");
+            ret.ResultAssembly = stream;
+
+            string[] codeLines = pCode.Split("\n");
 
             if (!emitResult.Success)
             {
@@ -129,16 +129,21 @@ namespace Coreflow.Helper
 
     */
 
+
+
             ret.Successful = true;
 
+            /*
             Directory.CreateDirectory("tmp");
             string asmFilename = Path.Combine("tmp", assemblyName + ".dll");
 
             File.WriteAllBytes(asmFilename, stream.ToArray());
 
             ret.ResultAssembly = Assembly.LoadFile(Path.GetFullPath(asmFilename));
+            */
 
 
+            /*
             Guid flowIdentifier = pFlowCode.Definition.Identifier;
 
             if (mGeneratedAssemblies.ContainsKey(flowIdentifier))
@@ -155,7 +160,7 @@ namespace Coreflow.Helper
             Type flowType = flows.First();
 
             ret.InstanceFactory = new FlowInstanceFactory(pFlowCode.Definition.Coreflow, pFlowCode.Definition.Identifier, flowType);
-
+            */
 
 
             return ret;

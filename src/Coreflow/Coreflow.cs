@@ -22,6 +22,8 @@ namespace Coreflow
 
         public IFlowInstanceStorage FlowInstanceStorage { get; }
 
+        public FlowManager FlowManager { get; } = new FlowManager();
+
         static Coreflow()
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
@@ -40,7 +42,6 @@ namespace Coreflow
 
             return null;
         }
-
 
         public Coreflow(IFlowDefinitionStorage pFlowDefinitionStorage, IFlowInstanceStorage pFlowInstanceStorage, string pPluginDirectory = null)
         {
@@ -75,6 +76,16 @@ namespace Coreflow
             {
                 CodeCreatorStorage.AddCodeCreatorFactory(new CallFlowCreatorFactory(flow.Identifier, flow.Name, flow.Icon));
             }
+        }
+
+        public void CompileFlows()
+        {
+            FlowManager.CompileFlows(this, FlowDefinitionStorage.GetDefinitions());
+        }
+
+        public IDictionary<string, object> RunFlow(Guid pIdentifier, IDictionary<string, object> pArguments = null)
+        {
+            return FlowManager.GetFactory(pIdentifier).RunInstance(pArguments);
         }
 
         public void Dispose()
