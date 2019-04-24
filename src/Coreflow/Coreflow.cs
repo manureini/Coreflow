@@ -52,6 +52,7 @@ namespace Coreflow
             FlowDefinitionFactory = new FlowDefinitionFactory(this);
 
             CodeCreatorStorage.AddCodeActivity(typeof(ConsoleWriteLineActivity));
+            CodeCreatorStorage.AddCodeActivity(typeof(SleepActivity));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(ForLoopCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(SequenceCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(InlineCodeCodeCreator));
@@ -74,13 +75,18 @@ namespace Coreflow
 
             foreach (var flow in FlowDefinitionStorage.GetDefinitions())
             {
-                CodeCreatorStorage.AddCodeCreatorFactory(new CallFlowCreatorFactory(flow.Identifier, flow.Name, flow.Icon));
+                CodeCreatorStorage.AddCodeCreatorFactory(new CallFlowCreatorFactory(flow));
             }
         }
 
         public void CompileFlows()
         {
             FlowManager.CompileFlows(this, FlowDefinitionStorage.GetDefinitions());
+        }
+
+        public Guid? GetFlowIdentifier(string pFlowName)
+        {
+            return FlowDefinitionStorage.GetDefinitions().FirstOrDefault(d => d.Name == pFlowName)?.Identifier;
         }
 
         public IDictionary<string, object> RunFlow(Guid pIdentifier, IDictionary<string, object> pArguments = null)

@@ -122,6 +122,12 @@ namespace Coreflow.Helper
         {
             string xFullName = xElement.Attribute("FullName").Value;
             Assembly asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName == xFullName);
+
+            if (asm == null)
+            {
+                Assembly.Load(xFullName);
+            }
+
             return asm;
         }
 

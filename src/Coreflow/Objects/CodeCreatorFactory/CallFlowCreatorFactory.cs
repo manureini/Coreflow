@@ -16,16 +16,19 @@ namespace Coreflow.Objects.CodeCreatorFactory
 
         public string FlowIcon { get; }
 
-        public CallFlowCreatorFactory(Guid pFlowIdentifier, string pFlowName, string pFlowIcon)
+        public List<FlowArguments> Arguments { get; }
+
+        public CallFlowCreatorFactory(FlowDefinition pFlowDefinition)
         {
-            FlowIdentifier = pFlowIdentifier;
-            FlowName = pFlowName;
-            FlowIcon = pFlowIcon;
+            FlowIdentifier = pFlowDefinition.Identifier;
+            FlowName = pFlowDefinition.Name;
+            FlowIcon = pFlowDefinition.Icon;
+            Arguments = pFlowDefinition.Arguments;
         }
 
         public ICodeCreator Create()
         {
-            return new CallFlowCreator(FlowIdentifier, FlowName, FlowIcon)
+            return new CallFlowCreator(FlowIdentifier, FlowName, FlowIcon, Arguments)
             {
                 FactoryIdentifier = Identifier
             };

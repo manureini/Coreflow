@@ -44,12 +44,10 @@ namespace Coreflow.Helper
             }*/
 
 
-
             foreach (var assembly in pFlowDefinition.ReferencedAssemblies)
             {
                 ret.Add(assembly, MetadataReference.CreateFromFile(assembly.Location));
             }
-
 
             return ret;
         }

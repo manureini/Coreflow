@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Coreflow.CodeCreators
 {
-    public class CallFlowCreator : IVariableCreator, ICustomFactoryCodeCreator, IUiDesignable
+    public class CallFlowCreator : IVariableCreator, ICustomFactoryCodeCreator, IParametrized, IUiDesignable
     {
         public string Name => FlowName;
 
@@ -22,15 +22,37 @@ namespace Coreflow.CodeCreators
 
         public string FlowVariableName { get; set; }
 
+        public List<IArgument> Arguments { get; set; } = new List<IArgument>();
+
+
+        public CodeCreatorParameter[] Parameters { get; set; }
+
+
         public CallFlowCreator()
         {
         }
 
-        public CallFlowCreator(Guid pFlowId, string pFlowName, string pFlowIcon)
+        public CallFlowCreator(Guid pFlowId, string pFlowName, string pFlowIcon, List<FlowArguments> pArguments)
         {
             FlowVariableName = pFlowId.ToString().ToVariableName();
             FlowName = pFlowName;
             Icon = pFlowIcon;
+
+            List<CodeCreatorParameter> parameterList = new List<CodeCreatorParameter>();
+
+            pArguments ??= new List<FlowArguments>();
+
+            foreach (var entry in pArguments)
+            {
+                parameterList.Add(new CodeCreatorParameter()
+                {
+                    Direction = entry.Direction,
+                    Name = entry.Name,
+                    Type = entry.Type
+                });
+            }
+
+            Parameters = parameterList.ToArray();
         }
 
         public void Initialize(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
@@ -42,11 +64,30 @@ namespace Coreflow.CodeCreators
         {
             pBuilderContext.UpdateCurrentSymbols();
 
-            pCodeWriter.AppendLineTop($"var {pBuilderContext.GetLocalVariableName(this)} = new {FlowBuilderHelper.FLOW_NAMESPACE_PREFIX}{FlowVariableName}.{FlowBuilderHelper.FLOW_CLASS_PREFIX}{FlowVariableName}();");
+            string flowInstanceVariableName = pBuilderContext.GetLocalVariableName(this);
 
-            //TODO parameter
+            pCodeWriter.AppendLineTop($"var {flowInstanceVariableName} = new {FlowBuilderHelper.FLOW_NAMESPACE_PREFIX}{FlowVariableName}.{FlowBuilderHelper.FLOW_CLASS_PREFIX}{FlowVariableName}();");
 
-            pCodeWriter.AppendLineTop($"{pBuilderContext.GetLocalVariableName(this)}.Run();");
+            string dictVariableName = flowInstanceVariableName + "_1";
+
+            pCodeWriter.AppendLineTop($"var {dictVariableName} = new Dictionary<string, object>();");
+
+            foreach (var entry in Arguments)
+            {
+                if (string.IsNullOrWhiteSpace(entry.Code))
+                    continue;
+
+                pCodeWriter.AppendLineTop($"{dictVariableName}.Add(\"{entry.Name}\", {entry.Code});");
+            }
+
+            pCodeWriter.AppendLineTop($"{flowInstanceVariableName}.SetArguments({dictVariableName});");
+
+            pCodeWriter.AppendLineTop($"{flowInstanceVariableName}.Run();");
+        }
+
+        public CodeCreatorParameter[] GetParameters()
+        {
+            return Parameters ?? new CodeCreatorParameter[0];
         }
     }
 }

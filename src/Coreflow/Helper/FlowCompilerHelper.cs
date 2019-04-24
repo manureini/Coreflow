@@ -195,7 +195,10 @@ namespace Coreflow.Helper
                 }
             }
 
-            throw new Exception("GetIdentifier: Identifier not found!");
+            return Guid.Empty;
+
+
+            //throw new Exception("GetIdentifier: Identifier not found!");
         }
 
         internal static int GetLineOfCode(string[] pCode, Guid pIdentifier)

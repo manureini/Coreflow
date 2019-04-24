@@ -48,11 +48,12 @@ namespace Coreflow.Activities.Common
                 SubjectEncoding = UTF8Encoding.UTF8,
             };
 
-            pAttachments.ForEach(a => mm.Attachments.Add(a));
+
+            pAttachments?.ForEach(a => mm.Attachments.Add(a));
 
             pTo.ForEach(e => mm.To.Add(e));
-            pCc.ForEach(e => mm.CC.Add(e));
-            pBcc.ForEach(e => mm.Bcc.Add(e));
+            pCc?.ForEach(e => mm.CC.Add(e));
+            pBcc?.ForEach(e => mm.Bcc.Add(e));
 
             mm.Headers.Add("X-Mailer", "SMTP Client");
             mm.Headers.Add("Message-Id", $"<{Guid.NewGuid()}@smtpclient>");
