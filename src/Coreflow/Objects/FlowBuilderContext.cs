@@ -19,12 +19,21 @@ namespace Coreflow.Objects
 
         public IEnumerable<ISymbol> CurrentSymbols { get; protected set; }
 
-        public FlowBuilderContext(FlowCodeWriter pCodeWriter, List<MetadataReference> pReferencedAssemblies)
+        public SemanticModel SemanticModel { get; protected set; }
+
+        public SyntaxTree SyntaxTree { get; protected set; }
+
+        public FlowDefinition FlowDefinition { get; protected set; }
+
+        public Compilation Compilation { get; protected set; }
+
+
+        public FlowBuilderContext(FlowCodeWriter pCodeWriter, List<MetadataReference> pReferencedAssemblies, FlowDefinition pCurrentDefinition)
         {
             mCodeWriter = pCodeWriter;
             mReferencedAssemblies = pReferencedAssemblies;
+            FlowDefinition = pCurrentDefinition;
         }
-
 
         public string GetOrCreateLocalVariableName(IVariableCreator pVariableCreator)
         {
@@ -71,14 +80,14 @@ namespace Coreflow.Objects
 
             int loc = topCodeLines.Length;
 
-            SyntaxTree tree = FlowCompilerHelper.ParseText(code);
+            SyntaxTree = FlowCompilerHelper.ParseText(code);
 
-            SyntaxNode sn = GetNode(tree, loc);
+            SyntaxNode sn = GetNode(SyntaxTree, loc);
 
-            CurrentSymbols = CompilationLookUpSymbols(tree, sn as CSharpSyntaxNode);
+            CurrentSymbols = CompilationLookUpSymbols(SyntaxTree, sn as CSharpSyntaxNode);
         }
 
-        static SyntaxNode GetNode(SyntaxTree tree, int lineNumber)
+        protected SyntaxNode GetNode(SyntaxTree tree, int lineNumber)
         {
             /*  while (lineNumber > 0)
               {
@@ -100,15 +109,24 @@ namespace Coreflow.Objects
             return tree.GetRoot().FindNode(lineSpan);
         }
 
-
-        static IEnumerable<ISymbol> CompilationLookUpSymbols(SyntaxTree tree, CSharpSyntaxNode currentNode)
+        protected IEnumerable<ISymbol> CompilationLookUpSymbols(SyntaxTree tree, CSharpSyntaxNode currentNode)
         {
-            var compilation = CSharpCompilation.Create("dummy", new[] { tree });
-            var model = compilation.GetSemanticModel(tree);
-            return model.LookupSymbols(currentNode.SpanStart);
+            Compilation = FlowCompilerHelper.CreateLibraryCompilation("dummy", false)
+                                    .AddReferences(mReferencedAssemblies)
+                                    .AddSyntaxTrees(tree);
+
+            var diagnostics = Compilation.GetDiagnostics();
+
+            if (diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).Any())
+            {
+                //TODO Now it is possible that we can not resolve a type of a symbol. We hope the user will correct that error in code asap!
+                //Add a warning or something?
+                //Throw exception?
+            }
+
+            SemanticModel = Compilation.GetSemanticModel(tree);
+            return SemanticModel.LookupSymbols(currentNode.SpanStart);
         }
-
-
 
     }
 }

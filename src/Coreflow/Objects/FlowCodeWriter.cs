@@ -13,10 +13,9 @@ namespace Coreflow.Objects
 
         internal FlowCodeWriter() { }
 
-        public void SetStringBuilder(StringBuilder pTmpTopStringBuilder, StringBuilder pTmpBottomStringBuilder)
+        public void SetTopString(string pString)
         {
-            mTopStringBuilder = pTmpTopStringBuilder;
-            mBottomStringBuilder = pTmpBottomStringBuilder;
+            mTopStringBuilder = new StringBuilder(pString);
         }
 
         public void AppendTop(string pCode)
@@ -73,14 +72,24 @@ namespace Coreflow.Objects
             mBottomStringBuilder.Remove(pIndex, mBottomStringBuilder.Length - pIndex);
         }
 
+        public void RemoveTop(int pIndex)
+        {
+            mTopStringBuilder.Remove(pIndex, mBottomStringBuilder.Length - pIndex);
+        }
+
         public int GetButtomIndex()
         {
             return mBottomStringBuilder.Length;
         }
 
-        public string SubstringButtom(int pIndex)
+        public int GetTopIndex()
         {
-            return Reverse(mBottomStringBuilder.ToString().Substring(pIndex));
+            return mTopStringBuilder.Length;
+        }
+
+        public string SubstringButtom(int pStartIndex)
+        {
+            return Reverse(mBottomStringBuilder.ToString().Substring(pStartIndex));
         }
 
         public string ToStringTop()

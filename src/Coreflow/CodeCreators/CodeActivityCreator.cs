@@ -1,5 +1,9 @@
-﻿using Coreflow.Interfaces;
+﻿using Coreflow.Helper;
+using Coreflow.Interfaces;
 using Coreflow.Objects;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.FindSymbols;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -64,15 +68,10 @@ namespace Coreflow.CodeCreators
 
         public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer)
         {
-            pBuilderContext.UpdateCurrentSymbols();
-
-            pCodeWriter.WriteIdentifierTagTop(this);
-
-            pCodeWriter.AppendLineTop($"{pBuilderContext.GetLocalVariableName(this)}.Execute(");
-
             MethodInfo mi = typeof(T).GetMethod("Execute");
 
-            pCodeWriter.AppendLineTop(); //prevent issue with RemoveLastChar if no parameters are there
+
+            //validation part
 
             foreach (ParameterInfo pi in mi.GetParameters().OrderBy(p => p.Position))
             {
@@ -81,7 +80,86 @@ namespace Coreflow.CodeCreators
                 if (argument.Name != pi.Name)
                     throw new Exception($"Inconsistent parameter and arguments. Argument '{argument.Name}' does not match Parameter '{pi.Name}'. Did the source method changed?");
 
-                //TODO implement "CodeGenerator Compile Errors"
+                //TODO implement "CodeGenerator CodeCreation Errors"
+            }
+
+
+            /*
+            
+            pBuilderContext.UpdateCurrentSymbols();
+
+            foreach (ParameterInfo pi in mi.GetParameters().OrderBy(p => p.Position))
+            {
+                IArgument argument = Arguments[pi.Position];
+
+                if (argument is InputExpressionCreator iec)
+                {
+
+                    string variableName = argument.Identifier.ToString().ToVariableName();
+
+
+                    var tmpTree = FlowCompilerHelper.ParseText(iec.Code);
+
+
+                    var invocation = pBuilderContext.SyntaxTree.GetRoot().DescendantNodes().Last();
+
+                    var node = pBuilderContext.SemanticModel.GetSpeculativeSymbolInfo(pBuilderContext.SyntaxTree.Length, SyntaxFactory.IdentifierName("f"), SpeculativeBindingOption.BindAsExpression);
+ 
+                    //not working
+
+                }
+            }
+            */
+
+
+
+            string topString = pCodeWriter.ToStringTop();
+
+            foreach (ParameterInfo pi in mi.GetParameters().OrderBy(p => p.Position))
+            {
+                IArgument argument = Arguments[pi.Position];
+
+                if (argument is InputExpressionCreator iec)
+                {
+                    string variableName = argument.Identifier.ToString().ToVariableName();
+                    pCodeWriter.AppendLineTop($"var {variableName} = {iec.Code};");
+                }
+            }
+
+            pBuilderContext.UpdateCurrentSymbols();
+
+            foreach (ParameterInfo pi in mi.GetParameters().OrderBy(p => p.Position))
+            {
+                IArgument argument = Arguments[pi.Position];
+
+                if (argument is InputExpressionCreator iec)
+                {
+                    string variableName = argument.Identifier.ToString().ToVariableName();
+                    ILocalSymbol symbol = (ILocalSymbol)pBuilderContext.CurrentSymbols.First(s => s.Name == variableName);
+
+                    if (symbol.Type.TypeKind != TypeKind.Error)
+                    {
+                        iec.ActualType = symbol.Type;
+                    }
+                }
+            }
+
+            pCodeWriter.SetTopString(topString);
+
+
+            pBuilderContext.UpdateCurrentSymbols();
+
+
+            pCodeWriter.WriteIdentifierTagTop(this);
+
+            pCodeWriter.AppendLineTop($"{pBuilderContext.GetLocalVariableName(this)}.Execute(");
+
+
+            pCodeWriter.AppendLineTop(); //prevent issue with RemoveLastChar if no parameters are there
+
+            foreach (ParameterInfo pi in mi.GetParameters().OrderBy(p => p.Position))
+            {
+                IArgument argument = Arguments[pi.Position];
 
                 argument.ToCode(pBuilderContext, pCodeWriter, pContainer);
                 pCodeWriter.AppendTop(",");

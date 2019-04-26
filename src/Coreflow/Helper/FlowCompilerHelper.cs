@@ -174,7 +174,7 @@ namespace Coreflow.Helper
             return CSharpSyntaxTree.ParseText(sourceCode, options);
         }
 
-        private static Compilation CreateLibraryCompilation(string assemblyName, bool enableOptimisations)
+        internal static Compilation CreateLibraryCompilation(string assemblyName, bool enableOptimisations)
         {
             var options = new CSharpCompilationOptions(
                     OutputKind.DynamicallyLinkedLibrary,

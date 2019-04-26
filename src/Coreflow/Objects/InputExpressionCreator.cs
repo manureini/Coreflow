@@ -1,6 +1,9 @@
 ﻿using Coreflow.Helper;
 using Coreflow.Objects;
+using Microsoft.CodeAnalysis;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Coreflow.Interfaces
 {
@@ -16,6 +19,8 @@ namespace Coreflow.Interfaces
 
         //Type "Type" and serializer does not work
         public string Type { get; set; }
+
+        public ITypeSymbol ActualType { get; internal set; }
 
         public string FactoryIdentifier { get; set; }
 
@@ -45,15 +50,25 @@ namespace Coreflow.Interfaces
         {
             pCodewriter.WriteIdentifierTagTop(this);
 
+            Type type = TypeHelper.SearchType(Type);
+
             if (string.IsNullOrWhiteSpace(Code))
             {
-                Type type = TypeHelper.SearchType(Type);
-
-                if (type == typeof(CSharpCode))
-                    return;
-
-                pCodewriter.AppendLineTop("default(" + type.Name + ")");
+                pCodewriter.AppendLineTop(TypeHelper.GetDefaultInitializationCodeSnippet(type));
                 return;
+            }
+
+            if (ActualType != null && type != typeof(CSharpCode) && !ActualType.TypeSymbolMatchesType(type, pBuilderContext.SemanticModel))
+            {
+                ITypeSymbol typeSymbol = type.GetTypeSymbolForType(pBuilderContext.SemanticModel);
+
+                var converation = pBuilderContext.Compilation.ClassifyCommonConversion(ActualType, typeSymbol);
+
+                if (!(converation.IsIdentity | converation.IsImplicit | converation.IsNumeric | converation.IsUserDefined))
+                {
+                    if (ParameterConverterHelper.AppendCodeWithTypeConverter(pCodewriter, ActualType, typeSymbol, Code))
+                        return; // found a conversation
+                }
             }
 
             pCodewriter.AppendLineTop(Code);

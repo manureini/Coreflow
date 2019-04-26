@@ -51,6 +51,9 @@ namespace Coreflow
             CodeCreatorStorage = new CodeCreatorStorage(this);
             FlowDefinitionFactory = new FlowDefinitionFactory(this);
 
+
+            FlowDefinitionStorage.SetCoreflow(this);
+
             CodeCreatorStorage.AddCodeActivity(typeof(ConsoleWriteLineActivity));
             CodeCreatorStorage.AddCodeActivity(typeof(SleepActivity));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(ForLoopCreator));

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Coreflow.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -8,7 +9,6 @@ namespace Coreflow.Helper
 {
     public class TypeHelper
     {
-
         private static Regex mRegex = new Regex(@"\[\[(.*)\]\]");
 
         public static Type SearchType(string pTypename)
@@ -22,27 +22,32 @@ namespace Coreflow.Helper
                 type = a.GetType(pTypename);
                 if (type != null)
                     return type;
-
-                /*
-                   foreach (Type t in a.GetTypes())
-                     {
-                         if (t.AssemblyQualifiedName == pTypename)
-                             return t;
-                     } */
             }
-
-            /*
-            if (pTypename.Contains("`1[["))
-            {
-                Type baseType = SearchType(mRegex.Replace(pTypename, ""));
-                Type firstType = SearchType(mRegex.Match(pTypename).Groups[1].Value);
-                return baseType.MakeGenericType(firstType);
-            }
-
-            //No better way for generic types?
-            */
 
             return null;
+        }
+
+        public static string GetDefaultInitializationCodeSnippet(Type pType)
+        {
+            if (pType == typeof(CSharpCode))
+                return string.Empty;
+
+            if (pType.Name == typeof(IEnumerable<>).Name)
+            {
+                return GetCodeForEmptyIEnumerable(pType);
+            }
+
+            return "default(" + pType.Name + ")";
+        }
+
+        public static string GetCodeForEmptyIEnumerable(Type pType)
+        {
+            if (pType.Name != typeof(IEnumerable<>).Name)
+                throw new ArgumentException("Type is not IEnumerable", nameof(pType));
+
+            Type genericType = pType.GenericTypeArguments.Single();
+
+            return $"Enumerable.Empty<{genericType.FullName}>()";
         }
     }
 }

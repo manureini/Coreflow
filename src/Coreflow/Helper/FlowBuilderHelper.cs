@@ -39,7 +39,7 @@ namespace Coreflow
             }
         }
 
-        public static FlowCode GenerateFlowCode(FlowDefinition pFlowDefinition)
+        public static FlowCode GenerateFlowCode(FlowDefinition pFlowDefinition, bool pOnlySingleFlow = false)
         {
             FlowCode ret = new FlowCode();
             ret.Definition = pFlowDefinition;
@@ -53,7 +53,7 @@ namespace Coreflow
 
             FlowCodeWriter cw = new FlowCodeWriter();
 
-            FlowBuilderContext context = new FlowBuilderContext(cw, ret.ReferencedAssemblies.ToList());
+            FlowBuilderContext context = new FlowBuilderContext(cw, ret.ReferencedAssemblies.ToList(), pFlowDefinition);
 
             string flowid = pFlowDefinition.Identifier.ToString().ToVariableName();
 
@@ -167,6 +167,33 @@ namespace Coreflow
 
             return GetVariableCreatorInInitialScope(pContainer.ParentContainerCreator, pContainer, pFilter);
         }
+
+        public static FlowCode GetCombinedCodeOtherFlows(FlowDefinition pFlowDefinition)
+        {
+            List<MetadataReference> references = new List<MetadataReference>();
+
+            StringBuilder combinedCode = new StringBuilder();
+
+            foreach (var flow in pFlowDefinition.Coreflow.FlowDefinitionStorage.GetDefinitions())
+            {
+                if (flow.Identifier == pFlowDefinition.Identifier)
+                    continue;
+
+                FlowCode fcode = FlowBuilderHelper.GenerateFlowCode(flow, true);
+
+                references.AddRange(fcode.ReferencedAssemblies);
+                combinedCode.Append(fcode.Code);
+            }
+
+            string fullcode = combinedCode.ToString();
+
+            return new FlowCode()
+            {
+                Code = fullcode,
+                ReferencedAssemblies = references.Distinct()
+            };
+        }
+
 
         public static string FormatCode(string pCode)
         {
