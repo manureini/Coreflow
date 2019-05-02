@@ -46,14 +46,9 @@ namespace Coreflow
 
             SetParentContainer(pFlowDefinition.CodeCreator);
 
-            var wfReferencesDict = ReferenceHelper.GetMetadataReferences(pFlowDefinition);
-
-            ret.ReferencedAssemblies = wfReferencesDict.Values;
-
-
             FlowCodeWriter cw = new FlowCodeWriter();
 
-            FlowBuilderContext context = new FlowBuilderContext(cw, ret.ReferencedAssemblies.ToList(), pFlowDefinition);
+            FlowBuilderContext context = new FlowBuilderContext(cw, pFlowDefinition);
 
             string flowid = pFlowDefinition.Identifier.ToString().ToVariableName();
 
@@ -89,9 +84,6 @@ namespace Coreflow
             if (pFlowDefinition.Arguments != null)
                 foreach (FlowArguments parameter in pFlowDefinition.Arguments)
                 {
-                    if (!wfReferencesDict.ContainsKey(parameter.Type.Assembly))
-                        throw new ArgumentException($"Flow has parameter with type {parameter.Type}, but does not reference assembly {parameter.Type.Assembly.FullName}");
-
                     string value = $"default({parameter.Type.FullName})";
 
                     if (parameter.Expression != null && !string.IsNullOrWhiteSpace(parameter.Expression))
@@ -99,7 +91,6 @@ namespace Coreflow
 
                     cw.AppendLineTop($"public {parameter.Type.FullName} {parameter.Name} = {value};");
                 }
-
 
 
             cw.AppendLineTop();
@@ -168,9 +159,9 @@ namespace Coreflow
             return GetVariableCreatorInInitialScope(pContainer.ParentContainerCreator, pContainer, pFilter);
         }
 
+        /*
         public static FlowCode GetCombinedCodeOtherFlows(FlowDefinition pFlowDefinition)
         {
-            List<MetadataReference> references = new List<MetadataReference>();
 
             StringBuilder combinedCode = new StringBuilder();
 
@@ -181,7 +172,6 @@ namespace Coreflow
 
                 FlowCode fcode = FlowBuilderHelper.GenerateFlowCode(flow, true);
 
-                references.AddRange(fcode.ReferencedAssemblies);
                 combinedCode.Append(fcode.Code);
             }
 
@@ -189,11 +179,9 @@ namespace Coreflow
 
             return new FlowCode()
             {
-                Code = fullcode,
-                ReferencedAssemblies = references.Distinct()
+                Code = fullcode
             };
-        }
-
+        }*/
 
         public static string FormatCode(string pCode)
         {

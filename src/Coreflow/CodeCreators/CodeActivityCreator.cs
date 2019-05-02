@@ -84,35 +84,6 @@ namespace Coreflow.CodeCreators
             }
 
 
-            /*
-            
-            pBuilderContext.UpdateCurrentSymbols();
-
-            foreach (ParameterInfo pi in mi.GetParameters().OrderBy(p => p.Position))
-            {
-                IArgument argument = Arguments[pi.Position];
-
-                if (argument is InputExpressionCreator iec)
-                {
-
-                    string variableName = argument.Identifier.ToString().ToVariableName();
-
-
-                    var tmpTree = FlowCompilerHelper.ParseText(iec.Code);
-
-
-                    var invocation = pBuilderContext.SyntaxTree.GetRoot().DescendantNodes().Last();
-
-                    var node = pBuilderContext.SemanticModel.GetSpeculativeSymbolInfo(pBuilderContext.SyntaxTree.Length, SyntaxFactory.IdentifierName("f"), SpeculativeBindingOption.BindAsExpression);
- 
-                    //not working
-
-                }
-            }
-            */
-
-
-
             string topString = pCodeWriter.ToStringTop();
 
             foreach (ParameterInfo pi in mi.GetParameters().OrderBy(p => p.Position))
@@ -154,8 +125,15 @@ namespace Coreflow.CodeCreators
 
             pBuilderContext.UpdateCurrentSymbols();
 
-
             pCodeWriter.WriteIdentifierTagTop(this);
+
+
+            if (mi.ReturnType != typeof(void))
+            {
+                IArgument resultarg = Arguments.Last();
+                resultarg.ToCode(pBuilderContext, pCodeWriter, pContainer);
+                pCodeWriter.AppendLineTop(" = ");
+            }
 
             pCodeWriter.AppendLineTop($"{pBuilderContext.GetLocalVariableName(this)}.Execute(");
 
@@ -197,7 +175,21 @@ namespace Coreflow.CodeCreators
         public CodeCreatorParameter[] GetParameters()
         {
             MethodInfo mi = CodeActivityType.GetMethod("Execute");
-            return mi.GetParameters().Select(ConvertToParameter).ToArray();
+
+            List<CodeCreatorParameter> additional = new List<CodeCreatorParameter>();
+
+            if (mi.ReturnType != typeof(void))
+            {
+                additional.Add(new CodeCreatorParameter()
+                {
+                    Category = "Default",
+                    Name = "Result",
+                    Direction = VariableDirection.Out,
+                    Type = typeof(LeftSideCSharpCode)
+                });
+            }
+
+            return mi.GetParameters().Select(ConvertToParameter).Concat(additional).ToArray();
         }
     }
 }

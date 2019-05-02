@@ -26,15 +26,12 @@ namespace Coreflow.Helper
         {
             var combinedCode = new StringBuilder();
 
-            List<MetadataReference> references = new List<MetadataReference>();
-
+      
             //TODO add lock threadsafe
 
             foreach (var flow in pFlows)
             {
                 FlowCode fcode = FlowBuilderHelper.GenerateFlowCode(flow);
-
-                references.AddRange(fcode.ReferencedAssemblies);
                 combinedCode.Append(fcode.Code);
             }
 
@@ -58,7 +55,7 @@ namespace Coreflow.Helper
 
             string assemblyName = ASSEMBLY_PREFIX + mAssemblyVersion;
 
-            var result = FlowCompilerHelper.CompileFlowCode(fullcode, references.Distinct(), assemblyName);
+            var result = FlowCompilerHelper.CompileFlowCode(fullcode,  assemblyName);
 
             if (!result.Successful)
                 throw new Exception("Flows did not compile!");

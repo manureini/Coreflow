@@ -23,7 +23,7 @@ namespace Coreflow.Helper
         private static Regex mContainerRegex = new Regex(@"\/\/#Container");
 
 
-        public static FlowCompileResult CompileFlowCode(string pCode, IEnumerable<MetadataReference> pReferencedAssemblies, string pAssemblyName = null)
+        public static FlowCompileResult CompileFlowCode(string pCode, string pAssemblyName = null)
         {
             FlowCompileResult ret = new FlowCompileResult()
             {
@@ -36,9 +36,7 @@ namespace Coreflow.Helper
 
             pAssemblyName ??= Guid.NewGuid().ToString();
 
-            Compilation compilation = CreateLibraryCompilation(pAssemblyName, false)
-               .AddReferences(pReferencedAssemblies)
-               .AddSyntaxTrees(syntaxTree);
+            Compilation compilation = CreateCompilation(pAssemblyName, syntaxTree);
 
             var stream = new MemoryStream();
             var emitResult = compilation.Emit(stream);
@@ -164,6 +162,13 @@ namespace Coreflow.Helper
 
 
             return ret;
+        }
+
+        public static Compilation CreateCompilation(string pAssemblyName, SyntaxTree syntaxTree)
+        {
+            return CreateLibraryCompilation(pAssemblyName, false)
+               .AddReferences(ReferenceHelper.GetMetadataReferences())
+               .AddSyntaxTrees(syntaxTree);
         }
 
         public static SyntaxTree ParseText(string sourceCode)

@@ -10,13 +10,11 @@ namespace Coreflow.Objects
 
         public string FormattedCode => FlowBuilderHelper.FormatCode(Code);
 
-        public IEnumerable<MetadataReference> ReferencedAssemblies { get; set; }
-
         public FlowDefinition Definition { get; set; }
 
         public FlowCompileResult Compile()
         {
-            return FlowCompilerHelper.CompileFlowCode(Code, ReferencedAssemblies);
+            return FlowCompilerHelper.CompileFlowCode(Code);
         }
     }
 }

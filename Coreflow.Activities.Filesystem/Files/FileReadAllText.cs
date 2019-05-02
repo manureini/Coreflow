@@ -7,15 +7,16 @@ namespace Coreflow.Activities.Filesystem
 {
     public class FileReadAllText : ICodeActivity
     {
-        public void Execute(
+        public string Execute(
            [DisplayMeta("File Path")]
-           string pFilePath,
+           string pFilePath
 
-           [DisplayMeta("File Conent")]
-           out string pFileContent
+          //    [DisplayMeta("File Conent")]
+          //    out string pFileContent
           )
         {
-            pFileContent = File.ReadAllText(pFilePath);
+            // pFileContent = File.ReadAllText(pFilePath);
+            return File.ReadAllText(pFilePath);
         }
     }
 }

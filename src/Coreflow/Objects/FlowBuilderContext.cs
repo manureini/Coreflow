@@ -15,7 +15,6 @@ namespace Coreflow.Objects
         public Dictionary<string, object> BuildingContext = new Dictionary<string, object>();
 
         private FlowCodeWriter mCodeWriter;
-        private List<MetadataReference> mReferencedAssemblies;
 
         public IEnumerable<ISymbol> CurrentSymbols { get; protected set; }
 
@@ -28,10 +27,9 @@ namespace Coreflow.Objects
         public Compilation Compilation { get; protected set; }
 
 
-        public FlowBuilderContext(FlowCodeWriter pCodeWriter, List<MetadataReference> pReferencedAssemblies, FlowDefinition pCurrentDefinition)
+        public FlowBuilderContext(FlowCodeWriter pCodeWriter, FlowDefinition pCurrentDefinition)
         {
             mCodeWriter = pCodeWriter;
-            mReferencedAssemblies = pReferencedAssemblies;
             FlowDefinition = pCurrentDefinition;
         }
 
@@ -111,9 +109,7 @@ namespace Coreflow.Objects
 
         protected IEnumerable<ISymbol> CompilationLookUpSymbols(SyntaxTree tree, CSharpSyntaxNode currentNode)
         {
-            Compilation = FlowCompilerHelper.CreateLibraryCompilation("dummy", false)
-                                    .AddReferences(mReferencedAssemblies)
-                                    .AddSyntaxTrees(tree);
+            Compilation = FlowCompilerHelper.CreateCompilation("dummy", tree);
 
             var diagnostics = Compilation.GetDiagnostics();
 

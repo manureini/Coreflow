@@ -16,7 +16,7 @@ namespace Coreflow.Web.Controllers
                 Name = pFlowDefinition.Name,
                 Icon = pFlowDefinition.Icon,
                 ReferencedNamespaces = pFlowDefinition.ReferencedNamespaces,
-                ReferencedAssemblies = pFlowDefinition.ReferencedAssemblies.Select(a => a.FullName).ToList(),
+                ReferencedAssemblies = pFlowDefinition.ReferencedAssemblies.ToList(),
                 Identifier = pFlowDefinition.Identifier,
                 CodeCreatorModel = CodeCreatorModelHelper.CreateModel(pFlowDefinition.CodeCreator, null, pFlowDefinition),
                 CodeCreators = Program.CoreflowInstance.CodeCreatorStorage.GetAllFactories().Select(v =>
@@ -46,21 +46,11 @@ namespace Coreflow.Web.Controllers
                 Icon = pFlowDefinitionModel.Icon,
                 ReferencedNamespaces = pFlowDefinitionModel.ReferencedNamespaces,
                 Identifier = pFlowDefinitionModel.Identifier,
-                Arguments = pFlowDefinitionModel.Arguments
+                Arguments = pFlowDefinitionModel.Arguments,
+                ReferencedAssemblies = pFlowDefinitionModel.ReferencedAssemblies
             };
 #pragma warning restore CS0618 // Type or member is obsolete
 
-            ret.ReferencedAssemblies = new List<Assembly>();
-
-            foreach (string assemblyFullName in pFlowDefinitionModel.ReferencedAssemblies)
-            {
-                Assembly asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName == assemblyFullName);
-
-                if (asm == null)
-                    throw new Exception($"Assembly '{assemblyFullName}' not found!");
-
-                ret.ReferencedAssemblies.Add(asm);
-            }
 
             ret.CodeCreator = CodeCreatorModelHelper.CreateCode(pFlowDefinitionModel.CodeCreatorModel, ret);
 

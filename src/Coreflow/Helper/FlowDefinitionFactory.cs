@@ -24,20 +24,9 @@ namespace Coreflow.Helper
    //         nameof(Coreflow)
         };
 
-        public List<Assembly> DefaultReferencedAssemblies;
-
         internal FlowDefinitionFactory(Coreflow pCoreflow)
         {
             mCoreflow = pCoreflow;
-
-            DefaultReferencedAssemblies = new string[] {
-                 "System.Runtime.dll",
-                 "System.Collections.dll",
-                 "System.Linq.dll",
-     //            "System.Linq.Expressions.dll",
-                 "System.Private.CoreLib.dll",
-                 "System.Console.dll",
-                 nameof(Coreflow) + ".dll" }.Select(s => FindAssembly(s)).ToList();
         }
 
         private Assembly FindAssembly(string pFilename)
@@ -54,16 +43,6 @@ namespace Coreflow.Helper
             throw new Exception($"Assembly with filename {pFilename} not found!");
         }
 
-        public void AddDefaultReferencedAssembly(Assembly pAssembly)
-        {
-            if (!DefaultReferencedAssemblies.Contains(pAssembly))
-                DefaultReferencedAssemblies.Add(pAssembly);
-        }
-
-        public void AddDefaultReferencedAssembly(IEnumerable<Assembly> pAssemblies)
-        {
-            pAssemblies.ForEach(a => AddDefaultReferencedAssembly(a));
-        }
 
         public void AddDefaultReferencedNamespace(string pNameSpace)
         {
@@ -82,7 +61,6 @@ namespace Coreflow.Helper
             {
                 Name = pName,
                 ReferencedNamespaces = DefaultReferencedNamespaces,
-                ReferencedAssemblies = DefaultReferencedAssemblies,
                 Arguments = new List<FlowArguments>(),
             };
 

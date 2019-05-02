@@ -8,6 +8,7 @@ namespace Coreflow.Helper
 {
     public class ReferenceHelper
     {
+        /*
         private const string DLL_FILE_EXTENSION = ".dll";
 
         private static Dictionary<string, MetadataReference> mReferences = new Dictionary<string, MetadataReference>();
@@ -43,13 +44,28 @@ namespace Coreflow.Helper
                         ret.Add(assembly, MetadataReference.CreateFromFile(assembly.Location));
             }*/
 
+        /*
+        foreach (var assembly in pFlowDefinition.ReferencedAssemblies)
+        {
+            ret.Add(assembly, MetadataReference.CreateFromFile(assembly.Location));
+        }
 
-            foreach (var assembly in pFlowDefinition.ReferencedAssemblies)
-            {
+
+        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            if (!assembly.IsDynamic && assembly.Location != string.Empty)
                 ret.Add(assembly, MetadataReference.CreateFromFile(assembly.Location));
-            }
+        }
 
-            return ret;
+        return ret;
+    }
+    */
+
+        public static IEnumerable<MetadataReference> GetMetadataReferences()
+        {
+            return AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic && a.Location != string.Empty)
+                .Select(a => MetadataReference.CreateFromFile(a.Location));
         }
 
 

@@ -10,7 +10,7 @@ namespace Coreflow
     {
         public List<string> ReferencedNamespaces { get; set; }
 
-        public List<Assembly> ReferencedAssemblies { get; set; }
+        public List<string> ReferencedAssemblies { get; set; }
 
         public List<FlowArguments> Arguments { get; set; }
 
