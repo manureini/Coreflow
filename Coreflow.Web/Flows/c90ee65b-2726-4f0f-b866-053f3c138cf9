@@ -171,18 +171,6 @@
             </ns2:InputExpressionCreator>
           </Arguments>
         </ns1:IfCreator>
-        <ns1:InlineCodeCodeCreator>
-          <Identifier>dcde8c44-3db1-4123-8fd6-41c2ebd09a25</Identifier>
-          <Arguments>
-            <Capacity>4</Capacity>
-            <ns2:InputExpressionCreator>
-              <Identifier>323a1fc5-e2f6-44bf-8e19-1133cda0244f</Identifier>
-              <Code>int x= 5;</Code>
-              <Name>Expression</Name>
-              <Type>Coreflow.Interfaces.CSharpCode, Coreflow, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</Type>
-            </ns2:InputExpressionCreator>
-          </Arguments>
-        </ns1:InlineCodeCodeCreator>
       </sys:List>
     </CodeCreators>
     <Identifier>d27f4568-23c9-4819-b87a-715a1a283aa4</Identifier>

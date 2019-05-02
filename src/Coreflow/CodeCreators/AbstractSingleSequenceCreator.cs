@@ -43,8 +43,8 @@ namespace Coreflow.CodeCreators
             pCodeBuilder.WriteIdentifierTagTop(this);
             pCodeBuilder.WriteContainerTagTop(this);
 
-            pCodeBuilder.AppendLineTop("{ /* SingleContainer */");
-            pCodeBuilder.AppendLineBottom("} /* SingleContainer */ ");
+            pCodeBuilder.AppendLineTop("{"); /* SingleContainer */
+            pCodeBuilder.AppendLineBottom("}"); /* SingleContainer */
 
             AddInitializeCode(pBuilderContext, pCodeBuilder);
             ToSequenceCode(pBuilderContext, pCodeBuilder, pContainer);

@@ -50,8 +50,8 @@ namespace Coreflow.CodeCreators
             pCodeBuilder.WriteIdentifierTagTop(this);
             pCodeBuilder.WriteContainerTagTop(this);
 
-            pCodeBuilder.AppendLineTop("{ /* DualContainer */");
-            pCodeBuilder.AppendLineBottom("} /* DualContainer */ ");
+            pCodeBuilder.AppendLineTop("{");  /* DualContainer */
+            pCodeBuilder.AppendLineBottom("}"); /* DualContainer */
 
             AddInitializeCode(pBuilderContext, pCodeBuilder);
             ToSequenceCode(pBuilderContext, pCodeBuilder, pContainer);
@@ -76,7 +76,7 @@ namespace Coreflow.CodeCreators
         protected void AddFirstCodeCreatorsCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
             pCodeWriter.AppendLineTop();
-            pCodeWriter.AppendLineTop("{ /* first */ ");
+            pCodeWriter.AppendLineTop("{"); /* first */
 
             pCodeWriter.AppendLineBottom(RemoveLabelAndCloseBracket);
             pCodeWriter.AppendLineBottom();
@@ -88,14 +88,14 @@ namespace Coreflow.CodeCreators
                 }
 
             pCodeWriter.ReplaceBottom(RemoveLabelAndCloseBracket, "");
-            pCodeWriter.AppendLineTop("} /* first */");
+            pCodeWriter.AppendLineTop("}"); /* first */
         }
 
         protected void AddSecondCodeCreatorsCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
-            pCodeWriter.AppendLineTop("{ /* second */");
+            pCodeWriter.AppendLineTop("{"); /* second */
 
-            pCodeWriter.AppendLineBottom("} /* second */");
+            pCodeWriter.AppendLineBottom("}"); /* second */
 
             if (CodeCreators.Count > 1 && CodeCreators[1] != null)
                 foreach (ICodeCreator c in CodeCreators[1])
