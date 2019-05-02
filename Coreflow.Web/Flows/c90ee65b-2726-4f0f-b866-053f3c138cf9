@@ -86,73 +86,73 @@
                   <ns2:InputExpressionCreator>
                     <Identifier>4fe0f794-e1aa-407c-82dd-d2c0c746ae38</Identifier>
                     <Code>"eco-server.host"</Code>
-                    <Name>pHost</Name>
+                    <Name>Host</Name>
                     <Type>System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e</Type>
                   </ns2:InputExpressionCreator>
                   <ns2:InputExpressionCreator>
                     <Identifier>3efe2a51-b501-4e1d-b818-8b8c40d0b538</Identifier>
                     <Code>25</Code>
-                    <Name>pPort</Name>
+                    <Name>Port</Name>
                     <Type>System.Int32, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e</Type>
                   </ns2:InputExpressionCreator>
                   <ns2:InputExpressionCreator>
                     <Identifier>304ae243-c42e-429b-9fca-53617cd3938e</Identifier>
                     <Code>false</Code>
-                    <Name>pEnableSsl</Name>
+                    <Name>EnableSsl</Name>
                     <Type>System.Boolean, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e</Type>
                   </ns2:InputExpressionCreator>
                   <ns2:InputExpressionCreator>
                     <Identifier>a1427dfd-4495-4821-9888-da53df683f2f</Identifier>
                     <Code>""</Code>
-                    <Name>pUsername</Name>
+                    <Name>Username</Name>
                     <Type>System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e</Type>
                   </ns2:InputExpressionCreator>
                   <ns2:InputExpressionCreator>
                     <Identifier>b592adab-c012-41ef-9808-628180fae9ad</Identifier>
                     <Code>""</Code>
-                    <Name>pPassword</Name>
+                    <Name>Password</Name>
                     <Type>System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e</Type>
                   </ns2:InputExpressionCreator>
                   <ns2:InputExpressionCreator>
                     <Identifier>e971ed0a-6066-4e05-b13e-a0b6d999aeef</Identifier>
                     <Code>"Flow: Disks almost full"</Code>
-                    <Name>pSubject</Name>
+                    <Name>Subject</Name>
                     <Type>System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e</Type>
                   </ns2:InputExpressionCreator>
                   <ns2:InputExpressionCreator>
                     <Identifier>932850df-9992-45e6-ac5c-acc9356d144c</Identifier>
                     <Code>"Warning: Disk full"</Code>
-                    <Name>pBody</Name>
+                    <Name>Body</Name>
                     <Type>System.String, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e</Type>
                   </ns2:InputExpressionCreator>
                   <ns2:InputExpressionCreator>
                     <Identifier>c0825e4f-988e-4d66-94b7-8f3574c38d02</Identifier>
                     <Code></Code>
-                    <Name>pAttachments</Name>
+                    <Name>Attachments</Name>
                     <Type>System.Collections.Generic.IEnumerable`1[[System.Net.Mail.Attachment, System.Net.Mail, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51]], System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e</Type>
                   </ns2:InputExpressionCreator>
                   <ns2:InputExpressionCreator>
                     <Identifier>6b6cf57d-e989-4c0e-92e8-18b772e3540a</Identifier>
                     <Code>new MailAddress("")</Code>
-                    <Name>pFrom</Name>
+                    <Name>From</Name>
                     <Type>System.Net.Mail.MailAddress, System.Net.Mail, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51</Type>
                   </ns2:InputExpressionCreator>
                   <ns2:InputExpressionCreator>
                     <Identifier>63ac6a70-99be-441c-878a-8882c3276649</Identifier>
                     <Code>new MailAddress("") </Code>
-                    <Name>pTo</Name>
+                    <Name>To</Name>
                     <Type>System.Collections.Generic.IEnumerable`1[[System.Net.Mail.MailAddress, System.Net.Mail, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51]], System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e</Type>
                   </ns2:InputExpressionCreator>
                   <ns2:InputExpressionCreator>
                     <Identifier>c607770b-9815-4179-a45b-26c2bc233b3f</Identifier>
                     <Code></Code>
-                    <Name>pCc</Name>
+                    <Name>Cc</Name>
                     <Type>System.Collections.Generic.IEnumerable`1[[System.Net.Mail.MailAddress, System.Net.Mail, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51]], System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e</Type>
                   </ns2:InputExpressionCreator>
                   <ns2:InputExpressionCreator>
                     <Identifier>71a00aa5-078e-4232-97be-9917f6aaa803</Identifier>
                     <Code></Code>
-                    <Name>pBcc</Name>
+                    <Name>Bcc</Name>
                     <Type>System.Collections.Generic.IEnumerable`1[[System.Net.Mail.MailAddress, System.Net.Mail, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51]], System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e</Type>
                   </ns2:InputExpressionCreator>
                 </Arguments>
@@ -171,6 +171,18 @@
             </ns2:InputExpressionCreator>
           </Arguments>
         </ns1:IfCreator>
+        <ns1:InlineCodeCodeCreator>
+          <Identifier>dcde8c44-3db1-4123-8fd6-41c2ebd09a25</Identifier>
+          <Arguments>
+            <Capacity>4</Capacity>
+            <ns2:InputExpressionCreator>
+              <Identifier>323a1fc5-e2f6-44bf-8e19-1133cda0244f</Identifier>
+              <Code>int x= 5;</Code>
+              <Name>Expression</Name>
+              <Type>Coreflow.Interfaces.CSharpCode, Coreflow, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</Type>
+            </ns2:InputExpressionCreator>
+          </Arguments>
+        </ns1:InlineCodeCodeCreator>
       </sys:List>
     </CodeCreators>
     <Identifier>d27f4568-23c9-4819-b87a-715a1a283aa4</Identifier>

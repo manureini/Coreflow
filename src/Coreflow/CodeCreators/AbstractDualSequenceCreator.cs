@@ -75,6 +75,7 @@ namespace Coreflow.CodeCreators
 
         protected void AddFirstCodeCreatorsCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
+            pCodeWriter.AppendLineTop();
             pCodeWriter.AppendLineTop("{ /* first */ ");
 
             pCodeWriter.AppendLineBottom(RemoveLabelAndCloseBracket);

@@ -68,6 +68,7 @@ namespace Coreflow.CodeCreators
 
         protected void AddCodeCreatorsCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
+            pCodeWriter.AppendLineTop();
             pCodeWriter.AppendLineTop("{");
 
             pCodeWriter.AppendLineBottom("}");

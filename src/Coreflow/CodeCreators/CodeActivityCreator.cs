@@ -135,9 +135,14 @@ namespace Coreflow.CodeCreators
                 if (argument is InputExpressionCreator iec)
                 {
                     string variableName = argument.Identifier.ToString().ToVariableName();
-                    ILocalSymbol symbol = (ILocalSymbol)pBuilderContext.CurrentSymbols.First(s => s.Name == variableName);
+                    ILocalSymbol symbol = (ILocalSymbol)pBuilderContext.CurrentSymbols.FirstOrDefault(s => s.Name == variableName);
 
-                    if (symbol.Type.TypeKind != TypeKind.Error)
+                    if (symbol == null)
+                    {
+                        Console.WriteLine("WARNING: Variable could not be found in current context. Flow is inconsistent!");
+                    }
+
+                    if (symbol != null && symbol.Type.TypeKind != TypeKind.Error)
                     {
                         iec.ActualType = symbol.Type;
                     }
