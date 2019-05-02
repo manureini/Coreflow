@@ -101,9 +101,15 @@ namespace Coreflow.Web.Controllers
                 string serialized = HttpContext.Session.GetString("FlowModel");
                 FlowDefinitionModel wfDefModel = FlowDefinitionModelSerializer.DeSerialize(serialized);
 
-                CodeCreatorModel ccmodel = FlowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, Guid.Parse(pData.CreatorGuid)) as CodeCreatorModel;
-
-                ccmodel.UserDisplayName = pData.NewValue;
+                if (pData.CreatorGuid == "flow-name")
+                {
+                    wfDefModel.Name = pData.NewValue;
+                }
+                else
+                {
+                    CodeCreatorModel ccmodel = FlowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, Guid.Parse(pData.CreatorGuid)) as CodeCreatorModel;
+                    ccmodel.UserDisplayName = pData.NewValue;
+                }
 
                 serialized = FlowDefinitionModelSerializer.Serialize(wfDefModel);
                 HttpContext.Session.SetString("FlowModel", serialized);

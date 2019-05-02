@@ -32,7 +32,7 @@ namespace Coreflow.Helper
         }
 
 
-        public static FlowDefinition DeSerialize(string pFlowDefinition, Coreflow pCoreflow)
+        public static FlowDefinition Deserialize(string pFlowDefinition, Coreflow pCoreflow)
         {
             FlowDefinition ret = Serializer.Deserialize<FlowDefinition>(pFlowDefinition);
             ret.Coreflow = pCoreflow;

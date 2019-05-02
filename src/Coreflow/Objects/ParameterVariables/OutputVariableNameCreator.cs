@@ -4,22 +4,18 @@ using System.Linq;
 
 namespace Coreflow.Interfaces
 {
-    public class LeftSideVariableNameCreator : OutputVariableCodeInlineCreator
+    public class OutputVariableNameCreator : AbstractVariableCreator
     {
-        public LeftSideVariableNameCreator()
+        public OutputVariableNameCreator()
         {
         }
 
-        public LeftSideVariableNameCreator(string pName, string pVariableName) : this()
+        public OutputVariableNameCreator(string pName, string pVariableName) : base(pName, pVariableName, pName)
         {
-            Name = pName;
-            Code = pVariableName;
-            VariableIdentifier = pName;
         }
 
-        public LeftSideVariableNameCreator(string pName, string pVariableName, Guid pIdentifier) : this(pName, pVariableName)
+        public OutputVariableNameCreator(string pName, string pVariableName, Guid pIdentifier) : base(pName, pVariableName, pName, pIdentifier)
         {
-            Identifier = pIdentifier;
         }
 
         public override void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer = null)
@@ -33,7 +29,7 @@ namespace Coreflow.Interfaces
 
             bool existing = pBuilderContext.CurrentSymbols.Any(s => s.Name == Code);
 
-            pCodeWriter.AppendLineTop($"{(!existing ? "var " : " ")}{Code}");
+            pCodeWriter.AppendLineTop($"out {(!existing ? "var " : " ")}{Code}");
         }
     }
 }

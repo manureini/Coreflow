@@ -199,6 +199,10 @@ $(function () {
     $(document).on("change", ".input-displayname", function () {
         var ccid = $(this).parents("div").eq(0).data("id");
         //   var ccid = $(this).parent().closest('div').data("id");
+
+        if ($(this).attr('id') == "input-flow-name") {
+            ccid = "flow-name";
+        }
         SubmitUserDisplayNameChanged(ccid, $(this).val());
     });
     $(document).on("keydown", ".input-displayname", function () {
@@ -293,13 +297,11 @@ function RecalculateBoxSizes() {
 }
 
 function RecalculateInputBox(pInput) {
-    $("#hidden-span").html("");
-    $("#hidden-span").append("<p>" + $(pInput).val() + "</p>");
-
+    $("#hidden-span").html("<h4>" + $(pInput).val() + "</h4>");
     var hidden_span_scroll_width = $("#hidden-span")[0].scrollWidth;
 
     if (hidden_span_scroll_width > 50 || hidden_span_scroll_width < 600) { //TODO synchonize with css
-        $(pInput).css("width", hidden_span_scroll_width + 30);
+        $(pInput).css("width", hidden_span_scroll_width + 20);
     }
 }
 
@@ -308,8 +310,6 @@ function GetCodeCreatorSpaceHtml() {
 }
 
 function createDropSpace(event, ui, selected) {
-
-
     $(".codecreator")
         .not(selected)  //can't add on it's own
         .not($(selected).prev(".codecreator")) //can't add one before

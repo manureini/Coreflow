@@ -120,6 +120,7 @@ namespace Coreflow.Objects
             if (diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).Any())
             {
                 //TODO Now it is possible that we can not resolve a type of a symbol. We hope the user will correct that error in code asap!
+                //It's possible that we call another flow and we don't know the type here. But this can be ignored right now
                 //Add a warning or something?
                 //Throw exception?
             }

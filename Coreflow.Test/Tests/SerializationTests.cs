@@ -38,7 +38,7 @@ namespace Coreflow.Test
             Assert.IsNotNull(xml);
             Assert.IsTrue(xml.Length > 10);
 
-            FlowDefinition deserializedWfDef = FlowDefinitionSerializer.DeSerialize(xml, mCoreflow);
+            FlowDefinition deserializedWfDef = FlowDefinitionSerializer.Deserialize(xml, mCoreflow);
 
             Assert.IsNotNull(deserializedWfDef.Coreflow);
             Assert.AreEqual(wfdef.Identifier, deserializedWfDef.Identifier);

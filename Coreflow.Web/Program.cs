@@ -15,7 +15,7 @@ namespace Coreflow.Web
         {
             CoreflowInstance = new Coreflow(
                 new SimpleFlowDefinitionFileStorage(@"Flows"),
-                new MemoryFlowInstanceStorage(),
+                new SimpleFlowInstanceFileStorage("FlowInstances"),
                 "Plugins");
 
             Thread flowThread = new Thread(() =>

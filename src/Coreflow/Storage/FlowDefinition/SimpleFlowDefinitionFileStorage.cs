@@ -32,14 +32,10 @@ namespace Coreflow.Storage
             foreach (string file in Directory.GetFiles(mPath))
             {
                 string text = File.ReadAllText(file);
-                ret.Add(FlowDefinitionSerializer.DeSerialize(text, mCoreflow));
+                ret.Add(FlowDefinitionSerializer.Deserialize(text, mCoreflow));
             }
 
             return ret;
-        }
-
-        public void Dispose()
-        {
         }
 
         public void SetCoreflow(Coreflow pCoreflow)
@@ -51,6 +47,10 @@ namespace Coreflow.Storage
         {
             string filename = Path.Combine(mPath, pIdentifier.ToString());
             File.Delete(filename);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

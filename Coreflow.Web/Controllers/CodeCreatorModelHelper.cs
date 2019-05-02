@@ -137,8 +137,10 @@ namespace Coreflow.Web.Controllers
                             else
                                 parametrized.Arguments.Add(new OutputVariableCodeInlineCreator(argument.Name, argument.Code, argument.Guid));
                         }
-
-                        //TODO InOut
+                        else //InOut
+                        {
+                            parametrized.Arguments.Add(new InputOutputVariableNameCreator(argument.Name, argument.Code, argument.Guid));
+                        }
                     }
                 }
             }
