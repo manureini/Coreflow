@@ -168,8 +168,9 @@ $(function () {
         const key = event.key;
         if (key === "Delete"
             && $(e.target).parents("#parameter-box").length <= 0 //press inside textbox
-            && $(e.target).parents("dialog").length <= 0 //press inside textbox
-            && !$(e.target).is("input") //press inside textbox
+            && $(e.target).parents("dialog").length <= 0 //press inside dialog
+            && $(e.target).parents(".modal").length <= 0 //press inside modal
+            && !$(e.target).is("input") //press inside input
         ) {
             SubmitDeleteCodeCreator($(selected).data("id"));
             $("#parameter-box").html("");

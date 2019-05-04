@@ -45,6 +45,9 @@ namespace Coreflow.Web.Controllers
 
                 ret.Parameters = parametrized.GetParameters().ConvertToModel();
 
+                if (parametrized.Arguments == null)
+                    parametrized.Arguments = new List<IArgument>();
+
                 if (parametrized.Arguments.Count == 0)
                 {
                     ret.Arguments = new List<ArgumentModel>();
@@ -112,8 +115,12 @@ namespace Coreflow.Web.Controllers
             {
                 if (pCodeCreatorModel.Parameters != null)
                 {
+
                     if (pCodeCreatorModel.Parameters.Count != pCodeCreatorModel.Arguments.Count)
                         throw new Exception("Inconsistency between Parameters and Arguments");
+
+                    if (parametrized.Arguments == null)
+                        parametrized.Arguments = new List<IArgument>();
 
                     for (int i = 0; i < pCodeCreatorModel.Parameters.Count; i++)
                     {

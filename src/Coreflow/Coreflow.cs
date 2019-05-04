@@ -1,9 +1,11 @@
 ﻿using Coreflow.CodeCreators;
+using Coreflow.CodeCreators.Logging;
 using Coreflow.Helper;
 using Coreflow.Interfaces;
 using Coreflow.Objects;
 using Coreflow.Objects.CodeCreatorFactory;
 using Coreflow.Storage;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +24,15 @@ namespace Coreflow
 
         public IFlowInstanceStorage FlowInstanceStorage { get; }
 
+        public IArgumentInjectionStore ArgumentInjectionStore { get; }
+
         public FlowManager FlowManager { get; } = new FlowManager();
+
+        public ILoggerFactory LoggerFactory { get; set; }
+
+        public ILogger Logger { get; }
+
+        public ILogger FlowLogger { get; }
 
         static Coreflow()
         {
@@ -43,14 +53,29 @@ namespace Coreflow
             return null;
         }
 
-        public Coreflow(IFlowDefinitionStorage pFlowDefinitionStorage, IFlowInstanceStorage pFlowInstanceStorage, string pPluginDirectory = null)
+        public Coreflow(
+            IFlowDefinitionStorage pFlowDefinitionStorage,
+            IFlowInstanceStorage pFlowInstanceStorage,
+            IArgumentInjectionStore pArgumentInjectionStore,
+            string pPluginDirectory = null,
+            ILoggerFactory pLoggerFactory = null)
         {
             FlowDefinitionStorage = pFlowDefinitionStorage;
             FlowInstanceStorage = pFlowInstanceStorage;
+            ArgumentInjectionStore = pArgumentInjectionStore;
 
             CodeCreatorStorage = new CodeCreatorStorage(this);
             FlowDefinitionFactory = new FlowDefinitionFactory(this);
 
+            LoggerFactory = pLoggerFactory;
+
+            if (LoggerFactory == null)
+            {
+                LoggerFactory = new LoggerFactory();
+            }
+
+            Logger = LoggerFactory.CreateLogger(typeof(Coreflow));
+            FlowLogger = LoggerFactory.CreateLogger(typeof(ICompiledFlow));
 
             FlowDefinitionStorage.SetCoreflow(this);
 
@@ -65,6 +90,7 @@ namespace Coreflow
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(TerminateCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(IfCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(IfElseCreator));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(InfoLoggerCodeCreator));
 
             if (pPluginDirectory != null)
             {

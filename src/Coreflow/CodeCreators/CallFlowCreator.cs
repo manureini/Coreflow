@@ -84,6 +84,10 @@ namespace Coreflow.CodeCreators
 
             pCodeWriter.AppendLineTop($"{flowInstanceVariableName}.SetArguments({dictVariableName});");
 
+            pCodeWriter.AppendLineTop($"{flowInstanceVariableName}.{nameof(ICompiledFlow.CoreflowInstace)} = this.{nameof(ICompiledFlow.CoreflowInstace)};");
+            pCodeWriter.AppendLineTop($"{flowInstanceVariableName}.{nameof(ICompiledFlow.ArgumentInjectionStore)} = this.{nameof(ICompiledFlow.ArgumentInjectionStore)};");
+            pCodeWriter.AppendLineTop($"{flowInstanceVariableName}.{nameof(ICompiledFlow.Logger)} = this.{nameof(ICompiledFlow.Logger)};");
+
             pCodeWriter.AppendLineTop($"{flowInstanceVariableName}.Run();");
         }
 

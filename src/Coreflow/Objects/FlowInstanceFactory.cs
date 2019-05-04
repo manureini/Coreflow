@@ -48,6 +48,10 @@ namespace Coreflow.Objects
         {
             ICompiledFlow flow = NewInstance();
 
+            flow.CoreflowInstace = Coreflow;
+            flow.ArgumentInjectionStore = Coreflow.ArgumentInjectionStore;
+            flow.Logger = Coreflow.Logger;
+
             FlowInstance flowInstance = new FlowInstance()
             {
                 DefinitionIdentifier = DefinitionGuid,

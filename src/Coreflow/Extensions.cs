@@ -34,7 +34,7 @@ namespace Coreflow
 
         public static bool TypeSymbolMatchesType(this ITypeSymbol typeSymbol, Type type, SemanticModel semanticModel)
         {
-            return GetTypeSymbolForType(type, semanticModel).Equals(typeSymbol);
+            return typeSymbol == GetTypeSymbolForType(type, semanticModel);
         }
 
         public static INamedTypeSymbol GetTypeSymbolForType(this Type type, SemanticModel semanticModel)

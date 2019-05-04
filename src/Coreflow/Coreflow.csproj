@@ -8,7 +8,8 @@
   <ItemGroup>
     <PackageReference Include="ExtendedXmlSerializer" Version="2.1.17" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.0.0" />
-    <PackageReference Include="Mono.Cecil" Version="0.10.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 

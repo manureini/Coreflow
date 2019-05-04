@@ -52,23 +52,50 @@ namespace Coreflow.Interfaces
 
             Type type = TypeHelper.SearchType(Type);
 
+            Code = Code.Trim();
+
+
+            //    var coreflowInstance = pBuilderContext.FlowDefinition.Coreflow;
+
+            if (Code.StartsWith("$"))
+            {
+                string name = Code.Substring(1);
+
+                if (TypeHelper.IsValidVariableName(name))
+                {
+
+
+                }
+
+                // coreflowInstance.ArgumentInjectionStore.GetArgumentValue(name, type);
+            }
+
+
             if (string.IsNullOrWhiteSpace(Code))
             {
                 pCodewriter.AppendLineTop(TypeHelper.GetDefaultInitializationCodeSnippet(type));
                 return;
             }
 
-            if (ActualType != null && type != typeof(CSharpCode) && !ActualType.TypeSymbolMatchesType(type, pBuilderContext.SemanticModel))
+            try
             {
-                ITypeSymbol typeSymbol = type.GetTypeSymbolForType(pBuilderContext.SemanticModel);
-
-                var converation = pBuilderContext.Compilation.ClassifyCommonConversion(ActualType, typeSymbol);
-
-                if (!(converation.IsIdentity | converation.IsImplicit | converation.IsNumeric | converation.IsUserDefined))
+                if (ActualType != null && type != typeof(CSharpCode) && !ActualType.TypeSymbolMatchesType(type, pBuilderContext.SemanticModel))
                 {
-                    if (ParameterConverterHelper.AppendCodeWithTypeConverter(pCodewriter, ActualType, typeSymbol, Code))
-                        return; // found a conversation
+                    ITypeSymbol typeSymbol = type.GetTypeSymbolForType(pBuilderContext.SemanticModel);
+
+                    var converation = pBuilderContext.Compilation.ClassifyCommonConversion(ActualType, typeSymbol);
+
+                    if (!(converation.IsIdentity | converation.IsImplicit | converation.IsNumeric | converation.IsUserDefined))
+                    {
+                        if (ParameterConverterHelper.AppendCodeWithTypeConverter(pCodewriter, ActualType, typeSymbol, Code))
+                            return; // found a conversation
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                //TODO  does not work with linux
+                Console.WriteLine(e);
             }
 
             pCodewriter.AppendLineTop(Code);

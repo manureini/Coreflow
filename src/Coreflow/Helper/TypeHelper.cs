@@ -1,4 +1,5 @@
 ﻿using Coreflow.Interfaces;
+using Microsoft.CodeAnalysis.CSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,6 @@ namespace Coreflow.Helper
 {
     public class TypeHelper
     {
-        private static Regex mRegex = new Regex(@"\[\[(.*)\]\]");
-
         public static Type SearchType(string pTypename)
         {
             var type = Type.GetType(pTypename);
@@ -24,6 +23,7 @@ namespace Coreflow.Helper
                     return type;
             }
 
+            Console.WriteLine($"Warning: Type {pTypename} not found!");
             return null;
         }
 
@@ -37,7 +37,7 @@ namespace Coreflow.Helper
                 return GetCodeForEmptyIEnumerable(pType);
             }
 
-            return "default(" + pType.Name + ")";
+            return "default(" + pType.FullName + ")";
         }
 
         public static string GetCodeForEmptyIEnumerable(Type pType)
@@ -48,6 +48,11 @@ namespace Coreflow.Helper
             Type genericType = pType.GenericTypeArguments.Single();
 
             return $"Enumerable.Empty<{genericType.FullName}>()";
+        }
+
+        public static bool IsValidVariableName(string pName)
+        {
+            return SyntaxFacts.IsValidIdentifier(pName);
         }
     }
 }

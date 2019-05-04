@@ -3,6 +3,7 @@ using Coreflow.Interfaces;
 using Coreflow.Objects;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Formatting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +14,6 @@ namespace Coreflow
 {
     internal class FlowBuilderHelper
     {
-        internal const string INSTANCE_ID_PARAMETER_NAME = "InstanceId";
         internal const string FLOW_NAMESPACE_PREFIX = "FlowNs_";
         internal const string FLOW_CLASS_PREFIX = "Flow_";
 
@@ -77,7 +77,17 @@ namespace Coreflow
             cw.AppendLineBottom("} /* Class */"); //Close Class
 
 
-            cw.AppendLineTop($"public Guid {INSTANCE_ID_PARAMETER_NAME} = Guid.NewGuid();");
+            cw.AppendLineTop($"public System.Guid " + nameof(ICompiledFlow.InstanceId) + " {get; set;} = Guid.NewGuid();");
+
+            cw.AppendLineTop($"public Coreflow.{nameof(Coreflow)} {nameof(ICompiledFlow.CoreflowInstace)}");
+            cw.AppendTop("{ get; set; }");
+
+            cw.AppendLineTop($"public Coreflow.Interfaces.{nameof(IArgumentInjectionStore)} {nameof(ICompiledFlow.ArgumentInjectionStore)}");
+            cw.AppendTop("{ get; set; }");
+
+            cw.AppendLineTop($"public Microsoft.Extensions.Logging.{nameof(ILogger)} {nameof(ICompiledFlow.Logger)}");
+            cw.AppendTop("{ get; set; }");
+
 
             cw.AppendLineTop();
 
@@ -122,8 +132,6 @@ namespace Coreflow
             cw.AppendLineTop("}");
 
             cw.AppendLineTop();
-
-            cw.AppendLineTop("Guid Coreflow.Interfaces.ICompiledFlow.InstanceId => InstanceId;");
 
             cw.AppendLineTop();
 
