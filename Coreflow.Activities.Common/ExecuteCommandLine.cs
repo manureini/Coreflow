@@ -48,20 +48,17 @@ namespace Coreflow.Activities.Common
 
         public void Execute(string Command, out string StandardOutput)
         {
-            var escapedArgs = Command.Replace("\"", "\\\"");
-
             var process = new Process
             {
                 StartInfo = mStartInfo
             };
 
-            process.StartInfo.Arguments = $"-c \"{escapedArgs}\"";
+            process.StartInfo.Arguments = mEscaper.Invoke(Command);
 
             process.Start();
-            StandardOutput = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
 
-
+            StandardOutput = process.StandardOutput.ReadToEnd();
         }
     }
 }
