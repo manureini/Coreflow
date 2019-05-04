@@ -6,9 +6,11 @@ using System.Text;
 using System.Linq;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Coreflow.Objects;
 
 namespace Coreflow.Activities.Common
 {
+    [DisplayMeta("Execute Command Line", "Common", "fa-keyboard")]
     public class ExecuteCommandLine : ICodeActivity
     {
         private static ProcessStartInfo mStartInfo;

@@ -9,8 +9,6 @@ namespace Coreflow.Web.Models
     {
         public List<string> ReferencedNamespaces { get; set; }
 
-        public List<string> ReferencedAssemblies { get; set; }
-
         public List<FlowArguments> Arguments { get; set; }
 
         public List<CodeCreatorModel> CodeCreators { get; set; }

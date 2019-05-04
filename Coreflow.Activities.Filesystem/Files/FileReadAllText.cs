@@ -5,17 +5,14 @@ using System.IO;
 
 namespace Coreflow.Activities.Filesystem
 {
+    [DisplayMeta("Read All Text", "File", "fa-file-alt")]
     public class FileReadAllText : ICodeActivity
     {
         public string Execute(
            [DisplayMeta("File Path")]
            string pFilePath
-
-          //    [DisplayMeta("File Conent")]
-          //    out string pFileContent
           )
         {
-            // pFileContent = File.ReadAllText(pFilePath);
             return File.ReadAllText(pFilePath);
         }
     }

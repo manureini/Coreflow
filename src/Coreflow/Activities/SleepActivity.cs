@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Coreflow
 {
-    [DisplayMeta("Sleep", "fa-hourglass-half")]
+    [DisplayMeta("Sleep", "Basic", "fa-hourglass-half")]
     public class SleepActivity : ICodeActivity
     {
         public void Execute(

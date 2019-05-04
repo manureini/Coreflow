@@ -14,6 +14,8 @@ namespace Coreflow.Objects
 
         public MemoryStream ResultAssembly { get; internal set; }
 
+        public MemoryStream ResultSymbols { get; internal set; }
+
         public string ErrorMessage { get; internal set; }
 
         public IDictionary<Guid, string> ErrorCodeCreators { get; internal set; }

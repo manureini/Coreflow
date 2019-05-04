@@ -15,6 +15,8 @@ namespace Coreflow.Web.Models
 
         public string IconClass { get; set; }
 
+        public string Category { get; set; }
+
         public string Type { get; set; }
 
         public string CustomFactory { get; set; }

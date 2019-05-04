@@ -17,6 +17,8 @@ namespace Coreflow.CodeCreators
 
         public string Icon => "fa-code";
 
+        public string Category => "Basic";
+
         public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer = null)
         {
             pCodeWriter.WriteIdentifierTagTop(this);

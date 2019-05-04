@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Net.Mail;
 using System.Text;
 using System.Linq;
+using Coreflow.Objects;
 
 namespace Coreflow.Activities.Common
 {
+    [DisplayMeta("Send Mail", "Common", "fa-envelope")]
     public class SendEmail : ICodeActivity
     {
-
         public void Execute(
             string Host,
             int Port,

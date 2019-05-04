@@ -24,6 +24,7 @@ namespace Coreflow.Web.Controllers
                 Identifier = pCodeCreator.Identifier,
                 DisplayName = pCodeCreator.GetDisplayName(),
                 IconClass = pCodeCreator.GetIconClassName(),
+                Category = pCodeCreator.GetCategory(),
                 Type = pCodeCreator.GetType().AssemblyQualifiedName,
                 CustomFactory = (pCodeCreator is ICustomFactoryCodeCreator cfcc) ? cfcc.FactoryIdentifier : null,
                 Parent = pParent

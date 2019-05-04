@@ -29,6 +29,7 @@ namespace Coreflow.Helper
             mCoreflow = pCoreflow;
         }
 
+        /*
         private Assembly FindAssembly(string pFilename)
         {
             Assembly asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => !a.IsDynamic && Path.GetFileName(a.Location) == pFilename);
@@ -41,7 +42,7 @@ namespace Coreflow.Helper
                 return asm;
 
             throw new Exception($"Assembly with filename {pFilename} not found!");
-        }
+        }*/
 
 
         public void AddDefaultReferencedNamespace(string pNameSpace)

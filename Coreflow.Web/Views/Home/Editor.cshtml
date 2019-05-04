@@ -108,7 +108,6 @@
 
     </text>
     ;
-
 }
 
 <!-- Modal -->
@@ -132,15 +131,19 @@
 
     <div id="codecreator-panel" class="panel border-panel">
 
-        @foreach (var entry in Model.CodeCreators.OrderBy(c => c.Type).ThenBy(c => c.DisplayName))
+        @foreach (var grouped in Model.CodeCreators.GroupBy(c => c.Category).OrderBy(g => g.Key))
         {
-            <div class="codecreator-panel-parameter">
-                <i class="@entry.IconClass"></i> @entry.DisplayName
+            <h5>@grouped.Key</h5>
+            @foreach (var entry in grouped.OrderBy(c => c.DisplayName))
+            {
+                <div class="codecreator-panel-parameter">
+                    <i class="@entry.IconClass"></i> @entry.DisplayName
 
-                <div class="codecreator-panel-parameter-container">
-                    @PrintCodeCreatorModel(entry)
+                    <div class="codecreator-panel-parameter-container">
+                        @PrintCodeCreatorModel(entry)
+                    </div>
                 </div>
-            </div>
+            }
         }
 
     </div>
@@ -166,18 +169,20 @@
 
     <div id="center-box" class="panel border-panel">
         <ul class="nav nav-tabs">
-            <li><a data-toggle="tab" href="#menu0" class="active">Variables</a></li>
-            <li><a data-toggle="tab" href="#menu1">Arguments</a></li>
-            <li><a data-toggle="tab" href="#menu2">Namespaces</a></li>
-            <li><a data-toggle="tab" href="#menu3">Assemblies</a></li>
+            <li><a data-toggle="tab" href="#menu_args">Arguments</a></li>
+            <li><a data-toggle="tab" href="#menu_vars">Variables</a></li>
+            <li><a data-toggle="tab" href="#menu_ns">Namespaces</a></li>
+            <li><a data-toggle="tab" href="#menu_notes">Notes</a></li>
+
+            @*    <li><a data-toggle="tab" href="#menu3">Assemblies</a></li> *@
         </ul>
 
         <div class="tab-content">
-            <div id="menu0" class="tab-pane fade in active">
+            <div id="menu_vars" class="tab-pane fade">
                 <div></div>
 
             </div>
-            <div id="menu1" class="tab-pane fade">
+            <div id="menu_args" class="tab-pane fade">
                 <table id="table-arguments">
                     <thead>
                         <tr>
@@ -206,7 +211,7 @@
                     </tbody>
                 </table>
             </div>
-            <div id="menu2" class="tab-pane fade">
+            <div id="menu_ns" class="tab-pane fade">
                 <ul>
                     @foreach (string u in Model.ReferencedNamespaces)
                     {
@@ -216,16 +221,22 @@
                     <li><i class="fa fa-plus clickable add-referenced-namespace"></i><input type="text" placeholder="Add Namespace" /></li>
                 </ul>
             </div>
-            <div id="menu3" class="tab-pane fade">
-                <ul>
-                    @foreach (string u in Model.ReferencedAssemblies)
-                    {
-                        <li><i class="fa fa-trash clickable remove-referenced-assembly" data-id="@u"></i> @u</li>
-                    }
+            <div id="menu_notes" class="tab-pane fade">
+                <div></div>
 
-                    <li><i class="fa fa-plus clickable add-referenced-assembly"></i><input type="text" placeholder="Add Assembly" /></li>
-                </ul>
             </div>
+
+            @*
+                <div id="menu3" class="tab-pane fade">
+                    <ul>
+                        @foreach (string u in Model.ReferencedAssemblies)
+                        {
+                            <li><i class="fa fa-trash clickable remove-referenced-assembly" data-id="@u"></i> @u</li>
+                        }
+
+                        <li><i class="fa fa-plus clickable add-referenced-assembly"></i><input type="text" placeholder="Add Assembly" /></li>
+                    </ul>
+                </div> *@
         </div>
     </div>
 

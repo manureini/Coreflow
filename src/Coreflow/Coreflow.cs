@@ -60,6 +60,7 @@ namespace Coreflow
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(SequenceCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(InlineCodeCodeCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(CommentCreator));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(DebuggerBreakCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(AssignCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(TerminateCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(IfCreator));

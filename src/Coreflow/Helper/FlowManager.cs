@@ -3,6 +3,7 @@ using Coreflow.Objects;
 using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -26,7 +27,7 @@ namespace Coreflow.Helper
         {
             var combinedCode = new StringBuilder();
 
-      
+
             //TODO add lock threadsafe
 
             foreach (var flow in pFlows)
@@ -55,7 +56,7 @@ namespace Coreflow.Helper
 
             string assemblyName = ASSEMBLY_PREFIX + mAssemblyVersion;
 
-            var result = FlowCompilerHelper.CompileFlowCode(fullcode,  assemblyName);
+            var result = FlowCompilerHelper.CompileFlowCode(fullcode, true, assemblyName);
 
             if (!result.Successful)
                 throw new Exception("Flows did not compile!");
@@ -70,9 +71,13 @@ namespace Coreflow.Helper
 
             mAssemblyContext = new CollectibleAssemblyLoadContext();
 
-            result.ResultAssembly.Position = 0;
-            Assembly asm = mAssemblyContext.LoadFromStream(result.ResultAssembly);
+            result.ResultAssembly.Seek(0, SeekOrigin.Begin);
+            result.ResultSymbols.Seek(0, SeekOrigin.Begin);
+
+            Assembly asm = mAssemblyContext.LoadFromStream(result.ResultAssembly, result.ResultSymbols);
+
             result.ResultAssembly.Dispose();
+            result.ResultSymbols.Dispose();
 
             IEnumerable<Type> flows = asm.GetTypes().Where(t => typeof(ICompiledFlow).IsAssignableFrom(t));
 

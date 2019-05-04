@@ -9,5 +9,7 @@ namespace Coreflow.Interfaces
         string Name { get; }
 
         string Icon { get; }
+
+        string Category { get; }
     }
 }

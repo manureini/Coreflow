@@ -60,7 +60,7 @@ function SubmitUserDisplayNameChanged(creatorGuid, newValue) {
     });
 }
 
-
+/*
 function SubmitFlowReferencedAssemblyChanged(pAddValue, pValue) {
     var postData = {};
     postData["AddValue"] = pAddValue;
@@ -81,7 +81,7 @@ function SubmitFlowReferencedAssemblyChanged(pAddValue, pValue) {
             alert(errorThrown);
         }
     });
-}
+}*/
 
 function SubmitFlowReferencedNamespaceChanged(pAddValue, pValue) {
     var postData = {};

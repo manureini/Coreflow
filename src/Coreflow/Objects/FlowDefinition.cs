@@ -10,8 +10,6 @@ namespace Coreflow
     {
         public List<string> ReferencedNamespaces { get; set; }
 
-        public List<string> ReferencedAssemblies { get; set; }
-
         public List<FlowArguments> Arguments { get; set; }
 
         public Dictionary<Guid, Dictionary<string, object>> Metadata { get; set; }
@@ -19,6 +17,8 @@ namespace Coreflow
         public string Name { get; set; }
 
         public string Icon { get; set; } = "fa-cogs";
+
+        public string Category => null;
 
         public ICodeCreator CodeCreator { get; set; }
 

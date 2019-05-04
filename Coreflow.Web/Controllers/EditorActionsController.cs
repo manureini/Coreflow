@@ -80,7 +80,7 @@ namespace Coreflow.Web.Controllers
 
                 FlowDefinition wfDef = FlowDefinitionModelMappingHelper.GenerateFlowDefinition(wfDefModel);
                 FlowCode code = wfDef.GenerateFlowCode();
-                FlowCompileResult result = code.Compile();
+                FlowCompileResult result = code.Compile(false);
 
                 serialized = FlowDefinitionModelSerializer.Serialize(wfDefModel);
                 HttpContext.Session.SetString("FlowModel", serialized);
@@ -122,9 +122,9 @@ namespace Coreflow.Web.Controllers
             }
         }
 
-
+        /*
         [HttpPost]
-        public JsonResult FlowReferencedAssemblyChanged([FromBody] FlowReferencedAssemblyChangedData pData)
+        public JsonResult ReferencedAssemblyChanged([FromBody] ReferencedAssemblyChangedData pData)
         {
             try
             {
@@ -139,12 +139,10 @@ namespace Coreflow.Web.Controllers
                     {
                         return Json(new Response(false, $"Assembly {pData.Value} not found!"));
                     }
-
-                    wfDefModel.ReferencedAssemblies.Add(asm.FullName);
                 }
                 else
                 {
-                    wfDefModel.ReferencedAssemblies.Remove(pData.Value);
+
                 }
 
                 serialized = FlowDefinitionModelSerializer.Serialize(wfDefModel);
@@ -156,8 +154,7 @@ namespace Coreflow.Web.Controllers
             {
                 return Json(new Response(false, e.ToString()));
             }
-        }
-
+        }*/
 
         [HttpPost]
         public JsonResult FlowReferencedNamespaceChanged([FromBody] FlowReferencedNamespaceChangedData pData)

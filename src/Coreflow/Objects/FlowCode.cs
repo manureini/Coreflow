@@ -12,9 +12,9 @@ namespace Coreflow.Objects
 
         public FlowDefinition Definition { get; set; }
 
-        public FlowCompileResult Compile()
+        public FlowCompileResult Compile(bool pDebug)
         {
-            return FlowCompilerHelper.CompileFlowCode(Code);
+            return FlowCompilerHelper.CompileFlowCode(Code, pDebug);
         }
     }
 }

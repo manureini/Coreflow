@@ -219,7 +219,7 @@ $(function () {
         SubmitFlowReferencedNamespaceChanged(false, $(this).data("id"));
     });
 
-
+    /*
     $(document).on("click", ".add-referenced-assembly", function () {
         var value = $(this).next("input").val();
         $(this).next("input").val("");
@@ -228,7 +228,7 @@ $(function () {
     $(document).on("click", ".remove-referenced-assembly", function () {
         $(this).parent().remove();
         SubmitFlowReferencedAssemblyChanged(false, $(this).data("id"));
-    });
+    });*/
 
     $(document).on("click", ".add-argument", function () {
         var name = $("#add-argument-name").val();

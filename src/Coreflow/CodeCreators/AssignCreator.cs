@@ -18,6 +18,8 @@ namespace Coreflow.CodeCreators
 
         public string Icon => "fa-equals";
 
+        public string Category => "Basic";
+
         public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer = null)
         {
             pBuilderContext.UpdateCurrentSymbols();

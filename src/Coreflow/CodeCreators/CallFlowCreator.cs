@@ -12,6 +12,8 @@ namespace Coreflow.CodeCreators
 
         public string Icon { get; set; }
 
+        public string Category => "Flows";
+
         public string VariableIdentifier => Guid.NewGuid().ToString();
 
         public Guid Identifier { get; set; } = Guid.NewGuid();

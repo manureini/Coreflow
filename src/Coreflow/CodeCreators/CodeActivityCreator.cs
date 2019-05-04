@@ -50,6 +50,19 @@ namespace Coreflow.CodeCreators
             }
         }
 
+        public string Category
+        {
+            get
+            {
+                var attr = typeof(T).GetCustomAttribute<DisplayMetaAttribute>();
+
+                if (attr != null && !string.IsNullOrWhiteSpace(attr.Category))
+                    return attr.Category;
+
+                return null;
+            }
+        }
+
 
         public void Initialize(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {

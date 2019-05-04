@@ -3,6 +3,7 @@ using Coreflow.Objects;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Formatting;
 using System;
 using System.Collections.Generic;
@@ -23,14 +24,14 @@ namespace Coreflow.Helper
         private static Regex mContainerRegex = new Regex(@"\/\/#Container");
 
 
-        public static FlowCompileResult CompileFlowCode(string pCode, string pAssemblyName = null)
+        public static FlowCompileResult CompileFlowCode(string pCode, bool pDebug, string pAssemblyName = null)
         {
             FlowCompileResult ret = new FlowCompileResult()
             {
 
             };
 
-            SyntaxTree syntaxTree = ParseText(pCode);
+            SyntaxTree syntaxTree = ParseText(pCode, pDebug);
 
             //  string formattedCode = FormatCode(syntaxTree);        
 
@@ -38,10 +39,20 @@ namespace Coreflow.Helper
 
             Compilation compilation = CreateCompilation(pAssemblyName, syntaxTree);
 
-            var stream = new MemoryStream();
-            var emitResult = compilation.Emit(stream);
+            var emitOptions = new EmitOptions(
+              debugInformationFormat: DebugInformationFormat.PortablePdb,
+              pdbFilePath: pAssemblyName + ".pdb");
 
-            ret.ResultAssembly = stream;
+            var assemblyStream = new MemoryStream();
+            var symbolsStream = new MemoryStream();
+
+            var emitResult = compilation.Emit(
+                peStream: assemblyStream,
+                pdbStream: symbolsStream,
+                options: emitOptions);
+
+            ret.ResultAssembly = assemblyStream;
+            ret.ResultSymbols = symbolsStream;
 
             string[] codeLines = pCode.Split("\n");
 
@@ -171,12 +182,19 @@ namespace Coreflow.Helper
                .AddSyntaxTrees(syntaxTree);
         }
 
-        public static SyntaxTree ParseText(string sourceCode)
+        public static SyntaxTree ParseText(string pSourceCode, bool pDebug)
         {
             var options = new CSharpParseOptions(kind: SourceCodeKind.Regular, languageVersion: LanguageVersion.Latest);
 
-            // Return a syntax tree of our source code
-            return CSharpSyntaxTree.ParseText(sourceCode, options);
+            if (pDebug)
+            {
+                string filename = "LastGeneratedCode.cs";
+
+                File.WriteAllText(filename, FlowBuilderHelper.FormatCode(pSourceCode));
+                return CSharpSyntaxTree.ParseText(File.ReadAllText(filename), options, path: filename, encoding: Encoding.UTF8);
+            }
+
+            return CSharpSyntaxTree.ParseText(pSourceCode, options);
         }
 
         internal static Compilation CreateLibraryCompilation(string assemblyName, bool enableOptimisations)
@@ -184,7 +202,7 @@ namespace Coreflow.Helper
             var options = new CSharpCompilationOptions(
                     OutputKind.DynamicallyLinkedLibrary,
                     optimizationLevel: enableOptimisations ? OptimizationLevel.Release : OptimizationLevel.Debug,
-                    allowUnsafe: true);
+                    allowUnsafe: true).WithPlatform(Platform.AnyCpu);
 
             return CSharpCompilation.Create(assemblyName, options: options);
         }

@@ -12,8 +12,11 @@ namespace Coreflow.Objects
 
         public string Icon { get; }
 
-        public DisplayMetaAttribute(string pDisplayName, string pIcon = DEFAULT_ICON)
+        public string Category { get; }
+
+        public DisplayMetaAttribute(string pDisplayName, string pCategory = null, string pIcon = DEFAULT_ICON)
         {
+            Category = pCategory;
             DisplayName = pDisplayName;
             Icon = pIcon;
         }

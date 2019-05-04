@@ -1,4 +1,5 @@
 ﻿using Coreflow.Interfaces;
+using Coreflow.Objects;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Text;
 
 namespace Coreflow.Activities.Filesystem.Files
 {
+    [DisplayMeta("Check file contains", "File", "fa-file-alt")]
     public class FileContentContains : ICodeActivity
     {
         public bool Execute(string FilePath, string Needle)

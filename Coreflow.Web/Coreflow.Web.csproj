@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="LastGeneratedCode.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="c90ee65b-2726-4f0f-b866-053f3c138cf9 - Copy" />
   </ItemGroup>
 

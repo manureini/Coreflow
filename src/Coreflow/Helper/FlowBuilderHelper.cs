@@ -185,7 +185,7 @@ namespace Coreflow
 
         public static string FormatCode(string pCode)
         {
-            return FormatCode(FlowCompilerHelper.ParseText(pCode));
+            return FormatCode(FlowCompilerHelper.ParseText(pCode, false));
         }
 
         private static string FormatCode(SyntaxTree pSyntaxTree)

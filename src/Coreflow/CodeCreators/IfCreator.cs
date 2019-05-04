@@ -20,6 +20,8 @@ namespace Coreflow.CodeCreators
 
         public override string Icon => "fa-check";
 
+        public override string Category => "Basic";
+
         public override void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer)
         {
             pCodeBuilder.AppendLineTop("if (");

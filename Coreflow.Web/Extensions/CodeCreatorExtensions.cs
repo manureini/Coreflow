@@ -27,5 +27,16 @@ namespace Coreflow.Web.Extensions
 
             return "fa " + DisplayMetaAttribute.DEFAULT_ICON;
         }
+
+        public static string GetCategory(this ICodeCreator pCodeCreator)
+        {
+            if (pCodeCreator is IUiDesignable desingable)
+            {
+                return desingable.Category;
+            }
+
+            return null;
+        }
+
     }
 }

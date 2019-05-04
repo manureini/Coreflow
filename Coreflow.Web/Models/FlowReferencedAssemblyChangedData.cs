@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Coreflow.Web.Models
 {
-    public class FlowReferencedAssemblyChangedData
+    public class ReferencedAssemblyChangedData
     {
         public bool AddValue { get; set; }
 

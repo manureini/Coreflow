@@ -20,6 +20,8 @@ namespace Coreflow.CodeCreators
 
         public virtual string Icon => "fa-tasks";
 
+        public virtual string Category => null;
+
         public int SequenceCount { get; } = 2;
 
         protected string RemoveLabelAndCloseBracket

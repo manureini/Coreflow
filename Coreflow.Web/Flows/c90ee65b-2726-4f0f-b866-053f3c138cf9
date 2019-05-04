@@ -10,18 +10,6 @@
     <sys:string>System.Runtime</sys:string>
     <sys:string>System.Net.Mail</sys:string>
   </ReferencedNamespaces>
-  <ReferencedAssemblies>
-    <Capacity>16</Capacity>
-    <sys:RuntimeAssembly FullName="System.Runtime, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <sys:RuntimeAssembly FullName="System.Collections, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <sys:RuntimeAssembly FullName="System.Linq, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <sys:RuntimeAssembly FullName="System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" />
-    <sys:RuntimeAssembly FullName="System.Console, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <sys:RuntimeAssembly FullName="Coreflow, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
-    <sys:RuntimeAssembly FullName="Coreflow.Activities.Filesystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
-    <sys:RuntimeAssembly FullName="Coreflow.Activities.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
-    <sys:RuntimeAssembly FullName="System.Net.Mail, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
-  </ReferencedAssemblies>
   <Arguments>
     <Capacity>4</Capacity>
     <ns3:FlowArguments Name="percent" Type="System.Int32, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" Direction="In" Expression="20" />

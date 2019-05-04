@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace Coreflow
 {
-    [DisplayMeta("Console.WriteLine", "fa-terminal")]
+    [DisplayMeta("Console WriteLine", "Basic", "fa-terminal")]
     public class ConsoleWriteLineActivity : ICodeActivity
     {
         public void Execute(

@@ -29,12 +29,6 @@ namespace Coreflow.Test
             FlowDefinition wfdef = mCoreflow.FlowDefinitionFactory.Create("empty");
 
             FlowInvoker.Invoke(wfdef);
-
-            wfdef.ReferencedAssemblies.Clear();
-            FlowInvoker.Invoke(wfdef);
-
-            wfdef.ReferencedAssemblies = null;
-            FlowInvoker.Invoke(wfdef);
         }
 
 
@@ -43,7 +37,7 @@ namespace Coreflow.Test
         {
             FlowDefinition wfdef = TestFlows.GetTestFlow1(mCoreflow);
 
-            FlowCompileResult compileResult = wfdef.GenerateFlowCode().Compile();
+            FlowCompileResult compileResult = wfdef.GenerateFlowCode().Compile(false);
 
             Console.WriteLine(compileResult.FlowCode.Code);
         }

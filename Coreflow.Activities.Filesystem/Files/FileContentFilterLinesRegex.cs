@@ -1,4 +1,5 @@
 ﻿using Coreflow.Interfaces;
+using Coreflow.Objects;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace Coreflow.Activities.Filesystem.Files
 {
+    [DisplayMeta("Filter lines regex", "File", "fa-file-alt")]
     public class FileContentFilterLinesRegex : ICodeActivity
     {
         public List<string> Execute(string FilePath, string Regex)

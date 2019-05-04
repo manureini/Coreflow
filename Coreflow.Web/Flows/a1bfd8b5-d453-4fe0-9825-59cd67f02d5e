@@ -9,15 +9,6 @@
     <sys:string>System.Reflection</sys:string>
     <sys:string>System.Runtime</sys:string>
   </ReferencedNamespaces>
-  <ReferencedAssemblies>
-    <Capacity>8</Capacity>
-    <sys:RuntimeAssembly FullName="System.Runtime, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <sys:RuntimeAssembly FullName="System.Collections, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <sys:RuntimeAssembly FullName="System.Linq, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <sys:RuntimeAssembly FullName="System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" />
-    <sys:RuntimeAssembly FullName="System.Console, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <sys:RuntimeAssembly FullName="Coreflow, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
-  </ReferencedAssemblies>
   <Name>init</Name>
   <Icon>fa-cogs</Icon>
   <CodeCreator exs:type="ns1:SequenceCreator">
@@ -25,6 +16,9 @@
       <Capacity>4</Capacity>
       <sys:List exs:arguments="ICodeCreator">
         <Capacity>4</Capacity>
+        <ns1:DebuggerBreakCreator>
+          <Identifier>234624f1-a889-4653-967a-0463b60e8aeb</Identifier>
+        </ns1:DebuggerBreakCreator>
         <ns1:CodeActivityCreator exs:arguments="ConsoleWriteLineActivity">
           <Arguments>
             <Capacity>4</Capacity>
@@ -53,6 +47,9 @@
                       <FactoryIdentifier>Coreflow.Objects.CodeCreatorFactory.CallFlowCreatorFactory_c90ee65b-2726-4f0f-b866-053f3c138cf9</FactoryIdentifier>
                       <FlowName>CheckDisks</FlowName>
                       <FlowVariableName>__cc_c90ee65b_2726_4f0f_b866_053f3c138cf9</FlowVariableName>
+                      <Parameters>
+                        <CodeCreatorParameter Name="percent" DisplayName="" Type="System.Int32, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" Category="Default" Direction="In" xmlns="clr-namespace:Coreflow.Objects;assembly=Coreflow" />
+                      </Parameters>
                     </ns1:CallFlowCreator>
                     <ns1:CodeActivityCreator exs:arguments="SleepActivity">
                       <Arguments>

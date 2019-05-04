@@ -16,7 +16,6 @@ namespace Coreflow.Web.Controllers
                 Name = pFlowDefinition.Name,
                 Icon = pFlowDefinition.Icon,
                 ReferencedNamespaces = pFlowDefinition.ReferencedNamespaces,
-                ReferencedAssemblies = pFlowDefinition.ReferencedAssemblies.ToList(),
                 Identifier = pFlowDefinition.Identifier,
                 CodeCreatorModel = CodeCreatorModelHelper.CreateModel(pFlowDefinition.CodeCreator, null, pFlowDefinition),
                 CodeCreators = Program.CoreflowInstance.CodeCreatorStorage.GetAllFactories().Select(v =>
@@ -46,8 +45,7 @@ namespace Coreflow.Web.Controllers
                 Icon = pFlowDefinitionModel.Icon,
                 ReferencedNamespaces = pFlowDefinitionModel.ReferencedNamespaces,
                 Identifier = pFlowDefinitionModel.Identifier,
-                Arguments = pFlowDefinitionModel.Arguments,
-                ReferencedAssemblies = pFlowDefinitionModel.ReferencedAssemblies
+                Arguments = pFlowDefinitionModel.Arguments
             };
 #pragma warning restore CS0618 // Type or member is obsolete
 

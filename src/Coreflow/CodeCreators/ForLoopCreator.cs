@@ -18,6 +18,8 @@ namespace Coreflow.CodeCreators
 
         public override string Name => "For Loop";
 
+        public override string Category => "Basic";
+
 
         public override void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer)
         {
