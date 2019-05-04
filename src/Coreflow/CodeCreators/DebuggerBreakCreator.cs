@@ -12,9 +12,9 @@ namespace Coreflow.CodeCreators
 
         public string FactoryIdentifier { get; set; }
 
-        public string Name => "Debugger break";
+        public string Name => "Wait for debugger";
 
-        public string Icon => "fa-times";
+        public string Icon => "fa-bug";
 
         public string Category => "Basic";
 
