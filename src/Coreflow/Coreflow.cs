@@ -111,7 +111,7 @@ namespace Coreflow
 
         public void CompileFlows()
         {
-            FlowManager.CompileFlows(this, FlowDefinitionStorage.GetDefinitions());
+            FlowManager.CompileFlowsCreateAndLoadAssembly(this, FlowDefinitionStorage.GetDefinitions());
         }
 
         public Guid? GetFlowIdentifier(string pFlowName)

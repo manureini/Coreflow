@@ -65,6 +65,7 @@ namespace Coreflow.CodeCreators
         public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pParentContainer = null)
         {
             pBuilderContext.UpdateCurrentSymbols();
+            pCodeWriter.WriteIdentifierTagTop(this);
 
             string flowInstanceVariableName = pBuilderContext.GetLocalVariableName(this);
 
@@ -79,7 +80,9 @@ namespace Coreflow.CodeCreators
                 if (string.IsNullOrWhiteSpace(entry.Code))
                     continue;
 
-                pCodeWriter.AppendLineTop($"{dictVariableName}.Add(\"{entry.Name}\", {entry.Code});");
+                pCodeWriter.AppendLineTop($"{dictVariableName}.Add(\"{entry.Name}\",");
+                entry.ToCode(pBuilderContext, pCodeWriter, pParentContainer);
+                pCodeWriter.AppendLineTop($");");
             }
 
             pCodeWriter.AppendLineTop($"{flowInstanceVariableName}.SetArguments({dictVariableName});");

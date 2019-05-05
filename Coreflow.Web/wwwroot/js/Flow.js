@@ -45,7 +45,6 @@ $(function () {
 
             $("#parameter-box #codecreator-parameters-table .codecreator-parameters-table-text").each(function (i, val) {
 
-
                 var editor = monaco.editor.create(val, {
                     value: String($(val).data('value')),
                     language: 'csharp',
@@ -63,6 +62,7 @@ $(function () {
                 });
 
                 editor.onDidChangeModelContent(function (e) {
+
                     var creatorid = $(val.parentElement.parentElement.parentElement.parentElement).data("creator-id");
                     var parameter = $(val.parentElement.parentElement).data("id");
                     var newText = editor.getValue();
@@ -76,9 +76,12 @@ $(function () {
 
                     htmlMapping.attr('data-value', newText);
 
-                    SubmitParameterTextChanged(creatorid, parameter, newText);
-                });
+                    clearTimeout($.data(this, 'timer'));
+                    var wait = setTimeout(SubmitParameterTextChanged, 200);
+                    $(this).data('timer', wait);
 
+                    PrepareParameterTextChanged(creatorid, parameter, newText);
+                });
 
                 $(this).dblclick(function () {
 
@@ -197,13 +200,15 @@ $(function () {
 
     $("#RunFlowbtn").click(SubmitRunFlow);
 
+    $("#SaveFlowbtn").click(SubmitSaveFlow);
+    $("#ResetFlowbtn").click(SubmitResetFlow);
+
     $(document).on("change", ".input-displayname", function () {
         var ccid = $(this).parents("div").eq(0).data("id");
         //   var ccid = $(this).parent().closest('div').data("id");
 
         if ($(this).attr('id') == "input-flow-name") {
             ccid = "flow-name";
-            setTimeout(() => SubmitGetCodeCreatorDisplayNames(), 1000);
         }
         SubmitUserDisplayNameChanged(ccid, $(this).val());
     });
@@ -251,9 +256,6 @@ $(function () {
         SubmitFlowArgumentChanged(false, $(this).data("id"));
     });
 
-
-
-
     $(document).on("click", ".nav a.active", function (e) {
         $(this).removeClass("active");
         $(".tab-content .active").removeClass("active");
@@ -281,6 +283,8 @@ $(function () {
                 verticalScrollbarSize: 0
             },
         });
+
+        SubmitCompile();
     });
 });
 
@@ -481,4 +485,14 @@ function SetDroppable(element) {
         tolerance: "pointer",
 
     });
+}
+
+function OnFlowChange() {
+    $("#SaveFlowbtn").removeClass("disabled");
+}
+
+function OnFlowSave() {
+
+    $("#SaveFlowbtn").addClass("disabled");
+    setTimeout(() => SubmitGetCodeCreatorDisplayNames(), 300);
 }

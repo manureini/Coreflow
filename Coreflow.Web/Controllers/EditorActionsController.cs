@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Coreflow.Web.Controllers
@@ -33,12 +34,18 @@ namespace Coreflow.Web.Controllers
 
 
         [HttpPost]
-        public JsonResult SaveFlow(FlowEditorRequest pRequest)
+        public JsonResult SaveFlow([FromBody] FlowEditorRequest pRequest)
         {
             FlowDefinitionModelStorage.PersistModel(pRequest.FlowIdentifier);
             return Json(new Response(true, "ok"));
         }
 
+        [HttpPost]
+        public JsonResult ResetFlow([FromBody] FlowEditorRequest pRequest)
+        {
+            FlowDefinitionModelStorage.ResetFlow(pRequest.FlowIdentifier);
+            return Json(new Response(true, "ok"));
+        }
 
         [HttpPost]
         public JsonResult RunFlow([FromBody] FlowEditorRequest pRequest)
@@ -105,23 +112,57 @@ namespace Coreflow.Web.Controllers
 
                 am.Code = pData.NewValue;
 
-                FlowDefinition wfDef = FlowDefinitionModelMappingHelper.GenerateFlowDefinition(wfDefModel);
-                FlowCode code = wfDef.GenerateFlowCode();
-                FlowCompileResult result = code.Compile(false);
+
+                //       FlowDefinition wfDef = FlowDefinitionModelMappingHelper.GenerateFlowDefinition(wfDefModel);
+                //       FlowCode code = wfDef.GenerateFlowCode();
+                //       FlowCompileResult result = code.Compile(false);
 
                 FlowDefinitionModelStorage.StoreModel(wfDefModel, false);
 
-                IDictionary<string, string> errors = new Dictionary<string, string>();
+                /*           IDictionary<string, string> errors = new Dictionary<string, string>();
 
-                if (!result.Successful)
-                    errors = result.ErrorCodeCreators.ToDictionary(s => s.Key.ToString(), s => s.Value);
+                           if (!result.Successful)
+                               errors = result.ErrorCodeCreators.ToDictionary(s => s.Key.ToString(), s => s.Value);
+                               */
 
-                return Json(new DictionaryResponse(true, "ok", errors));
+                return Json(new Response(true, "ok"));
             }
             catch (Exception e)
             {
                 return Json(new Response(false, e.ToString()));
             }
+        }
+
+        [HttpPost]
+        public JsonResult CompileFlow([FromBody] FlowEditorRequest pData)
+        {
+            /*
+             FlowDefinitionModel wfDefModel = FlowDefinitionModelStorage.GetModel(pData.FlowIdentifier);
+
+            FlowDefinition wfDef = FlowDefinitionModelMappingHelper.GenerateFlowDefinition(wfDefModel);
+            FlowCode code = wfDef.GenerateFlowCode();
+            FlowCompileResult result = code.Compile(false);
+            */
+
+            var combinedCode = new StringBuilder();
+
+            foreach (var flow in FlowDefinitionModelStorage.CombineStoredAndTmpFlows())
+            {
+                FlowCode fcode = flow.GenerateFlowCode();
+                combinedCode.Append(fcode.Code);
+            }
+
+            string fullcode = combinedCode.ToString();
+
+            var result = FlowCompilerHelper.CompileFlowCode(fullcode, false, "dummy");
+
+
+            IDictionary<string, string> errors = new Dictionary<string, string>();
+
+            if (!result.Successful)
+                errors = result.ErrorCodeCreators.ToDictionary(s => s.Key.ToString(), s => s.Value);
+
+            return Json(new DictionaryResponse(true, "ok", errors));
         }
 
         [HttpPost]
@@ -134,10 +175,6 @@ namespace Coreflow.Web.Controllers
                 if (pData.CreatorGuid == "flow-name")
                 {
                     wfDefModel.Name = pData.NewValue;
-
-                    string factoryIdentifier = CallFlowCreatorFactory.GetIdentifier(wfDefModel.Identifier);
-                    var factory = Program.CoreflowInstance.CodeCreatorStorage.GetAllFactories().Single(f => f.Identifier == factoryIdentifier) as CallFlowCreatorFactory;
-                    factory.FlowName = wfDefModel.Name;
                 }
                 else
                 {
@@ -294,22 +331,29 @@ namespace Coreflow.Web.Controllers
                 if (int.TryParse(pData.SequenceIndex, out int sindex))
                     sequenceIndex = sindex;
 
+
+
+                var factory = Program.CoreflowInstance.CodeCreatorStorage.GetAllFactories().Single(f => f.Identifier == pData.CustomFactory);
+
+                var tmpcc = factory.Create();
+
+
                 CodeCreatorModel modes = new CodeCreatorModel()
                 {
                     Type = pData.Type,
                     CustomFactory = pData.CustomFactory,
-                    DisplayName = pData.Type,
                     Identifier = Guid.NewGuid(),
+                    DisplayName = tmpcc.GetDisplayName(),
+                    Category = tmpcc.GetCategory(),
+                    IconClass = tmpcc.GetIconClassName()
                 };
 
                 ret.Message = modes.Identifier.ToString();
 
                 ICodeCreator cc = CodeCreatorModelHelper.CreateCode(modes, null);
 
-                if (cc is IParametrized)
+                if (cc is IParametrized pm)
                 {
-                    IParametrized pm = cc as IParametrized;
-
                     modes.Parameters = pm.GetParameters().ConvertToModel();
                     modes.Arguments = new List<ArgumentModel>();
 
@@ -328,6 +372,7 @@ namespace Coreflow.Web.Controllers
                     modes.CodeCreatorModels = new Dictionary<int, List<CodeCreatorModel>>();
                     modes.SequenceCount = container.SequenceCount;
                 }
+
 
                 UpdateCodeCreatorModel(wfDefModel, destAfter, destContainer, sequenceIndex, modes);
 

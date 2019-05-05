@@ -15,7 +15,7 @@ using System.Text.RegularExpressions;
 
 namespace Coreflow.Helper
 {
-    internal static class FlowCompilerHelper
+    public static class FlowCompilerHelper
     {
         public const string COMMENT_ID_PREFIX = "//#id ";
         public const string CONTAINER_ID_PREFIX = "//#Container";

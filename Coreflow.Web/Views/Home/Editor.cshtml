@@ -9,6 +9,7 @@
     <p>Use this area to provide additional information.</p>
 *@
 
+@using Coreflow.Web.Helper
 
 
 @section Scripts
@@ -131,7 +132,7 @@
 
     <div id="codecreator-panel" class="panel border-panel">
 
-        @foreach (var grouped in Model.CodeCreators.GroupBy(c => c.Category).OrderBy(g => g.Key))
+        @foreach (var grouped in CodeCreatorHelper.GetCodeCreatorModels().GroupBy(c => c.Category).OrderBy(g => g.Key))
         {
             <h5>@grouped.Key</h5>
             @foreach (var entry in grouped.OrderBy(c => c.DisplayName))
@@ -149,7 +150,7 @@
     </div>
 
     <div id="editor-center" class="panel">
-        <h4> <i class="@Model.Icon.GetIconClassName()"></i> <input id="input-flow-name" type="text" class="input-displayname displayname" spellcheck="false" value="@Model.Name" /></h4>
+        <h4 id="flow-name"><i class="@Model.Icon.GetIconClassName()"></i> <input id="input-flow-name" type="text" class="input-displayname displayname" spellcheck="false" value="@Model.Name" /></h4>
 
         <div id="main">
             @PrintCodeCreatorModel(@Model.CodeCreatorModel)
@@ -160,7 +161,20 @@
     </div>
 
     <div id="control-panel" class="panel border-panel">
-        <input type="button" id="RunFlowbtn" value="Run Flow">
+
+        <button type="button" id="RunFlowbtn" class="btn btn-primary">
+            Run flow
+        </button>
+
+        @{string additionClass = FlowDefinitionModelStorage.UnSavedChanges(Model.Identifier) ? "" : "disabled"; }
+
+        <button type="button" id="SaveFlowbtn" class="btn btn-primary @additionClass">
+            Save flow
+        </button>
+
+        <button type="button" id="ResetFlowbtn" class="btn btn-primary">
+            Reset flow
+        </button>
 
         <button type="button" id="btnShowGeneratedCode" class="btn btn-primary">
             Show generated code
@@ -228,10 +242,10 @@
         </div>
     </div>
 
-    <script>
-        var currentFlowIdentifier = "@(Model.Identifier)";
-    </script>
-
     <span id="hidden-span"></span>
 </div>
 
+
+<script>
+    var currentFlowIdentifier = "@(Model.Identifier)";
+</script>

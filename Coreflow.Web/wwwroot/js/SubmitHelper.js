@@ -1,34 +1,66 @@
 ﻿
-function SubmitParameterTextChanged(creatorGuid, parameterGuid, newValue) {
-    var postData = {};
-    postData["FlowIdentifier"] = currentFlowIdentifier;
-    postData["CreatorGuid"] = creatorGuid;
-    postData["ParameterGuid"] = parameterGuid;
-    postData["NewValue"] = newValue;
+
+var postdata_SubmitParameterTextChanged;
+
+function PrepareParameterTextChanged(creatorGuid, parameterGuid, newValue) {
+    postdata_SubmitParameterTextChanged = {};
+    postdata_SubmitParameterTextChanged["FlowIdentifier"] = currentFlowIdentifier;
+    postdata_SubmitParameterTextChanged["CreatorGuid"] = creatorGuid;
+    postdata_SubmitParameterTextChanged["ParameterGuid"] = parameterGuid;
+    postdata_SubmitParameterTextChanged["NewValue"] = newValue;
+}
+
+function SubmitParameterTextChanged() {
+
+    OnFlowChange();
 
     $.ajax({
         url: "Action/ParameterTextChanged",
         type: 'post',
+        data: JSON.stringify(postdata_SubmitParameterTextChanged),
+        contentType: "application/json",
+        success: function (data) {
+            if (data.isSuccess) {
+                SubmitCompile();
+                return;
+            }
+            alert(data.message);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+}
+
+function SubmitCompile() {
+    var postData = {};
+    postData["FlowIdentifier"] = currentFlowIdentifier;
+
+    $.ajax({
+        url: "Action/CompileFlow",
+        type: 'post',
         data: JSON.stringify(postData),
         contentType: "application/json",
         success: function (data) {
-
-            $(".compile-error").removeAttr("title").removeClass("compile-error");
-
-            if (data.listValues) {
-
-                $.each(data.listValues, function (i, entry) {
-                    var guid = entry.guid;
-                    var message = entry.value;
-
-                    //.tooltip()
-                    $("tr[data-id='" + guid + "']").addClass("compile-error").attr("title", message)
-                        .parents(".codecreator").first().addClass("compile-error");
-                });
-
-            }
-
             if (data.isSuccess) {
+
+                $(".compile-error").removeAttr("title").removeClass("compile-error");
+
+                if (data.listValues && data.listValues.length > 0) {
+
+                    $("#flow-name").addClass("compile-error");
+
+                    $.each(data.listValues, function (i, entry) {
+                        var guid = entry.guid;
+                        var message = entry.value;
+
+                        $("tr[data-id='" + guid + "']").addClass("compile-error").attr("title", message)
+                            .parents(".codecreator").first().addClass("compile-error");
+
+                        $(".codecreator[data-id='" + guid + "'").addClass("compile-error");
+                    });
+                }
+
                 return;
             }
             alert(data.message);
@@ -40,6 +72,9 @@ function SubmitParameterTextChanged(creatorGuid, parameterGuid, newValue) {
 }
 
 function SubmitUserDisplayNameChanged(creatorGuid, newValue) {
+
+    OnFlowChange();
+
     var postData = {};
     postData["FlowIdentifier"] = currentFlowIdentifier;
     postData["CreatorGuid"] = creatorGuid;
@@ -63,6 +98,9 @@ function SubmitUserDisplayNameChanged(creatorGuid, newValue) {
 }
 
 function SubmitFlowReferencedNamespaceChanged(pAddValue, pValue) {
+
+    OnFlowChange();
+
     var postData = {};
     postData["FlowIdentifier"] = currentFlowIdentifier;
     postData["AddValue"] = pAddValue;
@@ -86,6 +124,9 @@ function SubmitFlowReferencedNamespaceChanged(pAddValue, pValue) {
 }
 
 function SubmitFlowArgumentChanged(pAddValue, pName, pType, pValue) {
+
+    OnFlowChange();
+
     var postData = {};
     postData["FlowIdentifier"] = currentFlowIdentifier;
     postData["AddValue"] = pAddValue;
@@ -112,6 +153,9 @@ function SubmitFlowArgumentChanged(pAddValue, pName, pType, pValue) {
 
 
 function SubmitMoveAfter(sourceId, destinationAfterId, destinationContainerId, sequenceIndex) {
+
+    OnFlowChange();
+
     var postData = {};
     postData["FlowIdentifier"] = currentFlowIdentifier;
     postData["SourceId"] = sourceId;
@@ -137,6 +181,9 @@ function SubmitMoveAfter(sourceId, destinationAfterId, destinationContainerId, s
 }
 
 function SubmitCreateCodeCreator(newCodeCreator, destinationAfterId, destinationContainerId, sequenceIndex, type, factory) {
+
+    OnFlowChange();
+
     var postData = {};
     postData["FlowIdentifier"] = currentFlowIdentifier;
     postData["DestinationAfterId"] = destinationAfterId;
@@ -174,6 +221,9 @@ function SubmitCreateCodeCreator(newCodeCreator, destinationAfterId, destination
 }
 
 function SubmitDeleteCodeCreator(id) {
+
+    OnFlowChange();
+
     var postData = {};
     postData["FlowIdentifier"] = currentFlowIdentifier;
     postData["Id"] = id;
@@ -197,6 +247,8 @@ function SubmitDeleteCodeCreator(id) {
 
 function SubmitRunFlow() {
 
+    OnFlowSave();
+
     var postData = {};
     postData["FlowIdentifier"] = currentFlowIdentifier;
 
@@ -217,6 +269,52 @@ function SubmitRunFlow() {
     });
 }
 
+
+function SubmitSaveFlow() {
+
+    OnFlowSave();
+
+    var postData = {};
+    postData["FlowIdentifier"] = currentFlowIdentifier;
+
+    $.ajax({
+        url: "Action/SaveFlow",
+        type: 'post',
+        data: JSON.stringify(postData),
+        contentType: "application/json",
+        success: function (data) {
+            if (data.isSuccess) {
+                return;
+            }
+            alert(data.message);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+}
+
+function SubmitResetFlow() {
+    var postData = {};
+    postData["FlowIdentifier"] = currentFlowIdentifier;
+
+    $.ajax({
+        url: "Action/ResetFlow",
+        type: 'post',
+        data: JSON.stringify(postData),
+        contentType: "application/json",
+        success: function (data) {
+            if (data.isSuccess) {
+                location.reload();
+                return;
+            }
+            alert(data.message);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+}
 
 function SubmitGetGeneratedCode(id) {
     var postData = {};

@@ -23,10 +23,9 @@ namespace Coreflow.Helper
 
         private string mFullCode = "";
 
-        public void CompileFlows(Coreflow pCoreflowInstance, IEnumerable<FlowDefinition> pFlows)
+        public void CompileFlowsCreateAndLoadAssembly(Coreflow pCoreflowInstance, IEnumerable<FlowDefinition> pFlows)
         {
             var combinedCode = new StringBuilder();
-
 
             //TODO add lock threadsafe
 
@@ -43,14 +42,12 @@ namespace Coreflow.Helper
 
             mFullCode = fullcode;
 
-
             foreach (var factory in mFactories)
             {
                 factory.Value.Dispose();
             }
 
             mFactories.Clear();
-
 
             mAssemblyVersion++; //Interlocked?
 

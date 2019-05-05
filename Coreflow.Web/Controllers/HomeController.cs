@@ -11,6 +11,7 @@ using Coreflow.Objects;
 using Coreflow.Web.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using System.Reflection;
+using Coreflow.Web.Helper;
 
 namespace Coreflow.Web.Controllers
 {
@@ -37,15 +38,9 @@ namespace Coreflow.Web.Controllers
             if (id == Guid.Empty)
                 return RedirectToAction(nameof(Flows));
 
-            FlowDefinition wfDef = Program.CoreflowInstance.FlowDefinitionStorage.GetDefinitions().FirstOrDefault(wf => wf.Identifier == id);
+            var fmodel = FlowDefinitionModelStorage.GetModel(id);
 
-            var FlowDefinitionModel = FlowDefinitionModelMappingHelper.GenerateModel(wfDef);
-
-            string serialized = FlowDefinitionModelSerializer.Serialize(FlowDefinitionModel);
-
-            HttpContext.Session.SetString("FlowModel", serialized);
-
-            return View(FlowDefinitionModel);
+            return View(fmodel);
         }
 
         public IActionResult Flows()
