@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Coreflow.Web.Models
+﻿namespace Coreflow.Web.Models.Requests
 {
-    public class FlowArgumentChangedData
+    public class FlowArgumentChangedData : FlowEditorRequest
     {
         public bool AddValue { get; set; }
 

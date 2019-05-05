@@ -203,6 +203,7 @@ $(function () {
 
         if ($(this).attr('id') == "input-flow-name") {
             ccid = "flow-name";
+            setTimeout(() => SubmitGetCodeCreatorDisplayNames(), 1000);
         }
         SubmitUserDisplayNameChanged(ccid, $(this).val());
     });

@@ -1,4 +1,4 @@
-﻿namespace Coreflow.Web.Models
+﻿namespace Coreflow.Web.Models.Requests
 {
     public class CreateCodeCreatorData : MoveAfterData
     {

@@ -1,6 +1,7 @@
 ﻿
 function SubmitParameterTextChanged(creatorGuid, parameterGuid, newValue) {
     var postData = {};
+    postData["FlowIdentifier"] = currentFlowIdentifier;
     postData["CreatorGuid"] = creatorGuid;
     postData["ParameterGuid"] = parameterGuid;
     postData["NewValue"] = newValue;
@@ -40,6 +41,7 @@ function SubmitParameterTextChanged(creatorGuid, parameterGuid, newValue) {
 
 function SubmitUserDisplayNameChanged(creatorGuid, newValue) {
     var postData = {};
+    postData["FlowIdentifier"] = currentFlowIdentifier;
     postData["CreatorGuid"] = creatorGuid;
     postData["NewValue"] = newValue;
 
@@ -60,31 +62,9 @@ function SubmitUserDisplayNameChanged(creatorGuid, newValue) {
     });
 }
 
-/*
-function SubmitFlowReferencedAssemblyChanged(pAddValue, pValue) {
-    var postData = {};
-    postData["AddValue"] = pAddValue;
-    postData["Value"] = pValue;
-
-    $.ajax({
-        url: "Action/FlowReferencedAssemblyChanged",
-        type: 'post',
-        data: JSON.stringify(postData),
-        contentType: "application/json",
-        success: function (data) {
-            if (data.isSuccess) {
-                return;
-            }
-            alert(data.message);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            alert(errorThrown);
-        }
-    });
-}*/
-
 function SubmitFlowReferencedNamespaceChanged(pAddValue, pValue) {
     var postData = {};
+    postData["FlowIdentifier"] = currentFlowIdentifier;
     postData["AddValue"] = pAddValue;
     postData["Value"] = pValue;
 
@@ -107,6 +87,7 @@ function SubmitFlowReferencedNamespaceChanged(pAddValue, pValue) {
 
 function SubmitFlowArgumentChanged(pAddValue, pName, pType, pValue) {
     var postData = {};
+    postData["FlowIdentifier"] = currentFlowIdentifier;
     postData["AddValue"] = pAddValue;
     postData["Name"] = pName;
     postData["Type"] = pType;
@@ -132,6 +113,7 @@ function SubmitFlowArgumentChanged(pAddValue, pName, pType, pValue) {
 
 function SubmitMoveAfter(sourceId, destinationAfterId, destinationContainerId, sequenceIndex) {
     var postData = {};
+    postData["FlowIdentifier"] = currentFlowIdentifier;
     postData["SourceId"] = sourceId;
     postData["DestinationAfterId"] = destinationAfterId;
     postData["DestinationContainerId"] = destinationContainerId;
@@ -156,7 +138,7 @@ function SubmitMoveAfter(sourceId, destinationAfterId, destinationContainerId, s
 
 function SubmitCreateCodeCreator(newCodeCreator, destinationAfterId, destinationContainerId, sequenceIndex, type, factory) {
     var postData = {};
-
+    postData["FlowIdentifier"] = currentFlowIdentifier;
     postData["DestinationAfterId"] = destinationAfterId;
     postData["DestinationContainerId"] = destinationContainerId;
     postData["Type"] = type;
@@ -193,6 +175,7 @@ function SubmitCreateCodeCreator(newCodeCreator, destinationAfterId, destination
 
 function SubmitDeleteCodeCreator(id) {
     var postData = {};
+    postData["FlowIdentifier"] = currentFlowIdentifier;
     postData["Id"] = id;
 
     $.ajax({
@@ -215,6 +198,7 @@ function SubmitDeleteCodeCreator(id) {
 function SubmitRunFlow() {
 
     var postData = {};
+    postData["FlowIdentifier"] = currentFlowIdentifier;
 
     $.ajax({
         url: "Action/RunFlow",
@@ -236,6 +220,7 @@ function SubmitRunFlow() {
 
 function SubmitGetGeneratedCode(id) {
     var postData = {};
+    postData["FlowIdentifier"] = currentFlowIdentifier;
     postData["Id"] = id;
 
     $.ajax({
@@ -259,3 +244,25 @@ function SubmitGetGeneratedCode(id) {
         }
     });
 }
+
+function SubmitGetCodeCreatorDisplayNames() {
+    $.ajax({
+        url: "Action/GetCodeCreatorDisplayNames",
+        type: 'get',
+        contentType: "application/json",
+        success: function (data) {
+            $.each(data.listValues, function (i, entry) {
+                var key = entry.guid;
+                var value = entry.value;
+                var codecreator = ($(".codecreator").filter((i, c) => $(c).data("customfactory") == key));
+                codecreator.parent().parent().find(".displayname").each((i, e) => $(e).html(value));
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+}
+
+
+

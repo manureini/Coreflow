@@ -8,13 +8,18 @@ namespace Coreflow.Objects.CodeCreatorFactory
 {
     public class CallFlowCreatorFactory : ICodeCreatorFactory
     {
-        public string Identifier => typeof(CallFlowCreatorFactory).FullName + "_" + FlowIdentifier;
+        public static string GetIdentifier(Guid pFlowIdentifier)
+        {
+            return typeof(CallFlowCreatorFactory).FullName + "_" + pFlowIdentifier;
+        }
+
+        public string Identifier => GetIdentifier(FlowIdentifier);
 
         public Guid FlowIdentifier { get; }
 
-        public string FlowName { get; }
+        public string FlowName { get; set; }
 
-        public string FlowIcon { get; }
+        public string FlowIcon { get; set; }
 
         public List<FlowArguments> Arguments { get; }
 

@@ -4,27 +4,27 @@ using System.Linq;
 
 namespace Coreflow.Web.Models.Responses
 {
-    public class GuidListResponse : Response
+    public class DictionaryResponse : Response
     {
-        public List<GuidEntry> ListValues { get; set; }
+        public List<ListEntry> ListValues { get; set; }
 
-        public GuidListResponse() { }
+        public DictionaryResponse() { }
 
-        public GuidListResponse(bool isSuccess, string message, IDictionary<Guid, string> pCompileErrors) : base(isSuccess, message)
+        public DictionaryResponse(bool isSuccess, string message, IDictionary<string, string> pDictionary) : base(isSuccess, message)
         {
-            ListValues = pCompileErrors?.Select(e => new GuidEntry(e.Key, e.Value)).ToList();
+            ListValues = pDictionary?.Select(e => new ListEntry(e.Key, e.Value)).ToList();
         }
     }
 
-    public class GuidEntry
+    public class ListEntry
     {
         public string Guid { get; }
 
         public string Value { get; }
 
-        public GuidEntry(Guid pGuid, string pValue)
+        public ListEntry(string pKey, string pValue)
         {
-            Guid = pGuid.ToString();
+            Guid = pKey;
             Value = pValue;
         }
 

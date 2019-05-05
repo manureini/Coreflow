@@ -1,6 +1,6 @@
-﻿namespace Coreflow.Web.Models
+﻿namespace Coreflow.Web.Models.Requests
 {
-    public class MoveAfterData
+    public class MoveAfterData : FlowEditorRequest
     {
         public string SourceId { get; set; }
 
