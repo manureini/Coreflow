@@ -12,6 +12,7 @@ using Coreflow.Web.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using System.Reflection;
 using Coreflow.Web.Helper;
+using Coreflow.Objects.CodeCreatorFactory;
 
 namespace Coreflow.Web.Controllers
 {
@@ -27,8 +28,9 @@ namespace Coreflow.Web.Controllers
         {
             FlowDefinition wfdef = Program.CoreflowInstance.FlowDefinitionFactory.Create("new");
 
-            Program.CoreflowInstance.FlowDefinitionStorage.Remove(wfdef.Identifier);
-            Program.CoreflowInstance.FlowDefinitionStorage.Add(wfdef);
+            var fmodel = FlowDefinitionModelMappingHelper.GenerateModel(wfdef);
+
+            FlowDefinitionModelStorage.StoreModel(fmodel, false);
 
             return RedirectToAction(nameof(Editor), new { id = wfdef.Identifier });
         }
@@ -58,6 +60,12 @@ namespace Coreflow.Web.Controllers
         public IActionResult DeleteFlow(Guid id)
         {
             Program.CoreflowInstance.FlowDefinitionStorage.Remove(id);
+
+            FlowDefinitionModelStorage.ResetFlow(id);
+
+            string factoryIdentifier = CallFlowCreatorFactory.GetIdentifier(id);
+            Program.CoreflowInstance.CodeCreatorStorage.RemoveFactory(factoryIdentifier);
+
             return RedirectToAction(nameof(Flows));
         }
 

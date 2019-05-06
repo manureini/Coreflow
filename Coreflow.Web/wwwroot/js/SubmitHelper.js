@@ -210,6 +210,8 @@ function SubmitCreateCodeCreator(newCodeCreator, destinationAfterId, destination
                     $(entry).children().last().children().first().attr("data-id", guid);
                 });
 
+                SubmitCompile();
+
                 return;
             }
             alert(data.message);
@@ -235,6 +237,7 @@ function SubmitDeleteCodeCreator(id) {
         contentType: "application/json",
         success: function (data) {
             if (data.isSuccess) {
+                SubmitCompile();
                 return;
             }
             alert(data.message);

@@ -64,8 +64,6 @@ namespace Coreflow.Helper
                 ReferencedNamespaces = DefaultReferencedNamespaces,
                 Arguments = new List<FlowArguments>(),
             };
-
-            mCoreflow.FlowDefinitionStorage.Add(w);
             return w;
         }
     }

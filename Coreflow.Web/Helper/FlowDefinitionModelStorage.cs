@@ -41,8 +41,16 @@ namespace Coreflow.Web.Helper
             Program.CoreflowInstance.FlowDefinitionStorage.Add(fdef);
 
             string factoryIdentifier = CallFlowCreatorFactory.GetIdentifier(fdef.Identifier);
-            var factory = Program.CoreflowInstance.CodeCreatorStorage.GetAllFactories().Single(f => f.Identifier == factoryIdentifier) as CallFlowCreatorFactory;
-            factory.FlowName = fdef.Name;
+            var factory = Program.CoreflowInstance.CodeCreatorStorage.GetAllFactories().SingleOrDefault(f => f.Identifier == factoryIdentifier) as CallFlowCreatorFactory;
+
+            if (factory != null)
+            {
+                factory.FlowName = fdef.Name;
+            }
+            else
+            {
+                Program.CoreflowInstance.CodeCreatorStorage.AddCodeCreatorFactory(new CallFlowCreatorFactory(fdef));
+            }
 
             mUnsavedChanges.Remove(pIdentifier);
             mUnsavedChanges.Add(pIdentifier, false);
@@ -73,7 +81,6 @@ namespace Coreflow.Web.Helper
             mModels.Remove(pIdentifier);
             mUnsavedChanges.Remove(pIdentifier);
         }
-
 
         public static IEnumerable<FlowDefinition> CombineStoredAndTmpFlows()
         {

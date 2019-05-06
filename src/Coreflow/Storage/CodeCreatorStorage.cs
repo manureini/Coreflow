@@ -65,5 +65,10 @@ namespace Coreflow.Storage
 
             return mCustomCodeCCreatorFactories[pFactoryIdentifier];
         }
+
+        public void RemoveFactory(string pFactoryIdentifier)
+        {
+            mCustomCodeCCreatorFactories.Remove(pFactoryIdentifier);
+        }
     }
 }
