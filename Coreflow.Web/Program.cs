@@ -1,7 +1,9 @@
 ﻿using Coreflow.Storage;
+using Coreflow.Storage.ArgumentInjection;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
@@ -17,10 +19,7 @@ namespace Coreflow.Web
             CoreflowInstance = new Coreflow(
                 new SimpleFlowDefinitionFileStorage(@"Flows"),
                 new SimpleFlowInstanceFileStorage("FlowInstances"),
-                new DictionaryArgumentInjectionStore(new Dictionary<string, object>()
-                {
-                    { "MailPassword", "1" }
-                }),
+                new JsonFileArgumentInjectionStore("Arguments.json"),
                 "Plugins");
 
             Thread flowThread = new Thread(() =>

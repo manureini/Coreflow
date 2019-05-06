@@ -264,3 +264,4 @@ Coreflow.Web/Flows/*
 Coreflow.Web/FlowInstances/*
 *.dll
 Coreflow.Web/LastGeneratedCode.cs
+Coreflow.Web/Arguments.json

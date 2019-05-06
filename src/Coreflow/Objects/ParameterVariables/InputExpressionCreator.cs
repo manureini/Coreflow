@@ -54,8 +54,12 @@ namespace Coreflow.Interfaces
 
             Code = Code.Trim();
 
+            if (string.IsNullOrWhiteSpace(Code))
+            {
+                pCodewriter.AppendLineTop(TypeHelper.GetDefaultInitializationCodeSnippet(type));
+                return;
+            }
 
-            //    var coreflowInstance = pBuilderContext.FlowDefinition.Coreflow;
 
             if (Code.StartsWith("$"))
             {
@@ -63,18 +67,9 @@ namespace Coreflow.Interfaces
 
                 if (TypeHelper.IsValidVariableName(name))
                 {
-
-
+                    pCodewriter.AppendLineTop($"({type.FullName})CoreflowInstace.ArgumentInjectionStore.GetArgumentValue(\"{name}\", typeof({type.FullName}))");
+                    return;
                 }
-
-                // coreflowInstance.ArgumentInjectionStore.GetArgumentValue(name, type);
-            }
-
-
-            if (string.IsNullOrWhiteSpace(Code))
-            {
-                pCodewriter.AppendLineTop(TypeHelper.GetDefaultInitializationCodeSnippet(type));
-                return;
             }
 
             try
