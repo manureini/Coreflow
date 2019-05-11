@@ -1,4 +1,6 @@
-﻿using Coreflow.Web.Identity;
+﻿using AspNetCore.Identity.LiteDB;
+using AspNetCore.Identity.LiteDB.Data;
+using AspNetCore.Identity.LiteDB.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -49,13 +51,21 @@ namespace Coreflow.Web
                 options.Cookie.Name = "X-CSRF-TOKEN-COOKIE";
             });
 
-
-            //   services.AddDbContext<IdentityDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
-
+       
+            /*
             services.AddIdentity<IdentityUser, IdentityRole>()
             .AddUserStore<MemoryUserStore>()
             .AddRoleStore<MemoryRoleStore>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders();*/
+
+
+            services.AddSingleton<ILiteDbContext, LiteDbContext>();
+
+            services.AddIdentity<ApplicationUser, AspNetCore.Identity.LiteDB.IdentityRole>()
+                 .AddUserStore<LiteDbUserStore<ApplicationUser>>()
+                .AddRoleStore<LiteDbRoleStore<AspNetCore.Identity.LiteDB.IdentityRole>>()
+                .AddDefaultTokenProviders();
+
 
             services.AddAuthentication().AddCookie(options => options.ExpireTimeSpan = TimeSpan.FromMinutes(30));
 
@@ -113,10 +123,10 @@ namespace Coreflow.Web
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
             //initializing custom roles           
-            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             string email = "admin@localhost";
-            var poweruser = new IdentityUser
+            var poweruser = new ApplicationUser
             {
                 UserName = "admin",
                 Email = email,

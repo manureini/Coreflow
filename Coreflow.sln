@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coreflow.Host", "Coreflow.H
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coreflow.Test", "Coreflow.Test\Coreflow.Test.csproj", "{4F4B4886-DD72-44B1-A69E-9CDFE1773809}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coreflow.Activities.Filesystem", "Coreflow.Activities.Filesystem\Coreflow.Activities.Filesystem.csproj", "{BDD68175-23F0-4411-B4C1-FA2CAB131599}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coreflow.Activities.Filesystem", "Coreflow.Activities.Filesystem\Coreflow.Activities.Filesystem.csproj", "{BDD68175-23F0-4411-B4C1-FA2CAB131599}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coreflow.Activities.Common", "Coreflow.Activities.Common\Coreflow.Activities.Common.csproj", "{F1F53298-B621-42FB-BBD1-5461870C47FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coreflow.Activities.Common", "Coreflow.Activities.Common\Coreflow.Activities.Common.csproj", "{F1F53298-B621-42FB-BBD1-5461870C47FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

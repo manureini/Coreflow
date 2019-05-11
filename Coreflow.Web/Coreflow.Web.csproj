@@ -18,9 +18,11 @@
 
   <ItemGroup>
     <None Remove="c90ee65b-2726-4f0f-b866-053f3c138cf9 - Copy" />
+    <None Remove="Database.db" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.Identity.LiteDB" Version="2.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0-preview4-19216-03" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
