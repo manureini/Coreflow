@@ -266,3 +266,5 @@ Coreflow.Web/FlowInstances/*
 Coreflow.Web/LastGeneratedCode.cs
 Coreflow.Web/Arguments.json
 Coreflow.Web/Database.db
+Coreflow.Repository/Flows/*
+
