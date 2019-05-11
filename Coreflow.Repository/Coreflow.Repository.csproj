@@ -8,8 +8,4 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0-preview4-19216-03" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\src\Coreflow\Coreflow.csproj" />
-  </ItemGroup>
-
 </Project>
