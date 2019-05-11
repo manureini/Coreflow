@@ -21,7 +21,7 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/FlowDefinitions",
-      "applicationUrl": "http://localhost:5000",
+      "applicationUrl": "http://localhost:5701",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
