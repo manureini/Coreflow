@@ -6,7 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Coreflow.Activities.Common\Coreflow.Activities.Common.csproj" />
+    <ProjectReference Include="..\Coreflow.Activities.Filesystem\Coreflow.Activities.Filesystem.csproj" />
     <ProjectReference Include="..\src\Coreflow\Coreflow.csproj" />
   </ItemGroup>
-
+  
 </Project>
