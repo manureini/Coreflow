@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coreflow.Activities.Filesys
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coreflow.Activities.Common", "Coreflow.Activities.Common\Coreflow.Activities.Common.csproj", "{F1F53298-B621-42FB-BBD1-5461870C47FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coreflow.Repository", "Coreflow.Repository\Coreflow.Repository.csproj", "{AE0352DA-8307-4B16-A184-BEDE20334243}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{F1F53298-B621-42FB-BBD1-5461870C47FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1F53298-B621-42FB-BBD1-5461870C47FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1F53298-B621-42FB-BBD1-5461870C47FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE0352DA-8307-4B16-A184-BEDE20334243}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE0352DA-8307-4B16-A184-BEDE20334243}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE0352DA-8307-4B16-A184-BEDE20334243}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE0352DA-8307-4B16-A184-BEDE20334243}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

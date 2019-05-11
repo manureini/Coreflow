@@ -24,7 +24,8 @@ namespace Coreflow.Web
             var loggerFactory = new LoggerFactory(new[] { new ConsoleLoggerProvider(optionsMonitor) }, new LoggerFilterOptions { MinLevel = LogLevel.Trace });
 
             CoreflowInstance = new Coreflow(
-                new SimpleFlowDefinitionFileStorage(@"Flows"),
+            //      new SimpleFlowDefinitionFileStorage(@"Flows"),
+                new RepositoryFlowDefinitionStorage("http://localhost:5000/"),
                 new SimpleFlowInstanceFileStorage("FlowInstances"),
                 new JsonFileArgumentInjectionStore("Arguments.json"),
                 "Plugins",
