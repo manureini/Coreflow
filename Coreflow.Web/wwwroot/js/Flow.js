@@ -174,6 +174,7 @@ $(function () {
             && $(e.target).parents("dialog").length <= 0 //press inside dialog
             && $(e.target).parents(".modal").length <= 0 //press inside modal
             && !$(e.target).is("input") //press inside input
+            && !$(e.target).is("textarea") //press inside input
         ) {
             SubmitDeleteCodeCreator($(selected).data("id"));
             $("#parameter-box").html("");
@@ -215,6 +216,14 @@ $(function () {
     $(document).on("keydown", ".input-displayname", function () {
         RecalculateInputBox($(this));
     });
+
+    $(document).on("keydown", ".note-textarea", function () {
+        var textarea = $(this);
+        clearTimeout($.data(this, 'timer'));
+        var wait = setTimeout(() => SubmitUpdateNote(textarea.data("id"), textarea.val()), 500);
+        $(this).data('timer', wait);
+    });
+
 
     $(document).on("click", ".add-referenced-namespace", function () {
         var value = $(this).next("input").val();
@@ -271,7 +280,11 @@ $(function () {
         $(this).trigger("modalEditorClosed");
     });
 
-    $(this).delay(50).queue(function () {
+    $(this).delay(50).queue(function () {        
+        if (typeof monaco === 'undefined') {
+            return;
+        }       
+
         dialogeditor = monaco.editor.create(document.getElementById("dialog-editor"), {
             value: "",
             language: 'csharp',

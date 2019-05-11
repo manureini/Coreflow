@@ -366,4 +366,29 @@ function SubmitGetCodeCreatorDisplayNames() {
 }
 
 
+function SubmitUpdateNote(pId, pNewText) {
+
+    OnFlowChange();
+
+    var postData = {};
+    postData["FlowIdentifier"] = currentFlowIdentifier;
+    postData["CreatorGuid"] = pId;
+    postData["NewValue"] = pNewText;
+
+    $.ajax({
+        url: "Action/UpdateNote",
+        type: 'post',
+        data: JSON.stringify(postData),
+        contentType: "application/json",
+        success: function (data) {
+            if (data.isSuccess) {
+                return;
+            }
+            alert(data.message);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+}
 

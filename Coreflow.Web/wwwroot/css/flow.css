@@ -104,6 +104,11 @@ body, .panel, .table {
         display: none;
     }
 
+    #codecreator-panel .codecreator-panel-parameter {
+        cursor: default;
+    }
+
+
 #parameter-box {
     position: fixed;
     height: 80vh;
@@ -284,3 +289,15 @@ body, .panel, .table {
 #modalEditor .modal-content {
     background: #232222;
 }
+
+#flow-notes-textarea {
+    width: 100%;
+    height: 300px;
+    background: transparent;
+    color: #a1a5a9;
+    border: none;
+}
+
+    #flow-notes-textarea:focus {
+        outline: none;
+    }

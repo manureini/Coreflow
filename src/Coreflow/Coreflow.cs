@@ -83,6 +83,7 @@ namespace Coreflow
             CodeCreatorStorage.AddCodeActivity(typeof(ConsoleWriteLineActivity));
             CodeCreatorStorage.AddCodeActivity(typeof(SleepActivity));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(ForLoopCreator));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(WhileCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(SequenceCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(InlineCodeCodeCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(CommentCreator));

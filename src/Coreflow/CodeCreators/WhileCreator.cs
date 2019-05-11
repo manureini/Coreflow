@@ -4,27 +4,27 @@ using System.Collections.Generic;
 
 namespace Coreflow.CodeCreators
 {
-    public class ForLoopCreator : AbstractSingleSequenceCreator, IParametrized
+    public class WhileCreator : AbstractSingleSequenceCreator, IParametrized
     {
         public List<IArgument> Arguments { get; set; } = new List<IArgument>();
 
-        public ForLoopCreator()
+        public WhileCreator()
         {
         }
 
-        public ForLoopCreator(ICodeCreatorContainerCreator pParentContainerCreator) : base(pParentContainerCreator)
+        public WhileCreator(ICodeCreatorContainerCreator pParentContainerCreator) : base(pParentContainerCreator)
         {
         }
 
-        public override string Name => "For Loop";
+        public override string Name => "While";
+
+        public override string Icon => "fa-level-down-alt";
 
         public override string Category => "Basic";
 
-        public override string Icon => "fa-undo";
-
         public override void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer)
         {
-            pCodeBuilder.AppendLineTop("for(");
+            pCodeBuilder.AppendLineTop("while (");
             Arguments[0].ToCode(pBuilderContext, pCodeBuilder, pContainer);
             pCodeBuilder.AppendLineTop(")");
 

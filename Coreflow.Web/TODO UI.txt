@@ -18,7 +18,9 @@ Auskommentieren durch Rechtsklick
 
 Ein serialisierter Flow kann UI Zustände speichern. Der Core kann diese aber nicht lesen oder verarbeiten
 
-Sequenz umbenennbar
+
+
+
 
 Expand
 
@@ -35,20 +37,5 @@ Versioning
 
 Flow Parameter: Keine Reflection weil teuer sondern Dictinary in ICompiledFlow
 
-
-
-
-
-Flow Code von Anfang und Ende nach Innen generieren
-
-
-
-
-
-
-
-
-
-
-
+  
 

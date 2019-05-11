@@ -11,7 +11,7 @@ namespace Coreflow.Web.Models
 
         public List<FlowArguments> Arguments { get; set; }
 
-     //   public List<CodeCreatorModel> CodeCreators { get; set; }
+        //   public List<CodeCreatorModel> CodeCreators { get; set; }
 
         public string Name { get; set; }
 
@@ -20,5 +20,7 @@ namespace Coreflow.Web.Models
         public CodeCreatorModel CodeCreatorModel { get; set; }
 
         public Guid Identifier { get; set; }
+
+        public string Note { get; set; }
     }
 }

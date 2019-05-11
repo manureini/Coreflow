@@ -469,5 +469,27 @@ namespace Coreflow.Web.Controllers
                 return Json(new Response(false, e.ToString()));
             }
         }
+
+        [HttpPost]
+        public JsonResult UpdateNote([FromBody] UserDisplayNameChangedData pData)
+        {
+            try
+            {
+                FlowDefinitionModel wfDefModel = FlowDefinitionModelStorage.GetModel(pData.FlowIdentifier);
+
+                if (pData.CreatorGuid == "flow-note")
+                {
+                    wfDefModel.Note = pData.NewValue;
+                }
+
+                FlowDefinitionModelStorage.StoreModel(wfDefModel, false);
+
+                return Json(new Response(true, string.Empty));
+            }
+            catch (Exception e)
+            {
+                return Json(new Response(false, e.ToString()));
+            }
+        }
     }
 }

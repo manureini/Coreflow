@@ -184,18 +184,12 @@
     <div id="center-box" class="panel border-panel">
         <ul class="nav nav-tabs">
             <li><a data-toggle="tab" href="#menu_args">Arguments</a></li>
-            <li><a data-toggle="tab" href="#menu_vars">Variables</a></li>
             <li><a data-toggle="tab" href="#menu_ns">Namespaces</a></li>
             <li><a data-toggle="tab" href="#menu_notes">Notes</a></li>
-
-            @*    <li><a data-toggle="tab" href="#menu3">Assemblies</a></li> *@
         </ul>
 
         <div class="tab-content">
-            <div id="menu_vars" class="tab-pane fade">
-                <div></div>
 
-            </div>
             <div id="menu_args" class="tab-pane fade">
                 <table id="table-arguments">
                     <thead>
@@ -236,8 +230,7 @@
                 </ul>
             </div>
             <div id="menu_notes" class="tab-pane fade">
-                <div></div>
-
+                <textarea id="flow-notes-textarea" class="note-textarea" data-id="flow-note">@Model.Note</textarea>
             </div>
         </div>
     </div>
