@@ -77,6 +77,7 @@ namespace Coreflow
             Logger = LoggerFactory.CreateLogger(typeof(Coreflow));
             FlowLogger = LoggerFactory.CreateLogger(typeof(ICompiledFlow));
 
+
             FlowDefinitionStorage.SetCoreflow(this);
 
             CodeCreatorStorage.AddCodeActivity(typeof(ConsoleWriteLineActivity));
@@ -90,7 +91,13 @@ namespace Coreflow
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(TerminateCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(IfCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(IfElseCreator));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(InfoLoggerCodeCreator));
+
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(CriticalLoggerCodeCreator));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(DebugLoggerCodeCreator));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(ErrorLoggerCodeCreator));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(InformationLoggerCodeCreator));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(TraceLoggerCodeCreator));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(WarningLoggerCodeCreator));
 
             if (pPluginDirectory != null)
             {

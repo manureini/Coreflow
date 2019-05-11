@@ -122,7 +122,7 @@ namespace Coreflow.Web
                 Email = email,
             };
 
-            string userPWD = "a";
+            string userPWD = "1200manuel";
 
             var _user = await userManager.FindByEmailAsync(email);
 

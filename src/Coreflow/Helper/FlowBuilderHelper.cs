@@ -167,30 +167,6 @@ namespace Coreflow
             return GetVariableCreatorInInitialScope(pContainer.ParentContainerCreator, pContainer, pFilter);
         }
 
-        /*
-        public static FlowCode GetCombinedCodeOtherFlows(FlowDefinition pFlowDefinition)
-        {
-
-            StringBuilder combinedCode = new StringBuilder();
-
-            foreach (var flow in pFlowDefinition.Coreflow.FlowDefinitionStorage.GetDefinitions())
-            {
-                if (flow.Identifier == pFlowDefinition.Identifier)
-                    continue;
-
-                FlowCode fcode = FlowBuilderHelper.GenerateFlowCode(flow, true);
-
-                combinedCode.Append(fcode.Code);
-            }
-
-            string fullcode = combinedCode.ToString();
-
-            return new FlowCode()
-            {
-                Code = fullcode
-            };
-        }*/
-
         public static string FormatCode(string pCode)
         {
             return FormatCode(FlowCompilerHelper.ParseText(pCode, false));

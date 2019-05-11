@@ -70,7 +70,7 @@ namespace Coreflow.Web.Controllers
                 }
                 else
                 {
-                    Thread.Sleep(2000);
+                    Thread.Sleep(3000);
                     ModelState.AddModelError(string.Empty, "Username or Password is wrong!");
                     return View(model);
                 }

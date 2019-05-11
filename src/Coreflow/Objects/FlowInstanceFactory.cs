@@ -50,7 +50,7 @@ namespace Coreflow.Objects
 
             flow.CoreflowInstace = Coreflow;
             flow.ArgumentInjectionStore = Coreflow.ArgumentInjectionStore;
-            flow.Logger = Coreflow.Logger;
+            flow.Logger = Coreflow.FlowLogger;
 
             FlowInstance flowInstance = new FlowInstance()
             {

@@ -6,8 +6,8 @@ using Coreflow.Objects;
 
 namespace Coreflow.CodeCreators.Logging
 {
-    public class InfoLoggerCodeCreator : AbstractLoggingCodeCreator
+    public class ErrorLoggerCodeCreator : AbstractLoggingCodeCreator
     {
-        protected override string LogLevel => "Information";
+        protected override string LogLevel => "Error";
     }
 }
