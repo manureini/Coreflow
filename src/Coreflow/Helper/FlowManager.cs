@@ -1,6 +1,5 @@
 ﻿using Coreflow.Interfaces;
 using Coreflow.Objects;
-using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.IO;

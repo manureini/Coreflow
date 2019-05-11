@@ -1,7 +1,6 @@
 ﻿using Coreflow.Interfaces;
 using Coreflow.Objects;
 using Microsoft.Extensions.Logging;
-using System;
 using System.IO;
 
 namespace Coreflow.Activities.Filesystem

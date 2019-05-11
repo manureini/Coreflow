@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Coreflow.Interfaces;
-using Coreflow.Objects;
 
 namespace Coreflow.Web.Models
 {
