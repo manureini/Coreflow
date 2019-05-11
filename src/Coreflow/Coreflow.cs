@@ -102,12 +102,10 @@ namespace Coreflow
             if (pPluginDirectory != null)
             {
                 Logger.LogDebug("Plugin dir: " + pPluginDirectory);
-                Console.WriteLine("Plugin dir: " + pPluginDirectory);
                 Directory.CreateDirectory(pPluginDirectory);
                 foreach (string file in Directory.GetFiles(pPluginDirectory, "*.dll", SearchOption.AllDirectories))
                 {
                     Logger.LogDebug("Found Plugin: " + file);
-                    Console.WriteLine("Found Plugin: " + file);
                     Assembly asm = Assembly.LoadFile(Path.GetFullPath(file));
                     CodeCreatorStorage.AddCodeCreatorDefaultConstructor(asm.GetTypes().Where(t => typeof(ICodeCreator).IsAssignableFrom(t)));
                     CodeCreatorStorage.AddCodeActivity(asm.GetTypes().Where(t => typeof(ICodeActivity).IsAssignableFrom(t)));
