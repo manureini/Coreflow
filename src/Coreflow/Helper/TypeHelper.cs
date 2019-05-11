@@ -10,13 +10,20 @@ namespace Coreflow.Helper
     {
         public static Type SearchType(string pTypename)
         {
-            var type = Type.GetType(pTypename);
-            if (type != null)
-                return type;
+            try
+            {
+                var type = Type.GetType(pTypename);
+                if (type != null)
+                    return type;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
             foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
             {
-                type = a.GetType(pTypename);
+                var type = a.GetType(pTypename);
                 if (type != null)
                     return type;
             }
