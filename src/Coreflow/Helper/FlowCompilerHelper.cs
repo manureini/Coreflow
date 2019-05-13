@@ -2,10 +2,12 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -15,6 +17,8 @@ namespace Coreflow.Helper
     {
         public const string COMMENT_ID_PREFIX = "//#id ";
         public const string CONTAINER_ID_PREFIX = "//#Container";
+        public const string LAST_COMPILED_CODE_FILE = "LastCompiledCode.cs";
+        public const string LAST_COMPILED_CODE_FILE_FORMATTED = "LastCompiledCodeFormatted.cs";
 
         private static Regex mIdRegex = new Regex(@"\/\/#id *([a-zA-Z0-9-]*)");
         private static Regex mContainerRegex = new Regex(@"\/\/#Container");
@@ -22,10 +26,10 @@ namespace Coreflow.Helper
 
         public static FlowCompileResult CompileFlowCode(string pCode, bool pDebug, string pAssemblyName = null)
         {
-            FlowCompileResult ret = new FlowCompileResult()
-            {
+            FlowCompileResult ret = new FlowCompileResult();
 
-            };
+            File.Delete(LAST_COMPILED_CODE_FILE);
+            File.Delete(LAST_COMPILED_CODE_FILE_FORMATTED);
 
             SyntaxTree syntaxTree = ParseText(pCode, pDebug);
 
@@ -36,9 +40,13 @@ namespace Coreflow.Helper
             Compilation compilation = CreateCompilation(pAssemblyName, syntaxTree);
 
             var emitOptions = new EmitOptions(
-              debugInformationFormat: DebugInformationFormat.PortablePdb,
-              pdbFilePath: pAssemblyName + ".pdb");
+                 debugInformationFormat: DebugInformationFormat.PortablePdb,
+                // pdbFilePath: pAssemblyName + ".pdb"
+                runtimeMetadataVersion: "1.0"
+                );
 
+
+          
             var assemblyStream = new MemoryStream();
             var symbolsStream = new MemoryStream();
 
@@ -172,10 +180,11 @@ namespace Coreflow.Helper
         }
 
         public static Compilation CreateCompilation(string pAssemblyName, SyntaxTree syntaxTree)
-        {
+        {           
             return CreateLibraryCompilation(pAssemblyName, false)
                .AddReferences(ReferenceHelper.GetMetadataReferences())
-               .AddSyntaxTrees(syntaxTree);
+               .AddSyntaxTrees(syntaxTree)
+               ;
         }
 
         public static SyntaxTree ParseText(string pSourceCode, bool pDebug)
@@ -184,10 +193,13 @@ namespace Coreflow.Helper
 
             if (pDebug)
             {
-                string filename = "LastGeneratedCode.cs";
+                //  string file = Path.GetFileNameWithoutExtension(LAST_COMPILED_CODE_FILE) + DateTime.Now.Millisecond + ".cs";
 
-                File.WriteAllText(filename, FlowBuilderHelper.FormatCode(pSourceCode));
-                return CSharpSyntaxTree.ParseText(File.ReadAllText(filename), options, path: filename, encoding: Encoding.UTF8);
+                string file = LAST_COMPILED_CODE_FILE;
+                File.WriteAllText(file, pSourceCode);
+
+                using var stream = File.OpenRead(file);
+                return CSharpSyntaxTree.ParseText(SourceText.From(stream), path: file);
             }
 
             return CSharpSyntaxTree.ParseText(pSourceCode, options);
@@ -220,14 +232,18 @@ namespace Coreflow.Helper
             //throw new Exception("GetIdentifier: Identifier not found!");
         }
 
-        internal static int GetLineOfCode(string[] pCode, Guid pIdentifier)
+        public static int GetLineOfIdentifier(string pCode, Guid pIdentifier)
         {
-            for (int i = 0; i < pCode.Length; i++)
+            string[] code = pCode.Split(Environment.NewLine);
+
+            string guid = pIdentifier.ToString();
+
+            for (int i = 0; i < code.Length; i++)
             {
-                var regexResult = mIdRegex.Match(pCode[i]);
-                if (regexResult.Success)
+                var regexResult = mIdRegex.Match(code[i]);
+                if (regexResult.Success && regexResult.Groups[1].Value == guid)
                 {
-                    return i;
+                    return i + 1;
                 }
             }
 

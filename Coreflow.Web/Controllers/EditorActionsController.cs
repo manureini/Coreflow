@@ -3,6 +3,7 @@ using Coreflow.Interfaces;
 using Coreflow.Objects;
 using Coreflow.Web.Extensions;
 using Coreflow.Web.Helper;
+using Coreflow.Web.Helper.Debug;
 using Coreflow.Web.Models;
 using Coreflow.Web.Models.Requests;
 using Coreflow.Web.Models.Responses;
@@ -10,8 +11,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Coreflow.Web.Controllers
 {
@@ -44,19 +47,6 @@ namespace Coreflow.Web.Controllers
         [HttpPost]
         public JsonResult RunFlow([FromBody] FlowEditorRequest pRequest)
         {
-            /*  string serialized = HttpContext.Session.GetString("FlowModel");
-              FlowDefinitionModel wfDefModel = FlowDefinitionModelSerializer.DeSerialize(serialized);
-
-              FlowDefinition wfDef = FlowDefinitionModelMappingHelper.GenerateFlowDefinition(wfDefModel);
-              wfDef.Coreflow = Program.CoreflowInstance;
-
-              //TODO
-              Program.CoreflowInstance.FlowDefinitionStorage.Remove(wfDef.Identifier);
-              Program.CoreflowInstance.FlowDefinitionStorage.Add(wfDef);
-
-              Program.CoreflowInstance.CompileFlows();
-              Program.CoreflowInstance.RunFlow(wfDef.Identifier);*/
-
 
             Guid flowidentifier = pRequest.FlowIdentifier;
 
@@ -128,16 +118,21 @@ namespace Coreflow.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult CompileFlow([FromBody] FlowEditorRequest pData)
+        public JsonResult CompileFlow()
         {
-            /*
-             FlowDefinitionModel wfDefModel = FlowDefinitionModelStorage.GetModel(pData.FlowIdentifier);
+            FlowCode fcode = GenerateCombinedCode();
+            var result = FlowCompilerHelper.CompileFlowCode(fcode.Code, false, "dummy");
 
-            FlowDefinition wfDef = FlowDefinitionModelMappingHelper.GenerateFlowDefinition(wfDefModel);
-            FlowCode code = wfDef.GenerateFlowCode();
-            FlowCompileResult result = code.Compile(false);
-            */
+            IDictionary<string, string> errors = new Dictionary<string, string>();
 
+            if (!result.Successful)
+                errors = result.ErrorCodeCreators.ToDictionary(s => s.Key.ToString(), s => s.Value);
+
+            return Json(new DictionaryResponse(true, "ok", errors));
+        }
+
+        private static FlowCode GenerateCombinedCode()
+        {
             var combinedCode = new StringBuilder();
 
             foreach (var flow in FlowDefinitionModelStorage.CombineStoredAndTmpFlows())
@@ -148,32 +143,27 @@ namespace Coreflow.Web.Controllers
 
             string fullcode = combinedCode.ToString();
 
-            var result = FlowCompilerHelper.CompileFlowCode(fullcode, false, "dummy");
-
-
-            IDictionary<string, string> errors = new Dictionary<string, string>();
-
-            if (!result.Successful)
-                errors = result.ErrorCodeCreators.ToDictionary(s => s.Key.ToString(), s => s.Value);
-
-            return Json(new DictionaryResponse(true, "ok", errors));
+            return new FlowCode()
+            {
+                Code = fullcode
+            };
         }
 
         [HttpPost]
-        public JsonResult UserDisplayNameChanged([FromBody] UserDisplayNameChangedData pData)
+        public JsonResult UserDisplayNameChanged([FromBody] IdValueRequest pData)
         {
             try
             {
                 FlowDefinitionModel wfDefModel = FlowDefinitionModelStorage.GetModel(pData.FlowIdentifier);
 
-                if (pData.CreatorGuid == "flow-name")
+                if (pData.Id == "flow-name")
                 {
-                    wfDefModel.Name = pData.NewValue;
+                    wfDefModel.Name = pData.Value;
                 }
                 else
                 {
-                    CodeCreatorModel ccmodel = FlowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, Guid.Parse(pData.CreatorGuid)) as CodeCreatorModel;
-                    ccmodel.UserDisplayName = pData.NewValue;
+                    CodeCreatorModel ccmodel = FlowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, Guid.Parse(pData.Id)) as CodeCreatorModel;
+                    ccmodel.UserDisplayName = pData.Value;
                 }
 
                 FlowDefinitionModelStorage.StoreModel(wfDefModel, false);
@@ -273,7 +263,7 @@ namespace Coreflow.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult CodeCreatorDeleted([FromBody] IdData pData)
+        public JsonResult CodeCreatorDeleted([FromBody] IdValueRequest pData)
         {
             try
             {
@@ -446,7 +436,7 @@ namespace Coreflow.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetGeneratedCode([FromBody] IdData pData)
+        public JsonResult GetGeneratedCode([FromBody] IdValueRequest pData)
         {
             try
             {
@@ -465,15 +455,15 @@ namespace Coreflow.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateNote([FromBody] UserDisplayNameChangedData pData)
+        public JsonResult UpdateNote([FromBody] IdValueRequest pData)
         {
             try
             {
                 FlowDefinitionModel wfDefModel = FlowDefinitionModelStorage.GetModel(pData.FlowIdentifier);
 
-                if (pData.CreatorGuid == "flow-note")
+                if (pData.Id == "flow-note")
                 {
-                    wfDefModel.Note = pData.NewValue;
+                    wfDefModel.Note = pData.Value;
                 }
 
                 FlowDefinitionModelStorage.StoreModel(wfDefModel, false);
@@ -485,5 +475,80 @@ namespace Coreflow.Web.Controllers
                 return Json(new Response(false, e.ToString()));
             }
         }
+
+        [HttpPost]
+        public JsonResult DebuggerAttach([FromBody] IdValueRequest pData)
+        {
+            try
+            {
+                int process = 0;
+                if (string.IsNullOrEmpty(pData.Id))
+                {
+                    process = Process.GetProcessesByName("Coreflow.Host").First().Id;
+                }
+                else
+                {
+                    process = Convert.ToInt32(pData.Id);
+                }
+
+                DebugHelper.Attach(process);
+
+                /*
+                Thread.Sleep(1000);
+
+                int tid = DebugHelper.GetThreads().First().Id;
+                DebugHelper.Pause(tid);
+
+                Thread.Sleep(1000);
+
+                DebugHelper.GetStackTrace(tid);
+                */
+
+                return Json(new Response(true, string.Empty));
+            }
+            catch (Exception e)
+            {
+                return Json(new Response(false, e.ToString()));
+            }
+        }
+
+        [HttpPost]
+        public JsonResult DebuggerAddBreakpoint([FromBody] IdValueRequest pData)
+        {
+            try
+            {
+                var result = GenerateCombinedCode();
+
+                Guid codeCreator = Guid.Parse(pData.Id);
+
+                int loc = FlowCompilerHelper.GetLineOfIdentifier(result.Code, codeCreator);
+
+                string[] lines = result.Code.Split(Environment.NewLine);
+
+                while (loc < lines.Length - 1)
+                {
+                    if (!lines[loc].Trim().StartsWith("//"))
+                        break;
+
+                    loc++;
+                }
+
+                loc++; //first line is 1
+
+                DebugHelper.AddBreakPoint(loc);
+
+                return Json(new Response(true, string.Empty));
+            }
+            catch (Exception e)
+            {
+                return Json(new Response(false, e.ToString()));
+            }
+        }
+
+
+
+
+
+
     }
 }

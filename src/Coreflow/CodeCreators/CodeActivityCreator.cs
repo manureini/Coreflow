@@ -65,7 +65,7 @@ namespace Coreflow.CodeCreators
         {
             pCodeWriter.WriteIdentifierTagTop(this);
 
-            string typeName = typeof(T).FullName;
+            string typeName = "global::" + typeof(T).FullName;
             string variableName = pBuilderContext.CreateLocalVariableName(this);
 
             pCodeWriter.AppendLineTop($"{typeName} {variableName} = new {typeName}();");

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="LastCompiledCode.cs" />
+    <Compile Remove="LastCompiledCodeFormatted.cs" />
     <Compile Remove="LastGeneratedCode.cs" />
   </ItemGroup>
 
@@ -26,6 +28,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0-preview4-19216-03" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="Portable.Microsoft.VisualStudio.Shared.VsCodeDebugProtocol" Version="15.8.20719.15" />
   </ItemGroup>
 
   <ItemGroup>

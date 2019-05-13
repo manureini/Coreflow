@@ -1,5 +1,6 @@
 ﻿using Coreflow.Storage;
 using Coreflow.Storage.ArgumentInjection;
+using FlowNs___cc_a1bfd8b5_d453_4fe0_9825_59cd67f02d5e;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
@@ -14,6 +15,19 @@ namespace Coreflow
     {
         public static void Main(string[] args)
         {
+            Thread.Sleep(3000);
+
+            Thread test = new Thread(() =>
+             {
+
+               //  Flow___cc_a1bfd8b5_d453_4fe0_9825_59cd67f02d5e f = new Flow___cc_a1bfd8b5_d453_4fe0_9825_59cd67f02d5e();
+              //   f.Run();
+
+             });
+            test.IsBackground = true;
+            test.Start();
+
+
             var configureNamedOptions = new ConfigureNamedOptions<ConsoleLoggerOptions>("", null);
             var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
             var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleLoggerOptions>>(), new OptionsCache<ConsoleLoggerOptions>());

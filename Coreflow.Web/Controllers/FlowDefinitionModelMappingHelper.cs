@@ -6,8 +6,6 @@ namespace Coreflow.Web.Controllers
 {
     public class FlowDefinitionModelMappingHelper
     {
-
-
         public static FlowDefinitionModel GenerateModel(FlowDefinition pFlowDefinition)
         {
             FlowDefinitionModel ret = new FlowDefinitionModel()

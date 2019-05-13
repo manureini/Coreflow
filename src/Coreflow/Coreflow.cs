@@ -91,6 +91,7 @@ namespace Coreflow
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(TerminateCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(IfCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(IfElseCreator));
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(PrintVariablesCreator));
 
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(CriticalLoggerCodeCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(DebugLoggerCodeCreator));

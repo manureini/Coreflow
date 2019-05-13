@@ -5,9 +5,7 @@ using System.IO;
 namespace Coreflow.Objects
 {
     public class FlowCompileResult
-    {
-        public FlowCode FlowCode { get; internal set; }
-
+    {     
         public bool Successful { get; internal set; }
 
         public MemoryStream ResultAssembly { get; internal set; }

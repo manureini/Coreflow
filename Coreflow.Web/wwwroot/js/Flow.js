@@ -169,16 +169,23 @@ $(function () {
 
     $(document).keydown(function (e) {
         const key = event.key;
-        if (key === "Delete"
-            && $(e.target).parents("#parameter-box").length <= 0 //press inside textbox
-            && $(e.target).parents("dialog").length <= 0 //press inside dialog
-            && $(e.target).parents(".modal").length <= 0 //press inside modal
-            && !$(e.target).is("input") //press inside input
-            && !$(e.target).is("textarea") //press inside input
+
+        if ($(e.target).parents("#parameter-box").length > 0 //press inside textbox
+            || $(e.target).parents("dialog").length > 0 //press inside dialog
+            || $(e.target).parents(".modal").length > 0 //press inside modal
+            || $(e.target).is("input") //press inside input
+            || $(e.target).is("textarea") //press inside input
         ) {
+            return;
+        }
+
+        if (key === "Delete") {
             SubmitDeleteCodeCreator($(selected).data("id"));
             $("#parameter-box").html("");
             $(selected).remove();
+        } else if (key === "F9") {
+            var ccid = $(".codecreator-active").data("id");
+            SubmitDebuggerAddBreakpoint(ccid);
         }
     });
 
@@ -224,7 +231,6 @@ $(function () {
         $(this).data('timer', wait);
     });
 
-
     $(document).on("click", ".add-referenced-namespace", function () {
         var value = $(this).next("input").val();
         $(this).next("input").val("");
@@ -235,16 +241,6 @@ $(function () {
         SubmitFlowReferencedNamespaceChanged(false, $(this).data("id"));
     });
 
-    /*
-    $(document).on("click", ".add-referenced-assembly", function () {
-        var value = $(this).next("input").val();
-        $(this).next("input").val("");
-        SubmitFlowReferencedAssemblyChanged(true, value);
-    });
-    $(document).on("click", ".remove-referenced-assembly", function () {
-        $(this).parent().remove();
-        SubmitFlowReferencedAssemblyChanged(false, $(this).data("id"));
-    });*/
 
     $(document).on("click", ".add-argument", function () {
         var name = $("#add-argument-name").val();
@@ -271,19 +267,23 @@ $(function () {
         $(".tab-content .show").removeClass("show");
     });
 
-
     $("#btnShowGeneratedCode").click(function () {
         SubmitGetGeneratedCode("todo guid");
     });
+
+    $("#btnDebuggerAttach").click(function () {
+        SubmitDebuggerAttach($("#input-process-id").val());
+    });
+
 
     $("#modalEditor").on('hidden.bs.modal', function () {
         $(this).trigger("modalEditorClosed");
     });
 
-    $(this).delay(50).queue(function () {        
+    $(this).delay(50).queue(function () {
         if (typeof monaco === 'undefined') {
             return;
-        }       
+        }
 
         dialogeditor = monaco.editor.create(document.getElementById("dialog-editor"), {
             value: "",

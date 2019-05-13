@@ -77,8 +77,8 @@ function SubmitUserDisplayNameChanged(creatorGuid, newValue) {
 
     var postData = {};
     postData["FlowIdentifier"] = currentFlowIdentifier;
-    postData["CreatorGuid"] = creatorGuid;
-    postData["NewValue"] = newValue;
+    postData["Id"] = creatorGuid;
+    postData["Value"] = newValue;
 
     $.ajax({
         url: "Action/UserDisplayNameChanged",
@@ -372,11 +372,56 @@ function SubmitUpdateNote(pId, pNewText) {
 
     var postData = {};
     postData["FlowIdentifier"] = currentFlowIdentifier;
-    postData["CreatorGuid"] = pId;
-    postData["NewValue"] = pNewText;
+    postData["Id"] = pId;
+    postData["Value"] = pNewText;
 
     $.ajax({
         url: "Action/UpdateNote",
+        type: 'post',
+        data: JSON.stringify(postData),
+        contentType: "application/json",
+        success: function (data) {
+            if (data.isSuccess) {
+                return;
+            }
+            alert(data.message);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+}
+
+
+function SubmitDebuggerAttach(pId) {
+    var postData = {};
+    postData["FlowIdentifier"] = currentFlowIdentifier;
+    postData["Id"] = pId;
+
+    $.ajax({
+        url: "Action/DebuggerAttach",
+        type: 'post',
+        data: JSON.stringify(postData),
+        contentType: "application/json",
+        success: function (data) {
+            if (data.isSuccess) {
+                return;
+            }
+            alert(data.message);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+}
+
+function SubmitDebuggerAddBreakpoint(pIdentifier) {
+    var postData = {};
+    postData["FlowIdentifier"] = currentFlowIdentifier;
+    postData["Id"] = pIdentifier;
+
+    $.ajax({
+        url: "Action/DebuggerAddBreakpoint",
         type: 'post',
         data: JSON.stringify(postData),
         contentType: "application/json",

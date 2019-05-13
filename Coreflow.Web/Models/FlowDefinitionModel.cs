@@ -11,8 +11,6 @@ namespace Coreflow.Web.Models
 
         public List<FlowArguments> Arguments { get; set; }
 
-        //   public List<CodeCreatorModel> CodeCreators { get; set; }
-
         public string Name { get; set; }
 
         public string Icon { get; set; }

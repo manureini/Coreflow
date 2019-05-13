@@ -70,7 +70,20 @@ namespace Coreflow.Helper
             result.ResultAssembly.Seek(0, SeekOrigin.Begin);
             result.ResultSymbols.Seek(0, SeekOrigin.Begin);
 
-            Assembly asm = mAssemblyContext.LoadFromStream(result.ResultAssembly, result.ResultSymbols);
+            using (var filestream = File.OpenWrite("GeneratedAssembly.dll"))
+            {
+                result.ResultAssembly.CopyTo(filestream);
+            };
+
+            using (var filestream = File.OpenWrite("GeneratedAssembly.pdb"))
+            {
+                result.ResultSymbols.CopyTo(filestream);
+            };
+
+            result.ResultAssembly.Seek(0, SeekOrigin.Begin);
+            result.ResultSymbols.Seek(0, SeekOrigin.Begin);
+
+            Assembly asm = mAssemblyContext.LoadFromAssemblyPath(Path.GetFullPath("GeneratedAssembly.dll"));
 
             result.ResultAssembly.Dispose();
             result.ResultSymbols.Dispose();
