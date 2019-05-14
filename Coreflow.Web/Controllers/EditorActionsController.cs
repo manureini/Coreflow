@@ -475,6 +475,9 @@ namespace Coreflow.Web.Controllers
             }
         }
 
+
+
+
         [HttpPost]
         public JsonResult DebuggerAttach([FromBody] IdValueRequest pData)
         {
@@ -512,16 +515,13 @@ namespace Coreflow.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult DebuggerAddBreakpoint([FromBody] IdValueRequest pData)
+        public JsonResult DebuggerChangeBreakpoint([FromBody] IdValueBoolRequest pData)
         {
             try
             {
                 var result = GenerateCombinedCode();
-
                 Guid codeCreator = Guid.Parse(pData.Id);
-
                 int loc = FlowCompilerHelper.GetLineOfIdentifier(result.Code, codeCreator);
-
                 string[] lines = result.Code.Split(Environment.NewLine);
 
                 while (loc < lines.Length - 1)
@@ -534,9 +534,10 @@ namespace Coreflow.Web.Controllers
 
                 loc++; //first line is 1
 
-
-
-                DebugHelper.AddBreakPoint(loc);
+                if (pData.Bool)
+                    DebugHelper.AddBreakPoint(loc);
+                else
+                    DebugHelper.RemoveBreakPoint(loc);
 
                 return Json(new Response(true, string.Empty));
             }
@@ -546,10 +547,24 @@ namespace Coreflow.Web.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult DebuggerRunCommand([FromBody] IdValueRequest pData)
+        {
+            try
+            {
+                switch (pData.Value)
+                {
+                    case "Continue": DebugHelper.Continue(); break;
+                    case "Next": DebugHelper.Next(); break;
+                    case "Pause": DebugHelper.Pause(); break;
+                }
 
-
-
-
-
+                return Json(new Response(true, string.Empty));
+            }
+            catch (Exception e)
+            {
+                return Json(new Response(false, e.ToString()));
+            }
+        }
     }
 }

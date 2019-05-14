@@ -415,13 +415,14 @@ function SubmitDebuggerAttach(pId) {
     });
 }
 
-function SubmitDebuggerAddBreakpoint(pIdentifier) {
+function SubmitDebuggerChangeBreakpoint(pIdentifier, pAdd) {
     var postData = {};
     postData["FlowIdentifier"] = currentFlowIdentifier;
     postData["Id"] = pIdentifier;
+    postData["Bool"] = pAdd;
 
     $.ajax({
-        url: "Action/DebuggerAddBreakpoint",
+        url: "Action/DebuggerChangeBreakpoint",
         type: 'post',
         data: JSON.stringify(postData),
         contentType: "application/json",
@@ -436,4 +437,27 @@ function SubmitDebuggerAddBreakpoint(pIdentifier) {
         }
     });
 }
+
+function SubmitDebuggerRunCommand(pCommand) {
+    var postData = {};
+    postData["FlowIdentifier"] = currentFlowIdentifier;
+    postData["Value"] = pCommand;
+
+    $.ajax({
+        url: "Action/DebuggerRunCommand",
+        type: 'post',
+        data: JSON.stringify(postData),
+        contentType: "application/json",
+        success: function (data) {
+            if (data.isSuccess) {
+                return;
+            }
+            alert(data.message);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+}
+
 

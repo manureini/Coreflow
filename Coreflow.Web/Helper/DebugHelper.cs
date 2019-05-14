@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.Shared.VSCodeDebugProtocol;
 using Microsoft.VisualStudio.Shared.VSCodeDebugProtocol.Messages;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -17,6 +18,36 @@ namespace Coreflow.Web.Helper
 
         private static List<int> mBreakPoints = new List<int>();
 
+        private static int mLastThreadIdStopped = -1;
+
+        public static event EventHandler<int> OnDebuggedLineChange = delegate { };
+
+        private static BlockingCollection<int> mStoppedThreadIds = new BlockingCollection<int>();
+
+        static DebugHelper()
+        {
+            var thread = new System.Threading.Thread(() =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        int threadid = mStoppedThreadIds.Take();
+                        var response = GetStackTrace(threadid);
+
+                        OnDebuggedLineChange(null, response.StackFrames[0].Line);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            });
+
+            thread.Name = "DebugHelperEventDispatcher";
+            thread.IsBackground = true;
+            thread.Start();
+        }
 
         public static void Launch(string pFile, bool pStopAtEntry)
         {
@@ -48,8 +79,8 @@ namespace Coreflow.Web.Helper
             mBreakPoints.Clear();
 
             ProcessStartInfo psi2 = new ProcessStartInfo();
-            psi2.FileName = Path.GetFullPath(@"..\netcoredbg-win64-master\netcoredbg\netcoredbg.exe");
-            psi2.Arguments = "--interpreter=vscode"; // --engineLogging=log.log
+            psi2.FileName = Path.GetFullPath(@"..\netcoredbg-test\netcoredbg\netcoredbg.exe");
+            psi2.Arguments = "--interpreter=vscode"; // --engineLogging=C:\\tmp\\log.log
             psi2.UseShellExecute = false;
 
             psi2.RedirectStandardInput = true;
@@ -85,18 +116,34 @@ namespace Coreflow.Web.Helper
             return response.Threads.Select(t => new DebugThread(t.Name, t.Id));
         }
 
-        public static void Pause(int pThreadId)
+        public static void Pause()
         {
             PauseRequest pr = new PauseRequest();
-
+            pr.ThreadId = mLastThreadIdStopped;
             mClient.SendRequestSync(pr);
         }
 
-        public static void GetStackTrace(int pThreadId)
+        public static void Continue()
+        {
+            ContinueRequest cr = new ContinueRequest();
+            cr.ThreadId = mLastThreadIdStopped;
+            mClient.SendRequestSync(cr);
+        }
+
+        public static void Next()
+        {
+            NextRequest nr = new NextRequest();
+            nr.ThreadId = mLastThreadIdStopped;
+            mClient.SendRequestSync(nr);
+        }
+
+        public static StackTraceResponse GetStackTrace(int pThreadId)
         {
             StackTraceRequest str = new StackTraceRequest();
             str.ThreadId = pThreadId;
-            var response = mClient.SendRequestSync(str);
+            str.StartFrame = 0;
+            str.Levels = 20;
+            return mClient.SendRequestSync(str);
         }
 
         public static void AddBreakPoint(int pLine)
@@ -171,6 +218,16 @@ namespace Coreflow.Web.Helper
             else if (e.Body is OutputEvent oe)
             {
                 Console.WriteLine("Debugee: " + oe.Output.Trim());
+            }
+            else if (e.Body is StoppedEvent se)
+            {
+                Console.WriteLine("Stopped reason:" + se.Reason);
+                if (se.ThreadId != null)
+                {
+                    int tid = se.ThreadId.Value;
+                    mLastThreadIdStopped = tid;
+                    mStoppedThreadIds.Add(tid);
+                }
             }
         }
 

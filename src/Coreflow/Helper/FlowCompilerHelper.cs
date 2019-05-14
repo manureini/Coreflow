@@ -168,8 +168,9 @@ namespace Coreflow.Helper
 
             var compilation = CSharpCompilation.Create(pAssemblyName)
               .AddReferences(references)
-              .AddSyntaxTrees(tree);
-
+              .AddSyntaxTrees(tree)
+              .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+            
             using MemoryStream ms = new MemoryStream();
             EmitResult emitResult = compilation.Emit(ms);
             return emitResult;

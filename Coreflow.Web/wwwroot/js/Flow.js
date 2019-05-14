@@ -184,8 +184,15 @@ $(function () {
             $("#parameter-box").html("");
             $(selected).remove();
         } else if (key === "F9") {
-            var ccid = $(".codecreator-active").data("id");
-            SubmitDebuggerAddBreakpoint(ccid);
+            var cc = $(".codecreator-active");
+            var ccid = cc.data("id");
+
+            SubmitDebuggerChangeBreakpoint(ccid, !cc.hasClass("breakpoint"));
+            cc.toggleClass("breakpoint");
+        } else if (key === "F10") {
+            SubmitDebuggerRunCommand("Continue");
+        } else if (key === "F8") {
+            SubmitDebuggerRunCommand("Next");
         }
     });
 

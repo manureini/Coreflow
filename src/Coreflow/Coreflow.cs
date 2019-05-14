@@ -132,6 +132,7 @@ namespace Coreflow
             }
         }
 
+
         public Guid? GetFlowIdentifier(string pFlowName)
         {
             return FlowDefinitionStorage.GetDefinitions().FirstOrDefault(d => d.Name == pFlowName)?.Identifier;
