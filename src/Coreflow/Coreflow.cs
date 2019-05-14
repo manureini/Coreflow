@@ -2,6 +2,7 @@
 using Coreflow.CodeCreators.Logging;
 using Coreflow.Helper;
 using Coreflow.Interfaces;
+using Coreflow.Objects;
 using Coreflow.Objects.CodeCreatorFactory;
 using Coreflow.Storage;
 using Microsoft.Extensions.Logging;
@@ -32,6 +33,8 @@ namespace Coreflow
         public ILogger Logger { get; }
 
         public ILogger FlowLogger { get; }
+
+        public FlowCompileResult LastCompileResult { get; protected set; }
 
         static Coreflow()
         {
@@ -121,7 +124,12 @@ namespace Coreflow
 
         public void CompileFlows()
         {
-            FlowManager.CompileFlowsCreateAndLoadAssembly(this, FlowDefinitionStorage.GetDefinitions());
+            var result = FlowManager.CompileFlowsCreateAndLoadAssembly(this, FlowDefinitionStorage.GetDefinitions());
+
+            if (result != null)
+            {
+                LastCompileResult = result;
+            }
         }
 
         public Guid? GetFlowIdentifier(string pFlowName)

@@ -78,7 +78,7 @@ namespace Coreflow.Objects
 
             int loc = topCodeLines.Length;
 
-            SyntaxTree = FlowCompilerHelper.ParseText(code, false);
+            SyntaxTree = FlowCompilerHelper.ParseTextNotDebuggable(code);
 
             SyntaxNode sn = GetNode(SyntaxTree, loc);
 

@@ -12,9 +12,6 @@ namespace Coreflow.Helper
 
     public class FlowManager
     {
-        private const string ASSEMBLY_PREFIX = "FlowsAssembly_";
-
-        internal int mAssemblyVersion = 0;
 
         internal Dictionary<Guid, FlowInstanceFactory> mFactories = new Dictionary<Guid, FlowInstanceFactory>();
 
@@ -22,7 +19,7 @@ namespace Coreflow.Helper
 
         private string mFullCode = "";
 
-        public void CompileFlowsCreateAndLoadAssembly(Coreflow pCoreflowInstance, IEnumerable<FlowDefinition> pFlows)
+        public FlowCompileResult CompileFlowsCreateAndLoadAssembly(Coreflow pCoreflowInstance, IEnumerable<FlowDefinition> pFlows)
         {
             var combinedCode = new StringBuilder();
 
@@ -37,7 +34,7 @@ namespace Coreflow.Helper
             string fullcode = combinedCode.ToString();
 
             if (fullcode == mFullCode)
-                return;
+                return null;
 
             mFullCode = fullcode;
 
@@ -48,9 +45,8 @@ namespace Coreflow.Helper
 
             mFactories.Clear();
 
-            mAssemblyVersion++; //Interlocked?
 
-            string assemblyName = ASSEMBLY_PREFIX + mAssemblyVersion;
+            string assemblyName = "Flows.dll";
 
             var result = FlowCompilerHelper.CompileFlowCode(fullcode, true, assemblyName);
 
@@ -67,15 +63,16 @@ namespace Coreflow.Helper
 
             mAssemblyContext = new CollectibleAssemblyLoadContext();
 
+            /*
             result.ResultAssembly.Seek(0, SeekOrigin.Begin);
             result.ResultSymbols.Seek(0, SeekOrigin.Begin);
 
-            using (var filestream = File.OpenWrite("GeneratedAssembly.dll"))
+            using (var filestream = File.OpenWrite(assemblyName))
             {
                 result.ResultAssembly.CopyTo(filestream);
             };
 
-            using (var filestream = File.OpenWrite("GeneratedAssembly.pdb"))
+            using (var filestream = File.OpenWrite(Path.ChangeExtension(assemblyName, "pdb")))
             {
                 result.ResultSymbols.CopyTo(filestream);
             };
@@ -83,10 +80,12 @@ namespace Coreflow.Helper
             result.ResultAssembly.Seek(0, SeekOrigin.Begin);
             result.ResultSymbols.Seek(0, SeekOrigin.Begin);
 
-            Assembly asm = mAssemblyContext.LoadFromAssemblyPath(Path.GetFullPath("GeneratedAssembly.dll"));
+    */
 
-            result.ResultAssembly.Dispose();
-            result.ResultSymbols.Dispose();
+
+
+
+            Assembly asm = mAssemblyContext.LoadFromAssemblyPath(result.DllFilePath);
 
             IEnumerable<Type> flows = asm.GetTypes().Where(t => typeof(ICompiledFlow).IsAssignableFrom(t));
 
@@ -95,6 +94,8 @@ namespace Coreflow.Helper
                 var attribute = flowtype.GetCustomAttribute<FlowIdentifierAttribute>();
                 mFactories.Add(attribute.Identifier, new FlowInstanceFactory(pCoreflowInstance, attribute.Identifier, flowtype));
             }
+
+            return result;
         }
 
         public FlowInstanceFactory GetFactory(Guid pFlowIdentifier)

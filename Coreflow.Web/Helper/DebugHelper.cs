@@ -17,19 +17,40 @@ namespace Coreflow.Web.Helper
 
         private static List<int> mBreakPoints = new List<int>();
 
+
+        public static void Launch(string pFile, bool pStopAtEntry)
+        {
+            StartDebugger(() =>
+            {
+                LaunchRequest lr = new LaunchRequest();
+                lr.NoDebug = false;
+                lr.ConfigurationProperties.Add("program", pFile);
+                lr.ConfigurationProperties.Add("stopAtEntry", pStopAtEntry);
+                mClient.SendRequestSync(lr);
+            });
+        }
+
         public static void Attach(int pProcessId)
+        {
+            StartDebugger(() =>
+            {
+                AttachRequest ar = new AttachRequest();
+                ar.Args.ConfigurationProperties.Add("processId", pProcessId);
+                mClient.SendRequestSync(ar);
+            });
+        }
+
+        private static void StartDebugger(Action pAction)
         {
             if (mDebuggerProcess != null)
                 Detach();
 
-
             mBreakPoints.Clear();
 
             ProcessStartInfo psi2 = new ProcessStartInfo();
-            psi2.FileName = @"D:\tmp\netcoredbg-master\bin\netcoredbg.exe";
-            psi2.Arguments = "--interpreter=vscode --engineLogging=log.log"; // 
+            psi2.FileName = Path.GetFullPath(@"..\netcoredbg-win64-master\netcoredbg\netcoredbg.exe");
+            psi2.Arguments = "--interpreter=vscode"; // --engineLogging=log.log
             psi2.UseShellExecute = false;
-            //   psi2.Verb = "runas";
 
             psi2.RedirectStandardInput = true;
             psi2.RedirectStandardOutput = true;
@@ -41,19 +62,16 @@ namespace Coreflow.Web.Helper
             mClient.Run();
 
             InitializeRequest ir = new InitializeRequest();
-            ir.ClientID = "CoreflowDebugger";
-            ir.AdapterID = "CoreflowAdapter";
+            ir.ClientID = "ClientID";
+            ir.AdapterID = "Adapter";
             ir.ColumnsStartAt1 = true;
             ir.PathFormat = InitializeArguments.PathFormatValue.Path;
             ir.SupportsVariablePaging = true;
             ir.SupportsVariableType = true;
             ir.SupportsRunInTerminalRequest = true;
-
             var repsonse = mClient.SendRequestSync(ir);
 
-            AttachRequest ar = new AttachRequest();
-            ar.Args.ConfigurationProperties.Add("processId", pProcessId);
-            mClient.SendRequestSync(ar);
+            pAction.Invoke();
 
             ConfigurationDoneRequest cr = new ConfigurationDoneRequest();
             mClient.SendRequestSync(cr);
@@ -62,9 +80,9 @@ namespace Coreflow.Web.Helper
         public static IEnumerable<DebugThread> GetThreads()
         {
             ThreadsRequest tr = new ThreadsRequest();
-            var tresponse = mClient.SendRequestSync(tr);
+            var response = mClient.SendRequestSync(tr);
 
-            return tresponse.Threads.Select(t => new DebugThread(t.Name, t.Id));
+            return response.Threads.Select(t => new DebugThread(t.Name, t.Id));
         }
 
         public static void Pause(int pThreadId)
@@ -95,22 +113,37 @@ namespace Coreflow.Web.Helper
 
         private static void UpdateBreakPoints()
         {
-            string file = Path.GetFullPath(FlowCompilerHelper.LAST_COMPILED_CODE_FILE);
+            // string file = Program.CoreflowInstance.LastCompileResult.SourcePath;
+
+            string file = @"C:\GitHub\Coreflow\Coreflow.Host\bin\Debug\netcoreapp3.0\tmp\Flows_1.cs";
+
+            if (!File.Exists(file))
+                throw new Exception();
+
+            Console.WriteLine(file);
 
             SetBreakpointsRequest br = new SetBreakpointsRequest();
             br.Source = new Source()
             {
-                Name = "LastCompiledCode.cs",
-                Path = @"C:\GitHub\Coreflow\Coreflow.Host\bin\Debug\netcoreapp3.0\LastCompiledCode.cs",
+                Name = Path.GetFileName(file),
+                Path = file,
             };
-            br.SourceModified = false;
+            br.SourceModified = true;
             br.Lines = mBreakPoints;
 
             br.Breakpoints = mBreakPoints.Select(b => new SourceBreakpoint(b)).ToList();
 
             var bresponse = mClient.SendRequestSync(br);
-        }
 
+            if (bresponse.Breakpoints.Any(b => b.Verified))
+            {
+                Console.WriteLine("SetBreakpointsRequest response: Breakpoint verified!");
+            }
+            else
+            {
+                Console.WriteLine("SetBreakpointsRequest response: Breakpoint NOT verified!");
+            }
+        }
 
         public static void Detach()
         {
@@ -127,7 +160,19 @@ namespace Coreflow.Web.Helper
 
         private static void Client_EventReceived(object sender, EventReceivedEventArgs e)
         {
-            Console.WriteLine(e.EventType);
+            Console.WriteLine("Event: " + e.EventType);
+
+            if (e.Body is BreakpointEvent be)
+            {
+                Console.WriteLine(be.Reason);
+                Breakpoint breakpoint = be.Breakpoint;
+                Console.WriteLine("id: " + breakpoint.Id + "  message: " + breakpoint.Message + "  line: " + breakpoint.Line + "  verified: " + breakpoint.Verified);
+            }
+            else if (e.Body is OutputEvent oe)
+            {
+                Console.WriteLine("Debugee: " + oe.Output.Trim());
+            }
         }
+
     }
 }

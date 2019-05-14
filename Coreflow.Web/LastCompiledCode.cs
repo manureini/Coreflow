@@ -1,17 +1,16 @@
 
-namespace FlowNs___cc_a1bfd8b5_d453_4fe0_9825_59cd67f02d5e {
+namespace FlowNs___cc_e4090fcd_cf72_4071_899a_44e9f704297a {
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime;
-using System.Text;
 
-//#id a1bfd8b5-d453-4fe0-9825-59cd67f02d5e
+//#id e4090fcd-cf72-4071-899a-44e9f704297a
 //#Container
-[Coreflow.Objects.FlowIdentifierAttribute("a1bfd8b5-d453-4fe0-9825-59cd67f02d5e")]
-public class Flow___cc_a1bfd8b5_d453_4fe0_9825_59cd67f02d5e : Coreflow.Interfaces.ICompiledFlow  {
+[Coreflow.Objects.FlowIdentifierAttribute("e4090fcd-cf72-4071-899a-44e9f704297a")]
+public class Flow___cc_e4090fcd_cf72_4071_899a_44e9f704297a : Coreflow.Interfaces.ICompiledFlow  {
 
 public System.Guid InstanceId {get; set;} = Guid.NewGuid();
 public Coreflow.Coreflow CoreflowInstace{ get; set; }
@@ -29,51 +28,52 @@ return ret;
 
 
 public void Run() { 
-//#id b88aa065-df8d-4ba1-8a4b-218c37cc90ec
+//#id 58ec97ae-2ca5-44ac-aa16-0fbd08c6d835
 //#Container
 {
-//#id 9079bbfa-9d19-42b2-9b18-a648c3d635c9
-global::Coreflow.ConsoleWriteLineActivity __cc_9079bbfa_9d19_42b2_9b18_a648c3d635c9 = new global::Coreflow.ConsoleWriteLineActivity();
 
 {
-//#id 9079bbfa-9d19-42b2-9b18-a648c3d635c9
-__cc_9079bbfa_9d19_42b2_9b18_a648c3d635c9.Execute(
+//#id acafbf10-aa4d-4be7-aac2-402fb93dd491
+System.Diagnostics.Debugger.Launch();
+System.Console.WriteLine("Wait for debugger...");
+while (!System.Diagnostics.Debugger.IsAttached) {
+System.Threading.Thread.Sleep(500);
+}
+System.Diagnostics.Debugger.Break();
 
-//#id c86cb032-876f-482e-9020-77b344724117
-"init flow START"
-);
 
-
-//#id 38c46ccf-e18c-42c0-bc23-694e4855f75b
+//#id b5fc53e1-ba6c-4e53-ad3c-be9925444a62
 //#Container
 {
-//#id eb8aed67-519d-4cf7-b16e-62d189c22797
-global::Coreflow.SleepActivity __cc_eb8aed67_519d_4cf7_b16e_62d189c22797 = new global::Coreflow.SleepActivity();
+//#id d31fe672-416e-4082-9781-05671bdfce7f
+global::Coreflow.ConsoleWriteLineActivity __cc_d31fe672_416e_4082_9781_05671bdfce7f = new global::Coreflow.ConsoleWriteLineActivity();
+//#id 59a09a0f-bae2-4ecb-8ba0-926a9eca58bc
+global::Coreflow.SleepActivity __cc_59a09a0f_bae2_4ecb_8ba0_926a9eca58bc = new global::Coreflow.SleepActivity();
 while (
-//#id 70a24d36-1af1-4368-ae11-cd6988a5dd9b
+//#id 5ef5b0b4-9efe-4042-962c-39f96ab5dbd7
 true
 )
 
 {
-//#id c0ff7ed2-2672-4d98-8b19-0e742255d2b6
-//#id ecb699cd-cf3d-4517-9d7f-b09acd584ef3
-Console.WriteLine("" + System.Diagnostics.Debugger.IsAttached);
+//#id d31fe672-416e-4082-9781-05671bdfce7f
+__cc_d31fe672_416e_4082_9781_05671bdfce7f.Execute(
 
-
-//#id c4f0ed2a-f04f-4031-b08a-2de462b22f43
-__cc_9079bbfa_9d19_42b2_9b18_a648c3d635c9.Execute(
-
-//#id 059b52e9-b547-47b8-a062-a1ca7aef58db
-"tick: " + DateTime.Now.Millisecond
+//#id 3b39bf56-6635-4fc0-97fe-342ab06b8288
+DateTime.Now.Millisecond + ""
 );
 
 
-//#id eb8aed67-519d-4cf7-b16e-62d189c22797
-__cc_eb8aed67_519d_4cf7_b16e_62d189c22797.Execute(
+//#id 59a09a0f-bae2-4ecb-8ba0-926a9eca58bc
+__cc_59a09a0f_bae2_4ecb_8ba0_926a9eca58bc.Execute(
 
-//#id afc499c0-01d5-4488-9fa4-efb282eda0da
-3000
+//#id 045dd8cb-cfd4-49fa-ac44-964ba276fa70
+1000
 );
+
+
+//#id 383b6d61-4933-43dd-9276-afee8f1052b8
+//#id 3911f6af-826e-4f6f-9ca8-b858ac39ad22
+System.Diagnostics.Debugger.Break();
 
 
 }

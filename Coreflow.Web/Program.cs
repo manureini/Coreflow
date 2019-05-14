@@ -19,7 +19,7 @@ namespace Coreflow.Web
         {
 
             Thread.Sleep(500);
-
+                       
             var configureNamedOptions = new ConfigureNamedOptions<ConsoleLoggerOptions>("", null);
             var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
             var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleLoggerOptions>>(), new OptionsCache<ConsoleLoggerOptions>());
@@ -33,6 +33,34 @@ namespace Coreflow.Web
                 "Plugins",
                 loggerFactory
                );
+
+            /*
+
+            Thread flowThread = new Thread(() =>
+            {
+                Guid? identifier = CoreflowInstance.GetFlowIdentifier("init");
+
+                if (identifier == null)
+                {
+                    Console.WriteLine("init flow not found!");
+                    return;
+                }
+
+                try
+                {
+                    CoreflowInstance.CompileFlows();
+                    CoreflowInstance.RunFlow(identifier.Value);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                    Console.WriteLine("Thread crashed!!!");
+                }
+            });
+
+            flowThread.IsBackground = true;
+            flowThread.Start();
+            */
 
             CreateWebHostBuilder(args).Build().Run();
         }

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Coreflow.Helper
 {
@@ -17,51 +18,41 @@ namespace Coreflow.Helper
     {
         public const string COMMENT_ID_PREFIX = "//#id ";
         public const string CONTAINER_ID_PREFIX = "//#Container";
-        public const string LAST_COMPILED_CODE_FILE = "LastCompiledCode.cs";
-        public const string LAST_COMPILED_CODE_FILE_FORMATTED = "LastCompiledCodeFormatted.cs";
 
         private static Regex mIdRegex = new Regex(@"\/\/#id *([a-zA-Z0-9-]*)");
         private static Regex mContainerRegex = new Regex(@"\/\/#Container");
+
+
+        private static volatile int mCounter = 0;
+
 
 
         public static FlowCompileResult CompileFlowCode(string pCode, bool pDebug, string pAssemblyName = null)
         {
             FlowCompileResult ret = new FlowCompileResult();
 
-            File.Delete(LAST_COMPILED_CODE_FILE);
-            File.Delete(LAST_COMPILED_CODE_FILE_FORMATTED);
 
-            SyntaxTree syntaxTree = ParseText(pCode, pDebug);
+            pAssemblyName ??= Guid.NewGuid().ToString() + ".dll";
 
-            //  string formattedCode = FormatCode(syntaxTree);        
+            EmitResult emitResult;
 
-            pAssemblyName ??= Guid.NewGuid().ToString();
+            if (pDebug)
+            {
+                emitResult = EmitWithDebugSymbols(pCode, pAssemblyName, out string dllPath, out string pdbPath, out string sourcePath);
 
-            Compilation compilation = CreateCompilation(pAssemblyName, syntaxTree);
-
-            var emitOptions = new EmitOptions(
-                 debugInformationFormat: DebugInformationFormat.PortablePdb,
-                // pdbFilePath: pAssemblyName + ".pdb"
-                runtimeMetadataVersion: "1.0"
-                );
-
-
-          
-            var assemblyStream = new MemoryStream();
-            var symbolsStream = new MemoryStream();
-
-            var emitResult = compilation.Emit(
-                peStream: assemblyStream,
-                pdbStream: symbolsStream,
-                options: emitOptions);
-
-            ret.ResultAssembly = assemblyStream;
-            ret.ResultSymbols = symbolsStream;
-
-            string[] codeLines = pCode.Split("\n");
+                ret.DllFilePath = dllPath;
+                ret.PdbFilePath = pdbPath;
+                ret.SourcePath = sourcePath;
+            }
+            else
+            {
+                emitResult = EmitNoDebug(pAssemblyName, pCode);
+            }
 
             if (!emitResult.Success)
             {
+                string[] codeLines = pCode.Split("\n");
+
                 IEnumerable<Diagnostic> failures = emitResult.Diagnostics.Where(
                     diagnostic => diagnostic.IsWarningAsError ||
                     diagnostic.Severity == DiagnosticSeverity.Error);
@@ -94,114 +85,107 @@ namespace Coreflow.Helper
                 return ret;
             }
 
-
-            /*
-            Dictionary<Guid, List<string>> containerVariables = new Dictionary<Guid, List<string>>();
-
-            void addToContainerVariables(Guid pContainerGuid, string pVariableIdentifier)
-            {
-                if (pVariableIdentifier.IsContainerCreatorVariableName())
-                    return;
-
-                if (containerVariables.ContainsKey(pContainerGuid))
-                    containerVariables[pContainerGuid].Add(pVariableIdentifier);
-                else
-                {
-                    containerVariables.Add(pContainerGuid, new List<string>());
-                    containerVariables[pContainerGuid].Add(pVariableIdentifier);
-                }
-            };
-
-            var root = (CompilationUnitSyntax)syntaxTree.GetRoot();
-
-            var variableDeclarations = root.DescendantNodes().OfType<VariableDeclarationSyntax>();
-
-            foreach (var variableDeclaration in variableDeclarations)
-            {
-                string identifier = variableDeclaration.Variables.First().Identifier.Value.ToString();
-
-                int line = variableDeclaration.GetLocation().GetLineSpan().StartLinePosition.Line;
-                int containerLine = GetContainerLineOfCode(codeLines, line);
-                Guid containerGuid = GetIdentifier(codeLines, containerLine);
-
-                addToContainerVariables(containerGuid, identifier);
-            }
-
-            var variableDeclarationsParams = root.DescendantNodes().OfType<SingleVariableDesignationSyntax>();
-
-            foreach (var variableDeclaration in variableDeclarationsParams)
-            {
-                string identifier = variableDeclaration.Identifier.Value.ToString();
-
-                int line = variableDeclaration.GetLocation().GetLineSpan().StartLinePosition.Line;
-                int containerLine = GetContainerLineOfCode(codeLines, line);
-                Guid containerGuid = GetIdentifier(codeLines, containerLine);
-
-                addToContainerVariables(containerGuid, identifier);
-            }
-
-    */
-
-
-
             ret.Successful = true;
-
-            /*
-            Directory.CreateDirectory("tmp");
-            string asmFilename = Path.Combine("tmp", assemblyName + ".dll");
-
-            File.WriteAllBytes(asmFilename, stream.ToArray());
-
-            ret.ResultAssembly = Assembly.LoadFile(Path.GetFullPath(asmFilename));
-            */
-
-
-            /*
-            Guid flowIdentifier = pFlowCode.Definition.Identifier;
-
-            if (mGeneratedAssemblies.ContainsKey(flowIdentifier))
-            {
-                mGeneratedAssemblies.Remove(flowIdentifier);
-                //try to unload old assembly
-            }
-
-            mGeneratedAssemblies.Add(flowIdentifier, MetadataReference.CreateFromFile(asmFilename));
-
-
-            IEnumerable<Type> flows = ret.ResultAssembly.GetTypes().Where(t => typeof(ICompiledFlow).IsAssignableFrom(t));
-
-            Type flowType = flows.First();
-
-            ret.InstanceFactory = new FlowInstanceFactory(pFlowCode.Definition.Coreflow, pFlowCode.Definition.Identifier, flowType);
-            */
-
-
             return ret;
         }
 
+
+        private static EmitResult EmitWithDebugSymbols(string pCode, string pAssemblyName, out string assemblyPath, out string pdbPath, out string sourcePath)
+        {
+            int compilationNumber = Interlocked.Increment(ref mCounter);
+
+            string tmpDir = Path.GetFullPath("tmp");
+
+            string pdbFileName = Path.GetFileNameWithoutExtension(pAssemblyName) + "_" + compilationNumber + ".pdb";
+            string dllFileName = Path.GetFileNameWithoutExtension(pAssemblyName) + "_" + compilationNumber + ".dll";
+
+            sourcePath = Path.Combine(tmpDir, "Flows_" + compilationNumber + ".cs");
+            assemblyPath = Path.Combine(tmpDir, dllFileName);
+            pdbPath = Path.Combine(tmpDir, pdbFileName);
+
+
+            File.WriteAllText(sourcePath, pCode);
+
+            Encoding encoding = Encoding.UTF8;
+
+            var buffer = encoding.GetBytes(File.ReadAllText(sourcePath));
+
+            SourceText sourceText = SourceText.From(buffer, buffer.Length, encoding, canBeEmbedded: true);
+
+            var tree = CSharpSyntaxTree.ParseText(sourceText, new CSharpParseOptions(), path: sourcePath);
+
+            var syntaxRootNode = tree.GetRoot() as CSharpSyntaxNode;
+            var encoded = CSharpSyntaxTree.Create(syntaxRootNode, null, sourcePath, encoding);
+
+            //TODO !!!!!!!!!!!!!
+
+            var references = ReferenceHelper.GetMetadataReferences();
+
+            var compilation = CSharpCompilation.Create(pAssemblyName)
+              .WithOptions(
+                new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+                  .WithOptimizationLevel(OptimizationLevel.Debug)
+                  .WithPlatform(Platform.AnyCpu))
+              .AddReferences(references)
+              .AddSyntaxTrees(tree);
+
+            var emitOptions = new EmitOptions(
+               debugInformationFormat: DebugInformationFormat.PortablePdb,
+               pdbFilePath: pdbFileName
+              // runtimeMetadataVersion: "1.0"
+              );
+
+            var embeddedTexts = new List<EmbeddedText>
+            {
+                EmbeddedText.FromSource(sourcePath, sourceText),
+            };
+
+
+            EmitResult emitResult = null;
+
+            using (Stream fsDll = File.OpenWrite(assemblyPath))
+            using (Stream fsPdb = File.OpenWrite(pdbPath))
+            {
+                emitResult = compilation.Emit(
+                   options: emitOptions,
+                   peStream: fsDll,
+                   pdbStream: fsPdb,
+                   embeddedTexts: embeddedTexts
+                   );
+
+                fsDll.Close();
+                fsPdb.Close();
+            }
+
+            return emitResult;
+        }
+
+        private static EmitResult EmitNoDebug(string pAssemblyName, string pCode)
+        {
+            var tree = ParseTextNotDebuggable(pCode);
+
+            var references = ReferenceHelper.GetMetadataReferences();
+
+            var compilation = CSharpCompilation.Create(pAssemblyName)
+              .AddReferences(references)
+              .AddSyntaxTrees(tree);
+
+            using MemoryStream ms = new MemoryStream();
+            EmitResult emitResult = compilation.Emit(ms);
+            return emitResult;
+        }
+
         public static Compilation CreateCompilation(string pAssemblyName, SyntaxTree syntaxTree)
-        {           
+        {
             return CreateLibraryCompilation(pAssemblyName, false)
                .AddReferences(ReferenceHelper.GetMetadataReferences())
                .AddSyntaxTrees(syntaxTree)
                ;
         }
 
-        public static SyntaxTree ParseText(string pSourceCode, bool pDebug)
+        public static SyntaxTree ParseTextNotDebuggable(string pSourceCode)
         {
             var options = new CSharpParseOptions(kind: SourceCodeKind.Regular, languageVersion: LanguageVersion.Latest);
-
-            if (pDebug)
-            {
-                //  string file = Path.GetFileNameWithoutExtension(LAST_COMPILED_CODE_FILE) + DateTime.Now.Millisecond + ".cs";
-
-                string file = LAST_COMPILED_CODE_FILE;
-                File.WriteAllText(file, pSourceCode);
-
-                using var stream = File.OpenRead(file);
-                return CSharpSyntaxTree.ParseText(SourceText.From(stream), path: file);
-            }
-
             return CSharpSyntaxTree.ParseText(pSourceCode, options);
         }
 
