@@ -62,9 +62,7 @@ namespace Coreflow.CodeCreators
 
 
         public void Initialize(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
-        {
-            pCodeWriter.WriteIdentifierTagTop(this);
-
+        {            
             string typeName = "global::" + typeof(T).FullName;
             string variableName = pBuilderContext.CreateLocalVariableName(this);
 
@@ -79,7 +77,6 @@ namespace Coreflow.CodeCreators
         public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer)
         {
             MethodInfo mi = typeof(T).GetMethod("Execute");
-
 
             //validation part
 

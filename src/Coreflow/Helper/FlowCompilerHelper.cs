@@ -104,7 +104,7 @@ namespace Coreflow.Helper
             pdbPath = Path.Combine(tmpDir, pdbFileName);
 
 
-            File.WriteAllText(sourcePath, pCode);
+            File.WriteAllText(sourcePath, FlowBuilderHelper.FormatCode(pCode));
 
             Encoding encoding = Encoding.UTF8;
 
@@ -170,7 +170,7 @@ namespace Coreflow.Helper
               .AddReferences(references)
               .AddSyntaxTrees(tree)
               .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-            
+
             using MemoryStream ms = new MemoryStream();
             EmitResult emitResult = compilation.Emit(ms);
             return emitResult;

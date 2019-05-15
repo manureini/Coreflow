@@ -185,6 +185,7 @@ namespace Coreflow
                 formattedNode.WriteTo(writer);
             }
 
+            workspace.Dispose();
             return sb.ToString();
         }
     }

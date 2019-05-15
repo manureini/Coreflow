@@ -125,6 +125,11 @@ $(function () {
         distance: 20,
         delay: 30,
 
+        scroll: false,
+
+        cursor: "move",
+
+
         create: function (event, ui) {
         },
 
@@ -135,6 +140,9 @@ $(function () {
 
             $(this).html($(this).children(".codecreator-panel-parameter-container"));
             $(this).find(".codecreator-panel-parameter-container").attr("style", "display: block !important; z-index: 999");
+
+            $("#codecreator-panel").css("overflow-y", "visible");
+            $("#codecreator-panel").css("overflow-x", "visible");
         },
 
 
@@ -156,13 +164,15 @@ $(function () {
             ui.position.left += offsetX;
         },
 
-        cursor: "move",
-        //   cursorAt: { top: 0, left: 0 },
+
 
         stop: function (event, ui) {
             $(".codecreator-space").remove();
             $(this).html(oldHtml);
             firstRun = true;
+
+            $("#codecreator-panel").css("overflow-y", "auto");
+            $("#codecreator-panel").css("overflow-x", "hidden");
         }
 
     });
@@ -296,6 +306,7 @@ $(function () {
             value: "",
             language: 'csharp',
             theme: 'vs-dark',
+            glyphMargin: true,
 
             scrollBeyondLastLine: false,
             scrollbar: {
@@ -391,6 +402,10 @@ function SetDraggable(element) {
         distance: 20,
         delay: 30,
 
+        cursor: "grabbing",
+        opacity: 1,
+        helper: "clone",
+
         create: function (event, ui) {
         },
 
@@ -432,13 +447,6 @@ function SetDraggable(element) {
             ui.position.top += offsetY;
             ui.position.left += offsetX;
         },
-
-        cursor: "grabbing",
-        //   cursorAt: { top: 0, left: 0 },
-
-        opacity: 1,
-
-        helper: "clone",
 
         stop: function (event, ui) {
             $(this).removeClass("old-position");
@@ -512,7 +520,27 @@ function OnFlowChange() {
 }
 
 function OnFlowSave() {
-
     $("#SaveFlowbtn").addClass("disabled");
     setTimeout(() => SubmitGetCodeCreatorDisplayNames(), 300);
+}
+
+
+
+
+
+function AddBreakpoint(pLine) {
+
+    var decorations = dialogeditor.deltaDecorations([], [
+        {
+            range: new monaco.Range(pLine, 1, pLine, 1),
+            options: {
+                isWholeLine: true,
+                className: 'editor-breakpoint-line',
+                glyphMarginClassName: 'editor-breakpoint-line fa fa-circle'
+            }
+        }
+    ]);
+
+
+
 }

@@ -519,10 +519,15 @@ namespace Coreflow.Web.Controllers
         {
             try
             {
-                var result = GenerateCombinedCode();
+                Program.CoreflowInstance.CompileFlows();
+                string sourcePath = Program.CoreflowInstance.LastCompileResult.SourcePath;
+
+                string code = System.IO.File.ReadAllText(sourcePath);
+
                 Guid codeCreator = Guid.Parse(pData.Id);
-                int loc = FlowCompilerHelper.GetLineOfIdentifier(result.Code, codeCreator);
-                string[] lines = result.Code.Split(Environment.NewLine);
+                int loc = FlowCompilerHelper.GetLineOfIdentifier(code, codeCreator);
+
+                string[] lines = code.Split(Environment.NewLine);
 
                 while (loc < lines.Length - 1)
                 {
