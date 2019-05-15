@@ -146,34 +146,25 @@ namespace Coreflow.Web.Helper
             return mClient.SendRequestSync(str);
         }
 
-        public static void AddBreakPoint(int pLine)
+        public static void AddBreakPoint(string pSourceFilePath, int pLine)
         {
             mBreakPoints.Add(pLine);
-            UpdateBreakPoints();
+            UpdateBreakPoints(pSourceFilePath);
         }
 
-        public static void RemoveBreakPoint(int pLine)
+        public static void RemoveBreakPoint(string pSourceFilePath, int pLine)
         {
             mBreakPoints.Remove(pLine);
-            UpdateBreakPoints();
+            UpdateBreakPoints(pSourceFilePath);
         }
 
-        private static void UpdateBreakPoints()
+        private static void UpdateBreakPoints(string pSourceFilePath)
         {
-            // string file = Program.CoreflowInstance.LastCompileResult.SourcePath;
-
-            string file = @"C:\GitHub\Coreflow\Coreflow.Host\bin\Debug\netcoreapp3.0\tmp\Flows_1.cs";
-
-            if (!File.Exists(file))
-                throw new Exception();
-
-            Console.WriteLine(file);
-
             SetBreakpointsRequest br = new SetBreakpointsRequest();
             br.Source = new Source()
             {
-                Name = Path.GetFileName(file),
-                Path = file,
+                Name = Path.GetFileName(pSourceFilePath),
+                Path = pSourceFilePath,
             };
             br.SourceModified = true;
             br.Lines = mBreakPoints;

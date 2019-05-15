@@ -1,6 +1,7 @@
 ﻿using AspNetCore.Identity.LiteDB;
 using AspNetCore.Identity.LiteDB.Data;
 using AspNetCore.Identity.LiteDB.Models;
+using Coreflow.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -50,13 +51,14 @@ namespace Coreflow.Web
                 options.Cookie.Name = "X-CSRF-TOKEN-COOKIE";
             });
 
-       
+
             /*
             services.AddIdentity<IdentityUser, IdentityRole>()
             .AddUserStore<MemoryUserStore>()
             .AddRoleStore<MemoryRoleStore>()
             .AddDefaultTokenProviders();*/
 
+            services.AddSingleton<CoreflowApiClientProviderService>();
 
             services.AddSingleton<ILiteDbContext, LiteDbContext>();
 

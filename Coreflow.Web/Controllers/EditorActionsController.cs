@@ -6,6 +6,7 @@ using Coreflow.Web.Helper;
 using Coreflow.Web.Models;
 using Coreflow.Web.Models.Requests;
 using Coreflow.Web.Models.Responses;
+using Coreflow.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -21,6 +22,16 @@ namespace Coreflow.Web.Controllers
     [Authorize]
     public class EditorActionsController : Controller
     {
+
+        private readonly CoreflowApiClientProviderService mCoreflowApiClientProviderService;
+
+        public EditorActionsController(CoreflowApiClientProviderService pCoreflowApiClientProviderService)
+        {
+            mCoreflowApiClientProviderService = pCoreflowApiClientProviderService;
+        }
+
+
+
         [HttpGet]
         public JsonResult GetCodeCreatorDisplayNames()
         {
@@ -519,15 +530,15 @@ namespace Coreflow.Web.Controllers
         {
             try
             {
-                Program.CoreflowInstance.CompileFlows();
-                string sourcePath = Program.CoreflowInstance.LastCompileResult.SourcePath;
+                var response = mCoreflowApiClientProviderService.ApiClient.SubmitLastCompiledFlowInfoRequest();
 
-                string code = System.IO.File.ReadAllText(sourcePath);
+                string source = response.SourceCode;
+                string sourceFile = response.SourcePath;
 
                 Guid codeCreator = Guid.Parse(pData.Id);
-                int loc = FlowCompilerHelper.GetLineOfIdentifier(code, codeCreator);
+                int loc = FlowCompilerHelper.GetLineOfIdentifier(source, codeCreator);
 
-                string[] lines = code.Split(Environment.NewLine);
+                string[] lines = source.Split(Environment.NewLine);
 
                 while (loc < lines.Length - 1)
                 {
@@ -540,9 +551,9 @@ namespace Coreflow.Web.Controllers
                 loc++; //first line is 1
 
                 if (pData.Bool)
-                    DebugHelper.AddBreakPoint(loc);
+                    DebugHelper.AddBreakPoint(sourceFile, loc);
                 else
-                    DebugHelper.RemoveBreakPoint(loc);
+                    DebugHelper.RemoveBreakPoint(sourceFile, loc);
 
                 return Json(new Response(true, string.Empty));
             }

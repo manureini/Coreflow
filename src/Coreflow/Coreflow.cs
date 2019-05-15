@@ -1,4 +1,5 @@
-﻿using Coreflow.CodeCreators;
+﻿using Coreflow.Api;
+using Coreflow.CodeCreators;
 using Coreflow.CodeCreators.Logging;
 using Coreflow.Helper;
 using Coreflow.Interfaces;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 
 namespace Coreflow
@@ -36,6 +38,8 @@ namespace Coreflow
 
         public FlowCompileResult LastCompileResult { get; protected set; }
 
+        public CoreflowApiServer ApiServer { get; protected set; }
+
         static Coreflow()
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
@@ -53,6 +57,11 @@ namespace Coreflow
                     return an;
 
             return null;
+        }
+
+        public void StartApiServer(object ipAddress)
+        {
+            throw new NotImplementedException();
         }
 
         public Coreflow(
@@ -132,7 +141,6 @@ namespace Coreflow
             }
         }
 
-
         public Guid? GetFlowIdentifier(string pFlowName)
         {
             return FlowDefinitionStorage.GetDefinitions().FirstOrDefault(d => d.Name == pFlowName)?.Identifier;
@@ -141,6 +149,12 @@ namespace Coreflow
         public IDictionary<string, object> RunFlow(Guid pIdentifier, IDictionary<string, object> pArguments = null)
         {
             return FlowManager.GetFactory(pIdentifier).RunInstance(pArguments);
+        }
+
+        public void StartApiServer(IPAddress pLocalIpAddress, int pPort)
+        {
+            ApiServer = new CoreflowApiServer(this, pLocalIpAddress, pPort);
+            ApiServer.Start();
         }
 
         public void Dispose()
