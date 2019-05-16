@@ -14,7 +14,7 @@ namespace Coreflow
 
         public string Name { get => "Log " + LogLevel; }
 
-        public string Icon => "fa-sticky-note";
+        public string Icon => "fa-edit";
 
         public string Category => "Logging";
 

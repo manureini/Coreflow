@@ -12,6 +12,7 @@ namespace Coreflow.Web.Controllers
     public class CodeCreatorModelHelper
     {
         private const string USER_DISPLAY_NAME = "UserDisplayName";
+        private const string USER_NOTE = "UserNote";
 
         public static CodeCreatorModel CreateModel(ICodeCreator pCodeCreator, CodeCreatorModel pParent, FlowDefinition pFlowDefinition)
         {
@@ -29,12 +30,10 @@ namespace Coreflow.Web.Controllers
                 Parent = pParent
             };
 
-            if (pFlowDefinition != null && pFlowDefinition.Metadata != null && pFlowDefinition.Metadata.ContainsKey(ret.Identifier))
+            if (pFlowDefinition != null)
             {
-                var metadata = pFlowDefinition.Metadata[ret.Identifier];
-
-                if (metadata.ContainsKey(USER_DISPLAY_NAME))
-                    ret.UserDisplayName = metadata[USER_DISPLAY_NAME].ToString();
+                ret.UserDisplayName = (string)pFlowDefinition.GetMetadata(ret.Identifier, USER_DISPLAY_NAME);
+                ret.UserNote = (string)pFlowDefinition.GetMetadata(ret.Identifier, USER_NOTE);
             }
 
             if (pCodeCreator is IParametrized parametrized)
@@ -96,18 +95,10 @@ namespace Coreflow.Web.Controllers
 
             ret.Identifier = pCodeCreatorModel.Identifier;
 
-            if (pFlowDefinition != null && pCodeCreatorModel.UserDisplayName != null)
+            if (pFlowDefinition != null)
             {
-                //TODO helper
-                //TODO init here?
-                if (pFlowDefinition.Metadata == null)
-                    pFlowDefinition.Metadata = new Dictionary<Guid, Dictionary<string, object>>();
-
-                if (!pFlowDefinition.Metadata.ContainsKey(pCodeCreatorModel.Identifier))
-                    pFlowDefinition.Metadata.Add(pCodeCreatorModel.Identifier, new Dictionary<string, object>());
-
-                pFlowDefinition.Metadata[ret.Identifier].Remove(USER_DISPLAY_NAME);
-                pFlowDefinition.Metadata[ret.Identifier].Add(USER_DISPLAY_NAME, pCodeCreatorModel.UserDisplayName);
+                pFlowDefinition.SetMetadata(ret.Identifier, USER_DISPLAY_NAME, pCodeCreatorModel.UserDisplayName);
+                pFlowDefinition.SetMetadata(ret.Identifier, USER_NOTE, pCodeCreatorModel.UserNote);
             }
 
             if (ret is IParametrized parametrized)

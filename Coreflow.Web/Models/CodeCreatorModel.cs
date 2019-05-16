@@ -29,5 +29,7 @@ namespace Coreflow.Web.Models
         public CodeCreatorModel Parent { get; set; }
 
         public Dictionary<int, List<CodeCreatorModel>> CodeCreatorModels { get; set; }
+
+        public string UserNote { get; set; }
     }
 }

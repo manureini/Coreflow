@@ -18,7 +18,7 @@
     "Coreflow.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5700",
+      "applicationUrl": "http://localhost:5700/Home/Flows",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

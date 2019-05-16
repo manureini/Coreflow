@@ -42,7 +42,21 @@
 
                 @{string displayname = item.UserDisplayName != null ? item.UserDisplayName : item.DisplayName;}
 
-                <span><i class="@item.IconClass"></i> <input type="text" class="input-displayname displayname" spellcheck="false" value="@displayname" /></span>
+                <div class="codecreator-title">
+                    <span class="codecreator-title-left">
+                        <i class="@item.IconClass"></i>
+                        <input type="text" class="input-displayname displayname" spellcheck="false" value="@displayname" />
+                    </span>
+                    <span class="codecreator-title-right">
+
+                        @if (item.UserNote != null)
+                        {
+                            <a class="codecreator-note" href="#" tabindex="0" data-toggle="popover" data-input-text="@item.UserNote">
+                                <i class="fa fa-sticky-note"></i>
+                            </a>
+                        }
+                    </span>
+                </div>
 
                 @if (isContainer)
                 {
@@ -246,6 +260,20 @@
                 <textarea id="flow-notes-textarea" class="note-textarea" data-id="flow-note">@Model.Note</textarea>
             </div>
         </div>
+    </div>
+
+    <div id="context-menu" class="dropdown-menu dropdown-menu-sm">
+        <a id="context-menu-note" class="dropdown-item" href="#"><i class="fa fa-sticky-note"></i> <span id="context-menu-note-text">Add</span> Note</a>
+        <a id="context-menu-delete" class="dropdown-item" href="#"><i class="fa fa-times"></i> Delete</a>
+        <a id="context-menu-color" class="dropdown-item" href="#">
+            <i class="fa fa-paint-brush"></i>
+            <div class="color-box clickable" style="background-color: #0D730D"></div>
+            <div class="color-box clickable" style="background-color: #2424CE"></div>
+            <div class="color-box clickable" style="background-color: #0A9898"></div>
+            <div class="color-box clickable" style="background-color: #8E08A7"></div>
+            <div class="color-box clickable" style="background-color: #71510A"></div>            
+            <div class="color-box clickable" style="background-color: #3e3e42" data-reset="true"></div>
+        </a>
     </div>
 
     <span id="hidden-span"></span>

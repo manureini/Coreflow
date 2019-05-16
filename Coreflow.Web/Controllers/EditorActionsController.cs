@@ -475,6 +475,12 @@ namespace Coreflow.Web.Controllers
                 {
                     wfDefModel.Note = pData.Value;
                 }
+                else
+                {
+                    Guid ccid = Guid.Parse(pData.Id);
+                    CodeCreatorModel ccModel = FlowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, ccid) as CodeCreatorModel;
+                    ccModel.UserNote = pData.Value;
+                }
 
                 FlowDefinitionModelStorage.StoreModel(wfDefModel, false);
 

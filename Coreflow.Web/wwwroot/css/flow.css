@@ -28,11 +28,6 @@
         background: red;
     }
 
-
-.codecreator-active {
-    background: #686868;
-}
-
 .codecreator-space {
     background: #7d7d80;
     min-height: 70px;
@@ -316,4 +311,48 @@ body, .panel, .table {
 
 .editor-breakpoint-line {
     background-color: #7a1313;
+}
+
+.codecreator-title-right {
+    float: right;
+}
+
+    .codecreator-title-right .fa-sticky-note, #context-menu .fa-sticky-note {
+        color: #ede216;
+    }
+
+
+#context-menu {
+    background: #4f4d4d;
+    color: #a1a5a9;
+}
+
+    #context-menu .color-box {
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        vertical-align: text-bottom;
+        border: solid;
+        border-color: black;
+        border-width: 1px;
+    }
+
+.dropdown-item:focus, .dropdown-item:hover {
+    color: unset;
+    text-decoration: unset;
+    background-color: unset;
+}
+
+#context-menu-color {
+    cursor: default;
+}
+
+#context-menu-delete {
+    color: #7a1313;
+}
+
+
+
+:focus {
+    outline: none;
 }

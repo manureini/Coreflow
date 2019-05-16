@@ -13,8 +13,9 @@ function generateUuid() {
 var dialogeditor;
 var currentParamEditor;
 
-$(function () {
+var selected;
 
+$(function () {
 
     $(".codecreator").disableSelection();
     $(".codecreator-space").disableSelection();
@@ -22,17 +23,16 @@ $(function () {
     var offsetY = 0;
     var offsetX = 0;
 
-    var selected;
 
-    $(document).on("click", ".codecreator", function (e) {
+    $(document).on("mousedown", ".codecreator", function (e) {
         //  alert($(this).data('id'));
 
         e.stopPropagation();
 
         var codeCreator = $(e.target);
 
-        if (!codeCreator.is("div")) {
-            codeCreator = codeCreator.parents("div")[0];
+        if (!codeCreator.is(".codecreator")) {
+            codeCreator = codeCreator.closest(".codecreator");
         }
 
         selected = codeCreator;
@@ -106,8 +106,19 @@ $(function () {
             });
         }
 
-        $(".codecreator-active").removeClass("codecreator-active");
+
+        var oldSelected = $(".codecreator-active");
+        oldSelected.removeClass("codecreator-active");
+
+        if (oldSelected.data("background-color") == null) {
+            oldSelected.css("background", "");
+        } else {
+            oldSelected.css("background", oldSelected.data("background-color"));
+        }
+
         $(codeCreator).addClass("codecreator-active");
+
+        AddSelectedColor();
     });
 
     $(".codecreator").each(function (i, e) {
@@ -190,9 +201,7 @@ $(function () {
         }
 
         if (key === "Delete") {
-            SubmitDeleteCodeCreator($(selected).data("id"));
-            $("#parameter-box").html("");
-            $(selected).remove();
+            DeleteSelectedCodeCreator();
         } else if (key === "F9") {
             var cc = $(".codecreator-active");
             var ccid = cc.data("id");
@@ -241,8 +250,13 @@ $(function () {
         RecalculateInputBox($(this));
     });
 
-    $(document).on("keydown", ".note-textarea", function () {
+    $(document).on("keyup", ".note-textarea", function () {
         var textarea = $(this);
+
+        if ($(this).hasClass("input-codecreator-note")) {
+            $(selected).find(".codecreator-note").data("input-text", textarea.val());
+        }
+
         clearTimeout($.data(this, 'timer'));
         var wait = setTimeout(() => SubmitUpdateNote(textarea.data("id"), textarea.val()), 500);
         $(this).data('timer', wait);
@@ -284,6 +298,29 @@ $(function () {
         $(".tab-content .show").removeClass("show");
     });
 
+    $(document).on('mousedown', function (e) {
+        var $target = $(e.target);
+
+        //do nothing if there was a click on popover content
+        if ($target.hasClass('popover') || $target.closest('.popover').length) {
+            return;
+        }
+
+        $('[data-toggle="popover"]').each(function () {
+            $popover = $(this);
+
+            if (!$popover.is(e.target) &&
+                $popover.has(e.target).length === 0 &&
+                $('.popover').has(e.target).length === 0) {
+                $popover.popover('hide');
+            } else {
+                //fixes issue described above
+                $popover.popover('toggle');
+            }
+        });
+    })
+
+
     $("#btnShowGeneratedCode").click(function () {
         SubmitGetGeneratedCode("todo guid");
     });
@@ -317,11 +354,97 @@ $(function () {
 
         SubmitCompile();
     });
+
+    UpdatePopover();
+
+    $(document).on('contextmenu', function (e) {
+        var top = e.pageY;
+        var left = e.pageX;
+
+        if (selected == null || $(e.target).closest(".codecreator").length <= 0) {
+            return false;
+        }
+
+        if (SelectedHasNote()) {
+            $("#context-menu-note-text").html("Remove");
+        } else {
+            $("#context-menu-note-text").html("Add");
+        }
+
+        $("#context-menu").css({
+            display: "block",
+            top: top,
+            left: left
+        }).addClass("show");
+        return false; //blocks default Webbrowser right click menu
+    }).on("click", function () {
+        $("#context-menu").removeClass("show").hide();
+    });
+
+    $("#context-menu a").on("click", function () {
+        $(this).parent().removeClass("show").hide();
+    });
+
+    $("#context-menu-delete").click(function () {
+        DeleteSelectedCodeCreator();
+    });
+
+    $("#context-menu-note").click(function () {
+        if (SelectedHasNote()) {
+            $(selected).find(".codecreator-note").remove();
+            SubmitUpdateNote($(selected).data("id"), null);
+        } else {
+
+            var html = '<a class="codecreator-note" href="#" tabindex="0" data-toggle="popover" data-input-text=""><i class="fa fa-sticky-note"></i></a>';
+
+            $(selected).children(".codecreator-title").children(".codecreator-title-right").append(html);
+            UpdatePopover();
+            SubmitUpdateNote($(selected).data("id"), "");
+        }
+    });
+
+    $(".color-box").click(function () {
+        var color = $(this).css("background-color");
+
+        if ($(this).data("reset") == true) {
+            color = null;
+        }
+
+        $(selected).data("background-color", color);
+        AddSelectedColor();
+    });
 });
+
+
+function AddSelectedColor() {
+    if ($(selected).data("background-color") == null) {
+        $(selected).css("background", "#686868");
+    } else {
+        $(selected).css("background", "linear-gradient(to right, #686868, #686868, #686868, " + $(selected).data("background-color") + ")");
+    }
+}
+
 
 $(window).resize(function () {
     RecalculateBoxSizes();
 });
+
+function UpdatePopover() {
+    //  $('[data-toggle="popover"]').popover();
+
+    $('.codecreator-note').popover({
+        title: "Note",
+        html: true,
+        trigger: "click",
+
+        content: function () {
+            var inputHtml = $('<textarea type="text" class="input-codecreator-note note-textarea" spellcheck="false" />');
+            inputHtml.val($(this).data("input-text"));
+            inputHtml.data("id", $(this).closest(".codecreator").data("id"));
+            return inputHtml;
+        }
+    });
+}
 
 function RecalculateBoxSizes() {
 
@@ -344,6 +467,17 @@ function RecalculateInputBox(pInput) {
 
 function GetCodeCreatorSpaceHtml() {
     return '<div class="codecreator-space"></div>';
+}
+
+function SelectedHasNote() {
+    return $(selected).children(".codecreator-title").children(".codecreator-title-right").children(".codecreator-note").length > 0;
+}
+
+function DeleteSelectedCodeCreator() {
+    SubmitDeleteCodeCreator($(selected).data("id"));
+    $("#parameter-box").html("");
+    $(selected).remove();
+    selected = null;
 }
 
 function createDropSpace(event, ui, selected) {
@@ -526,8 +660,6 @@ function OnFlowSave() {
 
 
 
-
-
 function AddBreakpoint(pLine) {
 
     var decorations = dialogeditor.deltaDecorations([], [
@@ -540,7 +672,4 @@ function AddBreakpoint(pLine) {
             }
         }
     ]);
-
-
-
 }

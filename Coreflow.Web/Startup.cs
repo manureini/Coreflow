@@ -58,6 +58,7 @@ namespace Coreflow.Web
             .AddRoleStore<MemoryRoleStore>()
             .AddDefaultTokenProviders();*/
 
+
             services.AddSingleton<CoreflowApiClientProviderService>();
 
             services.AddSingleton<ILiteDbContext, LiteDbContext>();
@@ -79,7 +80,7 @@ namespace Coreflow.Web
             services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = false;
-            }).AddNewtonsoftJson();
+            }).AddNewtonsoftJson().AddRazorRuntimeCompilation();
 
             services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
             services.AddSession();
