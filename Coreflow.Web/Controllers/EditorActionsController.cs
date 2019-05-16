@@ -326,11 +326,9 @@ namespace Coreflow.Web.Controllers
                     sequenceIndex = sindex;
 
 
-
                 var factory = Program.CoreflowInstance.CodeCreatorStorage.GetAllFactories().Single(f => f.Identifier == pData.CustomFactory);
 
                 var tmpcc = factory.Create();
-
 
                 CodeCreatorModel modes = new CodeCreatorModel()
                 {
@@ -492,8 +490,26 @@ namespace Coreflow.Web.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult UpdateColor([FromBody] IdValueRequest pData)
+        {
+            try
+            {
+                FlowDefinitionModel wfDefModel = FlowDefinitionModelStorage.GetModel(pData.FlowIdentifier);
 
+                Guid ccid = Guid.Parse(pData.Id);
+                CodeCreatorModel ccModel = FlowDefinitionModelIdentifiableHelper.FindIIdentifiable(wfDefModel, ccid) as CodeCreatorModel;
+                ccModel.UserColor = pData.Value;
 
+                FlowDefinitionModelStorage.StoreModel(wfDefModel, false);
+
+                return Json(new Response(true, string.Empty));
+            }
+            catch (Exception e)
+            {
+                return Json(new Response(false, e.ToString()));
+            }
+        }
 
         [HttpPost]
         public JsonResult DebuggerAttach([FromBody] IdValueRequest pData)

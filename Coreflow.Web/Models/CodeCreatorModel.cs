@@ -31,5 +31,7 @@ namespace Coreflow.Web.Models
         public Dictionary<int, List<CodeCreatorModel>> CodeCreatorModels { get; set; }
 
         public string UserNote { get; set; }
+
+        public string UserColor { get; set; }
     }
 }

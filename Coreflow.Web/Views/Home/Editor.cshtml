@@ -38,7 +38,7 @@
         {
             bool isContainer = item.CodeCreatorModels != null;
 
-            <div class="codecreator @if (isContainer) { @("codecreator-container"); }" data-id="@item.Identifier" data-type="@item.Type" data-customfactory="@item.CustomFactory" title="@item.Type">
+            <div class="codecreator @if (isContainer) { @("codecreator-container"); }" data-id="@item.Identifier" data-type="@item.Type" data-customfactory="@item.CustomFactory" title="@item.Type"  @if (item.UserColor != null) { @(Html.Raw("style=\"background: " + item.UserColor + ";\" data-background-color=\"" + item.UserColor + "\"")); }>
 
                 @{string displayname = item.UserDisplayName != null ? item.UserDisplayName : item.DisplayName;}
 

@@ -13,6 +13,7 @@ namespace Coreflow.Web.Controllers
     {
         private const string USER_DISPLAY_NAME = "UserDisplayName";
         private const string USER_NOTE = "UserNote";
+        private const string USER_COLOR = "UserColor";
 
         public static CodeCreatorModel CreateModel(ICodeCreator pCodeCreator, CodeCreatorModel pParent, FlowDefinition pFlowDefinition)
         {
@@ -34,6 +35,7 @@ namespace Coreflow.Web.Controllers
             {
                 ret.UserDisplayName = (string)pFlowDefinition.GetMetadata(ret.Identifier, USER_DISPLAY_NAME);
                 ret.UserNote = (string)pFlowDefinition.GetMetadata(ret.Identifier, USER_NOTE);
+                ret.UserColor = (string)pFlowDefinition.GetMetadata(ret.Identifier, USER_COLOR);
             }
 
             if (pCodeCreator is IParametrized parametrized)
@@ -99,6 +101,7 @@ namespace Coreflow.Web.Controllers
             {
                 pFlowDefinition.SetMetadata(ret.Identifier, USER_DISPLAY_NAME, pCodeCreatorModel.UserDisplayName);
                 pFlowDefinition.SetMetadata(ret.Identifier, USER_NOTE, pCodeCreatorModel.UserNote);
+                pFlowDefinition.SetMetadata(ret.Identifier, USER_COLOR, pCodeCreatorModel.UserColor);
             }
 
             if (ret is IParametrized parametrized)

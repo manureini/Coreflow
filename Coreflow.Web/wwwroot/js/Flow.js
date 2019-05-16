@@ -411,6 +411,8 @@ $(function () {
         }
 
         $(selected).data("background-color", color);
+
+        SubmitUpdateColor($(selected).data("id"), color);
         AddSelectedColor();
     });
 });

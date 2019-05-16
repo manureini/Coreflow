@@ -392,6 +392,32 @@ function SubmitUpdateNote(pId, pNewText) {
     });
 }
 
+function SubmitUpdateColor(pId, pNewColor) {
+
+    OnFlowChange();
+
+    var postData = {};
+    postData["FlowIdentifier"] = currentFlowIdentifier;
+    postData["Id"] = pId;
+    postData["Value"] = pNewColor;
+
+    $.ajax({
+        url: "Action/UpdateColor",
+        type: 'post',
+        data: JSON.stringify(postData),
+        contentType: "application/json",
+        success: function (data) {
+            if (data.isSuccess) {
+                return;
+            }
+            alert(data.message);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+}
+
 
 function SubmitDebuggerAttach(pId) {
     var postData = {};

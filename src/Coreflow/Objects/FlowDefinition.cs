@@ -51,9 +51,10 @@ namespace Coreflow
                     if (!Metadata.ContainsKey(pIdentifier))
                         return;
 
-                    Metadata[pIdentifier].Remove(pKey);
+                    var dict = Metadata[pIdentifier];
+                    dict.Remove(pKey);
 
-                    if (Metadata[Identifier].Count <= 0)
+                    if (dict.Count <= 0)
                         Metadata.Remove(pIdentifier);
 
                     return;
