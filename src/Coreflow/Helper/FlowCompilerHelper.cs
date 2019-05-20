@@ -22,10 +22,7 @@ namespace Coreflow.Helper
         private static Regex mIdRegex = new Regex(@"\/\/#id *([a-zA-Z0-9-]*)");
         private static Regex mContainerRegex = new Regex(@"\/\/#Container");
 
-
         private static volatile int mCounter = 0;
-
-
 
         public static FlowCompileResult CompileFlowCode(string pCode, bool pDebug, string pAssemblyName = null)
         {
@@ -117,8 +114,6 @@ namespace Coreflow.Helper
             var syntaxRootNode = tree.GetRoot() as CSharpSyntaxNode;
             var encoded = CSharpSyntaxTree.Create(syntaxRootNode, null, sourcePath, encoding);
 
-            //TODO !!!!!!!!!!!!!
-
             var references = ReferenceHelper.GetMetadataReferences();
 
             var compilation = CSharpCompilation.Create(pAssemblyName)
@@ -127,7 +122,7 @@ namespace Coreflow.Helper
                   .WithOptimizationLevel(OptimizationLevel.Debug)
                   .WithPlatform(Platform.AnyCpu))
               .AddReferences(references)
-              .AddSyntaxTrees(tree);
+              .AddSyntaxTrees(encoded);
 
             var emitOptions = new EmitOptions(
                debugInformationFormat: DebugInformationFormat.PortablePdb,

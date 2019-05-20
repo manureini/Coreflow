@@ -152,7 +152,7 @@ namespace Coreflow
             return ret;
         }
 
-        public static IVariableCreator GetVariableCreatorInInitialScope(ICodeCreatorContainerCreator pContainer, ICodeCreator pCodeCreator, Func<IVariableCreator, bool> pFilter)
+        public static IVariableCreator GetVariableCreatorInInitialScope(ICodeCreatorContainerCreator pContainer, Func<IVariableCreator, bool> pFilter)
         {
             if (pContainer == null)
                 return null;
@@ -164,7 +164,7 @@ namespace Coreflow
                     return found;
             }
 
-            return GetVariableCreatorInInitialScope(pContainer.ParentContainerCreator, pContainer, pFilter);
+            return GetVariableCreatorInInitialScope(pContainer.ParentContainerCreator, pFilter);
         }
 
         public static string FormatCode(string pCode)

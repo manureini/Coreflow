@@ -56,5 +56,18 @@ namespace Coreflow
             var symbolDisplayFormat = new SymbolDisplayFormat(typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
             return pTypeSymbol.ToDisplayString(symbolDisplayFormat);
         }
+
+
+        public static string GetTypeIdentifier(this ICodeCreator pCodeCreator)
+        {
+            if (pCodeCreator is ICustomFactoryCodeCreator c)
+            {
+                return c.FactoryIdentifier;
+            }
+
+            return pCodeCreator.GetType().FullName;
+        }
+
+
     }
 }

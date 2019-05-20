@@ -90,7 +90,6 @@ namespace Coreflow.CodeCreators
                 //TODO implement "CodeGenerator CodeCreation Errors"
             }
 
-
             string topString = pCodeWriter.ToStringTop();
 
             foreach (ParameterInfo pi in mi.GetParameters().OrderBy(p => p.Position))
