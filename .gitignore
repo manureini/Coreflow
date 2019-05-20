@@ -262,9 +262,9 @@ __pycache__/
 
 Coreflow.Web/Flows/*
 Coreflow.Web/FlowInstances/*
-*.dll
 Coreflow.Web/LastGeneratedCode.cs
 Coreflow.Web/Arguments.json
 Coreflow.Web/Database.db
 Coreflow.Repository/Flows/*
+Coreflow.Web/tmp/*
 
