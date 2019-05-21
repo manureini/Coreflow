@@ -222,11 +222,11 @@ namespace Coreflow.Web.Controllers
                 if (pData.AddValue)
                 {
                     Type type = Type.GetType(pData.Type);
-                    wfDefModel.Arguments.Add(new FlowArguments(pData.Name, type, VariableDirection.In, pData.Value));
+                    wfDefModel.Parameter.Add(new FlowArguments(pData.Name, type, VariableDirection.In, pData.Value));
                 }
                 else
                 {
-                    wfDefModel.Arguments.RemoveAll(a => a.Name == pData.Name);
+                    wfDefModel.Parameter.RemoveAll(a => a.Name == pData.Name);
                 }
 
                 FlowDefinitionModelStorage.StoreModel(wfDefModel, false);

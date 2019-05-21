@@ -9,7 +9,7 @@ namespace Coreflow.Web.Models
     {
         public List<string> ReferencedNamespaces { get; set; }
 
-        public List<FlowArguments> Arguments { get; set; }
+        public List<FlowArguments> Parameter { get; set; }
 
         public string Name { get; set; }
 

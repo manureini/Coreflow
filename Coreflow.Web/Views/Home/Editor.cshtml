@@ -209,14 +209,14 @@
 
     <div id="center-box" class="panel border-panel">
         <ul class="nav nav-tabs">
-            <li><a data-toggle="tab" href="#menu_args">Arguments</a></li>
+            <li><a data-toggle="tab" href="#menu_parameter">Parameter</a></li>
             <li><a data-toggle="tab" href="#menu_ns">Namespaces</a></li>
             <li><a data-toggle="tab" href="#menu_notes">Notes</a></li>
         </ul>
 
         <div class="tab-content">
 
-            <div id="menu_args" class="tab-pane fade">
+            <div id="menu_parameter" class="tab-pane fade">
                 <table id="table-arguments">
                     <thead>
                         <tr>
@@ -227,7 +227,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var u in Model.Arguments)
+                        @foreach (var u in Model.Parameter)
                         {
                             <tr>
                                 <td><i class="fa fa-trash clickable remove-argument" data-id="@u.Name"></i></td>

@@ -15,7 +15,7 @@ namespace Coreflow.Web.Controllers
                 ReferencedNamespaces = pFlowDefinition.ReferencedNamespaces,
                 Identifier = pFlowDefinition.Identifier,
                 CodeCreatorModel = CodeCreatorModelHelper.CreateModel(pFlowDefinition.CodeCreator, null, pFlowDefinition),
-                Arguments = pFlowDefinition.Arguments ?? new List<Objects.FlowArguments>()
+                Parameter = pFlowDefinition.Arguments ?? new List<Objects.FlowArguments>()
             };
 
             if (pFlowDefinition.Metadata != null && pFlowDefinition.Metadata.ContainsKey(Guid.Empty))
@@ -39,7 +39,7 @@ namespace Coreflow.Web.Controllers
                 Icon = pFlowDefinitionModel.Icon,
                 ReferencedNamespaces = pFlowDefinitionModel.ReferencedNamespaces,
                 Identifier = pFlowDefinitionModel.Identifier,
-                Arguments = pFlowDefinitionModel.Arguments,
+                Arguments = pFlowDefinitionModel.Parameter,
             };
 #pragma warning restore CS0618 // Type or member is obsolete
 
