@@ -6,6 +6,8 @@ namespace Coreflow.Validation.Messages
 {
     public class WrongContainerCountMessage : IFlowValidationMessage
     {
+        public string Message => "The container count is inconsistent";
+
         public FlowValidationMessageType MessageType => FlowValidationMessageType.WrongCodeCreatorContainerCount;
 
         public Guid Identifier { get; set; }

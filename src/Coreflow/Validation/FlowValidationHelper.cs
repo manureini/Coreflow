@@ -10,14 +10,12 @@ namespace Coreflow.Validation
 {
     public static class FlowValidationHelper
     {
-
         public static List<IChecker> Checkers = new List<IChecker>()
         {
             new ArgumentButNoParameterChecker(),
             new ParameterButNoArgumentChecker(),
             new WrongContainerCountChecker(),
         };
-
 
         public static FlowValidationResult Validate(FlowDefinition pFlowDefinition)
         {
@@ -31,7 +29,6 @@ namespace Coreflow.Validation
 
             return ret;
         }
-
 
         private static void InvokeCheckers(ref List<IFlowValidationMessage> pMessages, ICodeCreator pCodeCreator)
         {

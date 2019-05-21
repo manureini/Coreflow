@@ -16,7 +16,7 @@ namespace Coreflow.Validation.Checker
             {
                 foreach (var param in para.GetParameters())
                 {
-                    if (!para.Arguments.Any(a => a.Name == param.Name))
+                    if (!para.Arguments.Any(a => a != null && a.Name == param.Name))
                     {
                         AddToResult(ref pMessages, pCodeCreator, param);
                     }

@@ -9,7 +9,9 @@ namespace Coreflow.Validation.Messages
 {
     public class ParameterButNoArgumentMessage : IFlowValidationCodeCreatorMessage
     {
-        public FlowValidationMessageType MessageType => FlowValidationMessageType.ArgumentButNoParameter;
+        public string Message => $"Parameter {Parameter.Name} is defined, but there is no argument with that name.";
+
+        public FlowValidationMessageType MessageType => FlowValidationMessageType.ParameterButNoArgument;
 
         public bool IsFatalError => false;
 
@@ -19,11 +21,15 @@ namespace Coreflow.Validation.Messages
 
         public CodeCreatorParameter Parameter { get; }
 
+        public Guid Identifier { get; set; } = Guid.NewGuid();
+
         internal ParameterButNoArgumentMessage(string pCodeCreatorTypeIdentifier, CodeCreatorParameter pParameter, Guid pFirstCodeCreator)
         {
             CodeCreatorTypeIdentifier = pCodeCreatorTypeIdentifier;
             Parameter = pParameter;
             CodeCreatorIdentifiers.Add(pFirstCodeCreator);
+
+
         }
     }
 }

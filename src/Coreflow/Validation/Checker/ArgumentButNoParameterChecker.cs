@@ -13,7 +13,7 @@ namespace Coreflow.Validation.Checker
         {
             if (pCodeCreator is IParametrized para)
             {
-                foreach (var arg in para.Arguments)
+                foreach (var arg in para.Arguments.Where(a => a != null))
                 {
                     if (!para.GetParameters().Any(p => p.Name == arg.Name))
                     {

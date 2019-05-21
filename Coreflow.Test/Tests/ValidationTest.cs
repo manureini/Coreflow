@@ -31,6 +31,8 @@ namespace Coreflow.Test.Tests
             {
                 var result = FlowValidationHelper.Validate(definition);
 
+                var corrector = CorrectorHelper.GetCorrectors(definition, result.Messages);
+
 
             }
         }

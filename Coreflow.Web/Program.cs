@@ -69,6 +69,10 @@ namespace Coreflow.Web
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls("http://0.0.0.0:5700");
+                .UseUrls("http://0.0.0.0:5700")
+                .ConfigureKestrel((context, options) =>
+                {
+             //       options.AllowSynchronousIO = true;
+                });
     }
 }

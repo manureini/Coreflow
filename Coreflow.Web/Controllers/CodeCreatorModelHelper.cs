@@ -40,29 +40,12 @@ namespace Coreflow.Web.Controllers
 
             if (pCodeCreator is IParametrized parametrized)
             {
-                //TODO validate Argument Names against Parameter names
-                //The editor should be able to show a warning and ask the user to fix the consistency of arguments and parameters
-
                 ret.Parameters = parametrized.GetParameters().ConvertToModel();
 
                 if (parametrized.Arguments == null)
                     parametrized.Arguments = new List<IArgument>();
 
-                if (parametrized.Arguments.Count == 0)
-                {
-                    ret.Arguments = new List<ArgumentModel>();
-                    foreach (var entry in ret.Parameters)
-                    {
-                        ret.Arguments.Add(new ArgumentModel(Guid.NewGuid(), entry.Name, ""));
-                    }
-                }
-                else
-                {
-                    //TODO more intelligent merge?
-                    //merge old argument to new argument
-
-                    ret.Arguments = parametrized.Arguments.Select(p => new ArgumentModel(p.Identifier, p.Name, p.Code)).ToList();
-                }
+                ret.Arguments = parametrized.Arguments.Select(p => new ArgumentModel(p.Identifier, p.Name, p.Code)).ToList();
             }
 
             if (pCodeCreator is ICodeCreatorContainerCreator container)
@@ -106,43 +89,13 @@ namespace Coreflow.Web.Controllers
 
             if (ret is IParametrized parametrized)
             {
-                if (pCodeCreatorModel.Parameters != null)
+                if (parametrized.Arguments == null)
+                    parametrized.Arguments = new List<IArgument>();
+
+                foreach (var argument in pCodeCreatorModel.Arguments)
                 {
-
-                    if (pCodeCreatorModel.Parameters.Count != pCodeCreatorModel.Arguments.Count)
-                        throw new Exception("Inconsistency between Parameters and Arguments");
-
-                    if (parametrized.Arguments == null)
-                        parametrized.Arguments = new List<IArgument>();
-
-                    for (int i = 0; i < pCodeCreatorModel.Parameters.Count; i++)
-                    {
-                        var param = pCodeCreatorModel.Parameters[i];
-                        var argument = pCodeCreatorModel.Arguments[i];
-
-                        if (param.Direction == VariableDirection.In)
-                            parametrized.Arguments.Add(new InputExpressionCreator(argument.Name, argument.Code, argument.Guid, param.Type));
-                        else if (param.Direction == VariableDirection.Out)
-                        {
-                            bool isSimpleVariableName = !argument.Code.Trim().Contains(" ") && !argument.Code.Contains("\"");
-
-                            if (isSimpleVariableName)
-                            {
-                                argument.Name = argument.Name.Trim();
-
-                                if (param.Type == typeof(LeftSideCSharpCode))
-                                    parametrized.Arguments.Add(new LeftSideVariableNameCreator(argument.Name, argument.Code, argument.Guid));
-                                else
-                                    parametrized.Arguments.Add(new OutputVariableNameCreator(argument.Name, argument.Code, argument.Guid));
-                            }
-                            else
-                                parametrized.Arguments.Add(new OutputVariableCodeInlineCreator(argument.Name, argument.Code, argument.Guid));
-                        }
-                        else //InOut
-                        {
-                            parametrized.Arguments.Add(new InputOutputVariableNameCreator(argument.Name, argument.Code, argument.Guid));
-                        }
-                    }
+                    var param = pCodeCreatorModel.Parameters.FirstOrDefault(p => p.Name == argument.Name);
+                    parametrized.Arguments.Add(ArgumentHelper.CreateArgument(param, argument.Name, argument.Code, argument.Guid));
                 }
             }
 

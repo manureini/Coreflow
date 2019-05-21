@@ -23,7 +23,6 @@ namespace Coreflow.Test
         {
             FlowDefinition wfdef = mCoreflow.FlowDefinitionFactory.Create("empty");
 
-            FlowInvoker.Invoke(wfdef);
         }
 
 
@@ -34,7 +33,7 @@ namespace Coreflow.Test
 
             FlowCompileResult compileResult = wfdef.GenerateFlowCode().Compile(false);
 
-           // Console.WriteLine(compileResult.FlowCode.Code);
+            // Console.WriteLine(compileResult.FlowCode.Code);
         }
 
 

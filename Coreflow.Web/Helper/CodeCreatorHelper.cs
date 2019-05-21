@@ -1,4 +1,6 @@
-﻿using Coreflow.Web.Controllers;
+﻿using Coreflow.Interfaces;
+using Coreflow.Web.Controllers;
+using Coreflow.Web.Extensions;
 using Coreflow.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -12,11 +14,11 @@ namespace Coreflow.Web.Helper
         {
             return Program.CoreflowInstance.CodeCreatorStorage.GetAllFactories().Select(v =>
              {
-                 var model = CodeCreatorModelHelper.CreateModel(v.Create(), null, null);
+                 var cc = v.Create();
+                 var model = CodeCreatorModelHelper.CreateModel(cc, null, null);
                  model.CustomFactory = v.Identifier;
                  model.Identifier = Guid.Empty;
-                 model.Arguments?.ForEach(v => v.Guid = Guid.Empty);
-
+                 model.Arguments = model.Parameters?.Select(p => new ArgumentModel(Guid.Empty, p.Name, "")).ToList() ?? new List<ArgumentModel>();
                  return model;
              }).ToList();
         }

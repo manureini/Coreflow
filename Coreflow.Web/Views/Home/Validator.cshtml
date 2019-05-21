@@ -1,0 +1,49 @@
+﻿@model ValidatorModel
+
+@using Coreflow.Validation.Messages;
+
+@{
+    ViewData["Title"] = "Flow Validator";
+}
+
+@section Scripts
+{
+    <script type="text/javascript" src="@Url.Content("/js/Validator.js")"></script>
+}
+
+
+<h3>Validator</h3>
+
+
+@foreach (var msg in Model.ValidationResult.Messages.Select(m => m as IFlowValidationCodeCreatorMessage).Where(m => m != null))
+{
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            @msg.MessageType<br />
+            @string.Join(", ", msg.CodeCreatorIdentifiers)<br />
+            @msg.CodeCreatorTypeIdentifier<br />
+            @msg.Message<br />
+
+        </div>
+    </div>
+
+}
+
+
+@foreach (var corrector in Model.Correctors)
+{
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            <button type="button" class="btn btn-primary corrector-action" data-action="@corrector.GetSerializedData()">@corrector.Name</button>
+
+        </div>
+    </div>
+
+}
+
+
+

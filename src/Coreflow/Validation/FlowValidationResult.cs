@@ -11,6 +11,5 @@ namespace Coreflow.Validation
         public bool IsValid { get; set; }
 
         public List<IFlowValidationMessage> Messages { get; internal set; } = new List<IFlowValidationMessage>();
-
     }
 }
