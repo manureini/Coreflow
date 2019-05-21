@@ -1,4 +1,5 @@
-﻿using Coreflow.Objects;
+﻿using Coreflow.Interfaces;
+using Coreflow.Objects;
 using Coreflow.Web.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,16 @@ namespace Coreflow.Web.Extensions
             }
 
             return ret;
+        }
+
+        public static ArgumentModel ConvertToModel(this IArgument pArgument)
+        {
+            string type = null;
+
+            if (pArgument is InputExpressionCreator iec)
+                type = iec.Type;
+
+            return new ArgumentModel(pArgument.Identifier, pArgument.Name, type, pArgument.Code);
         }
     }
 }

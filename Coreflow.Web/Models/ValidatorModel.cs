@@ -12,6 +12,6 @@ namespace Coreflow.Web.Models
 
         public FlowValidationResult ValidationResult { get; set; }
 
-        public List<ICorrector> Correctors { get; set; }
+        public List<(Guid, ICorrector)> Correctors { get; set; }
     }
 }

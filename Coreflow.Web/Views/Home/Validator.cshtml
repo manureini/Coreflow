@@ -12,38 +12,69 @@
 }
 
 
-<h3>Validator</h3>
+<h3>Flow Validator</h3>
+
+<br />
 
 
-@foreach (var msg in Model.ValidationResult.Messages.Select(m => m as IFlowValidationCodeCreatorMessage).Where(m => m != null))
-{
+<div class="accordion" id="validator-result">
 
-    <div class="panel panel-default">
-        <div class="panel-body">
+    @{int i = 0; }
 
-            @msg.MessageType<br />
-            @string.Join(", ", msg.CodeCreatorIdentifiers)<br />
-            @msg.CodeCreatorTypeIdentifier<br />
-            @msg.Message<br />
+    @foreach (var msg in Model.ValidationResult.Messages.Select(m => m as IFlowValidationCodeCreatorMessage).OrderByDescending(m => m.CodeCreatorIdentifiers.Count).Where(m => m != null))
+    {
+        <div class="card">
+            <div class="card-header" id="heading-@i">
+                <h2 class="mb-0">
+                    <i class="fa fa-times-circle" style="color: red;"></i>
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-@i" aria-expanded="true" aria-controls="collapse-@i">
+                        @msg.Message
+                    </button>
+                </h2>
+            </div>
 
+            <div id="collapse-@i" class="collapse" aria-labelledby="heading-@i" data-parent="#validator-result">
+                <div class="card-body">
+
+                    <div>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>Message Type:</td>
+                                    <td>@msg.MessageType</td>
+                                </tr>
+                                <tr>
+                                    <td>Code-Creators:</td>
+                                    <td>@string.Join(", ", msg.CodeCreatorIdentifiers)</td>
+                                </tr>
+                                <tr>
+                                    <td>CC Type:</td>
+                                    <td>@msg.CodeCreatorTypeIdentifier</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="btn-group" role="group">
+                        @foreach (var corrector in Model.Correctors.Where(e => e.Item1 == msg.Identifier))
+                        {
+                            <button type="button" class="btn btn-primary corrector-action" data-action="@corrector.Item2.GetSerializedData()">@corrector.Item2.Name</button>
+                        }
+                    </div>
+
+                </div>
+            </div>
         </div>
-    </div>
 
-}
+        i = i + 1;
 
+    }
 
-@foreach (var corrector in Model.Correctors)
-{
-
-    <div class="panel panel-default">
-        <div class="panel-body">
-
-            <button type="button" class="btn btn-primary corrector-action" data-action="@corrector.GetSerializedData()">@corrector.Name</button>
-
-        </div>
-    </div>
-
-}
+</div>
 
 
 
+
+<script>
+    var currentFlowIdentifier = "@(Model.FlowDefinition.Identifier)";
+</script>

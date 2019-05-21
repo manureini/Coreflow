@@ -1,10 +1,15 @@
 ﻿using Coreflow.Helper;
 using Coreflow.Validation;
+using Coreflow.Web.Helper;
+using Coreflow.Web.Models;
+using Coreflow.Web.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Coreflow.Web.Controllers
@@ -14,24 +19,34 @@ namespace Coreflow.Web.Controllers
     public class ValidatorActionsController : Controller
     {
 
-
         [HttpPost]
-        public JsonResult DoValidatorAction([FromBody]CorrectorData pData)
+        public JsonResult DoValidatorAction([FromBody]IdValueRequest pData)
         {
+            try
+            {
+                FlowDefinitionModel wfDefModel = FlowDefinitionModelStorage.GetModel(pData.FlowIdentifier);
 
-            Type type = TypeHelper.SearchType(pData.Type);
+                FlowDefinition wfDef = FlowDefinitionModelMappingHelper.GenerateFlowDefinition(wfDefModel);
 
+                CorrectorData cData = JsonConvert.DeserializeObject<CorrectorData>(pData.Value);
 
-            //Correct(FlowDefinition pFlowDefinition, List<Guid> pCodeCreators, object pData)
+                Type type = TypeHelper.SearchType(cData.Type);
 
-           // type.GetMethod("Correct").Invoke(null, new[] { });
+                //Correct(FlowDefinition pFlowDefinition, List<Guid> pCodeCreators, object pData)
 
+                type.GetMethod("Correct", BindingFlags.Static | BindingFlags.Public).Invoke(null, new[] { wfDef, cData.CodeCreators, cData.Data });
 
-            return new JsonResult("");
+                wfDefModel = FlowDefinitionModelMappingHelper.GenerateModel(wfDef);
+
+                FlowDefinitionModelStorage.StoreModel(wfDefModel, false);
+
+                return Json(new Response(true, string.Empty));
+            }
+            catch (Exception e)
+            {
+                return Json(new Response(false, e.ToString()));
+            }
         }
-
-
-
 
     }
 }

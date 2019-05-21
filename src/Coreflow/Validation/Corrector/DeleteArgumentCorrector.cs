@@ -7,11 +7,11 @@ using System.Text;
 
 namespace Coreflow.Validation.Corrector
 {
-    public class RemoveArgumentCorrector : AbstractCorrector
+    public class DeleteArgumentCorrector : AbstractCorrector
     {
-        public override string Name => "Remove Argument";
+        public override string Name => $"Delete {((ArgumentButNoParameterMessage)Message).Argument.Name} Argument";
 
-        public RemoveArgumentCorrector(FlowDefinition pFlowDefinition, List<IFlowValidationMessage> pMessages, IFlowValidationMessage pMessage) : base(pFlowDefinition, pMessages, pMessage)
+        public DeleteArgumentCorrector(FlowDefinition pFlowDefinition, List<IFlowValidationMessage> pMessages, IFlowValidationMessage pMessage) : base(pFlowDefinition, pMessages, pMessage)
         {
         }
 

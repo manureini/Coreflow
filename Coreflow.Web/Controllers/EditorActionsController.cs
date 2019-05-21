@@ -355,7 +355,7 @@ namespace Coreflow.Web.Controllers
                     {
                         Guid id = Guid.NewGuid();
                         ret.ListValues.Add(new ListEntry(id.ToString(), para.Name));
-                        modes.Arguments.Add(new ArgumentModel(id, para.Name, ""));
+                        modes.Arguments.Add(new ArgumentModel(id, para.Name, para.Type.AssemblyQualifiedName, ""));
                     }
                 }
 

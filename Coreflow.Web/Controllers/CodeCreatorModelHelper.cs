@@ -45,7 +45,7 @@ namespace Coreflow.Web.Controllers
                 if (parametrized.Arguments == null)
                     parametrized.Arguments = new List<IArgument>();
 
-                ret.Arguments = parametrized.Arguments.Select(p => new ArgumentModel(p.Identifier, p.Name, p.Code)).ToList();
+                ret.Arguments = parametrized.Arguments.Select(a => a.ConvertToModel()).ToList();
             }
 
             if (pCodeCreator is ICodeCreatorContainerCreator container)
@@ -95,7 +95,7 @@ namespace Coreflow.Web.Controllers
                 foreach (var argument in pCodeCreatorModel.Arguments)
                 {
                     var param = pCodeCreatorModel.Parameters.FirstOrDefault(p => p.Name == argument.Name);
-                    parametrized.Arguments.Add(ArgumentHelper.CreateArgument(param, argument.Name, argument.Code, argument.Guid));
+                    parametrized.Arguments.Add(ArgumentHelper.CreateArgument(param, argument.Name, argument.Type, argument.Code, argument.Guid));
                 }
             }
 

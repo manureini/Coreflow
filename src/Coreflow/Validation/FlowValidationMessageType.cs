@@ -8,6 +8,7 @@ namespace Coreflow.Validation.Messages
     {
         ArgumentButNoParameter,
         ParameterButNoArgument,
-        WrongCodeCreatorContainerCount
+        WrongCodeCreatorContainerCount,
+        ArgumentWrongType
     }
 }

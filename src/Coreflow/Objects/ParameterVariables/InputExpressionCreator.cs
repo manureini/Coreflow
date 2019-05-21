@@ -20,8 +20,6 @@ namespace Coreflow.Interfaces
 
         public ITypeSymbol ActualType { get; internal set; }
 
-        public string FactoryIdentifier { get; set; }
-
         public InputExpressionCreator()
         {
         }
@@ -32,12 +30,10 @@ namespace Coreflow.Interfaces
             Code = pExpression;
         }
 
-        public InputExpressionCreator(string pName, string pExpression, Guid pIdentifier, Type pType) : this()
+        public InputExpressionCreator(string pName, string pExpression, Guid pIdentifier, string pType) : this(pName, pExpression)
         {
-            Name = pName;
-            Code = pExpression;
             Identifier = pIdentifier;
-            Type = pType.AssemblyQualifiedName;
+            Type = pType;
         }
 
         public void Initialize(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)

@@ -11,8 +11,9 @@ namespace Coreflow.Validation
         private static List<Type> mCorrectors = new List<Type>()
         {
             typeof(AddArgumentCorrector),
-            typeof(RemoveArgumentCorrector),
-            typeof(MoveArgumentCorrector)
+            typeof(DeleteArgumentCorrector),
+            typeof(MoveArgumentCorrector),
+            typeof(ChangeArgumentTypeCorrector)
         };
 
         private static ICorrector CreateCorrector(Type pType, FlowDefinition pFlowDefinition, List<IFlowValidationMessage> pMessages, IFlowValidationMessage pMessage)
@@ -20,9 +21,9 @@ namespace Coreflow.Validation
             return (ICorrector)Activator.CreateInstance(pType, new object[] { pFlowDefinition, pMessages, pMessage });
         }
 
-        public static List<ICorrector> GetCorrectors(FlowDefinition pFlowDefinition, List<IFlowValidationMessage> pValidationMessages)
+        public static List<(Guid, ICorrector)> GetCorrectors(FlowDefinition pFlowDefinition, List<IFlowValidationMessage> pValidationMessages)
         {
-            List<ICorrector> ret = new List<ICorrector>();
+            List<(Guid, ICorrector)> ret = new List<(Guid, ICorrector)>();
 
             foreach (var ctype in mCorrectors)
             {
@@ -31,7 +32,7 @@ namespace Coreflow.Validation
                     var corrector = CreateCorrector(ctype, pFlowDefinition, pValidationMessages, msg);
 
                     if (corrector.CanCorrect())
-                        ret.Add(corrector);
+                        ret.Add((msg.Identifier, corrector));
                 }
             }
 

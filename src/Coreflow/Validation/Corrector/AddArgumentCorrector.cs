@@ -10,7 +10,7 @@ namespace Coreflow.Validation.Corrector
 {
     public class AddArgumentCorrector : AbstractCorrector
     {
-        public override string Name => "Add empty Argument";
+        public override string Name => $"Add empty {((ParameterButNoArgumentMessage)Message).Parameter.Name} Argument";
 
         public AddArgumentCorrector(FlowDefinition pFlowDefinition, List<IFlowValidationMessage> pMessages, IFlowValidationMessage pMessage) : base(pFlowDefinition, pMessages, pMessage)
         {
@@ -34,7 +34,7 @@ namespace Coreflow.Validation.Corrector
             {
                 var cc = pFlowDefinition.FindCodeCreator(ccid) as IParametrized;
                 var parameter = cc.GetParameters().Single(p => p.Name == name);
-                cc.Arguments.Add(ArgumentHelper.CreateArgument(parameter, name, "", Guid.NewGuid()));
+                cc.Arguments.Add(ArgumentHelper.CreateArgument(parameter, name, parameter.Type.AssemblyQualifiedName, "", Guid.NewGuid()));
             }
         }
     }

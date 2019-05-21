@@ -356,3 +356,21 @@ body, .panel, .table {
 :focus {
     outline: none;
 }
+
+
+#validator-result {
+    color: #c4c9ce;
+}
+
+.btn-link, .btn-link.focus, .btn-link:focus, .btn-link:hover {
+    text-decoration: none;
+    color: #c8cbcf;
+}
+ 
+.card-header {
+    background: #4f4d4d; 
+}
+
+.card-body {
+    background: #696b6d;
+}
