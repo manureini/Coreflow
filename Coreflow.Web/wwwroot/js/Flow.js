@@ -27,6 +27,11 @@ $(function () {
     $(document).on("mousedown", ".codecreator", function (e) {
         //  alert($(this).data('id'));
 
+
+        if ($(e.target).closest(".ui-draggable-dragging").length > 0) {
+            return;
+        }
+
         e.stopPropagation();
 
         var codeCreator = $(e.target);
@@ -329,6 +334,12 @@ $(function () {
         SubmitDebuggerAttach($("#input-process-id").val());
     });
 
+    $("#btnDownloadFlow").click(function () {
+        var postData = {};
+        postData["FlowIdentifier"] = currentFlowIdentifier;
+        StartDownload("Action/DownloadFlow", postData);
+    });
+
 
     $("#modalEditor").on('hidden.bs.modal', function () {
         $(this).trigger("modalEditorClosed");
@@ -361,7 +372,7 @@ $(function () {
         var top = e.pageY;
         var left = e.pageX;
 
-        if (selected == null || $(e.target).closest(".codecreator").length <= 0) {
+        if (selected == null || $(e.target).closest(".codecreator").length <= 0 || $(e.target).closest(".ui-draggable-dragging").length > 0) {
             return false;
         }
 
@@ -675,3 +686,26 @@ function AddBreakpoint(pLine) {
         }
     ]);
 }
+
+
+
+function StartDownload(url, data) {
+
+    var form = $('<form></form>').attr('action', url).attr('method', 'post'); //.attr('target', '_blank')
+
+    Object.keys(data).forEach(function (key) {
+        var value = data[key];
+
+        if (value instanceof Array) {
+            value.forEach(function (v) {
+                form.append($("<input></input>").attr('type', 'hidden').attr('name', key).attr('value', v));
+            });
+        } else {
+            form.append($("<input></input>").attr('type', 'hidden').attr('name', key).attr('value', value));
+        }
+
+    });
+
+    //send request
+    form.appendTo('body').submit().remove();
+};

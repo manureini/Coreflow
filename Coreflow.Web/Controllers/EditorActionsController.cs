@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Mime;
 using System.Text;
 using System.Threading;
 
@@ -603,6 +604,20 @@ namespace Coreflow.Web.Controllers
             {
                 return Json(new Response(false, e.ToString()));
             }
+        }
+
+        [HttpPost]
+        public FileResult DownloadFlow(FlowEditorRequest pRequest)
+        {
+            FlowDefinitionModel fDefModel = FlowDefinitionModelStorage.GetModel(pRequest.FlowIdentifier);
+
+            var fdef = FlowDefinitionModelMappingHelper.GenerateFlowDefinition(fDefModel);
+
+            string serialized = FlowDefinitionSerializer.Serialize(fdef);
+
+            byte[] data = Encoding.UTF8.GetBytes(serialized);
+
+            return File(data, MediaTypeNames.Application.Octet, fdef.Identifier + ".flow");
         }
     }
 }

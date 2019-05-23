@@ -87,7 +87,7 @@ namespace Coreflow.Web.Controllers
                 pFlowDefinition.SetMetadata(ret.Identifier, USER_COLOR, pCodeCreatorModel.UserColor);
             }
 
-            if (ret is IParametrized parametrized)
+            if (ret is IParametrized parametrized && pCodeCreatorModel.Arguments != null)
             {
                 if (parametrized.Arguments == null)
                     parametrized.Arguments = new List<IArgument>();
