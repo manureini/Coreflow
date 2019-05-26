@@ -7,8 +7,16 @@
 <h2>Flow Definitions</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-primary" asp-action="Create">Create New</a>
+    
+    <button id="btnUploadFlow" type="button" class="btn btn-primary">
+        Upload flow
+    </button>
+
 </p>
+
+<input id="inpUploadFlow" class="" type="file" accept=".flow" style="width: 0; height: 0; display: block" />
+
 <table class="table">
     <thead>
         <tr>

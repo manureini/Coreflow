@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 using Coreflow.Web.Helper;
 using Coreflow.Objects.CodeCreatorFactory;
 using Coreflow.Validation;
+using System.IO;
+using System.Linq;
+using Coreflow.Helper;
+using System.Text;
 
 namespace Coreflow.Web.Controllers
 {
@@ -28,6 +32,26 @@ namespace Coreflow.Web.Controllers
 
             return RedirectToAction(nameof(Editor), new { id = wfdef.Identifier });
         }
+
+
+        public IActionResult Upload()
+        {
+            var file = Request.Form.Files.FirstOrDefault();
+
+            using Stream readStream = file.OpenReadStream();
+
+            using MemoryStream ms = new MemoryStream();
+            readStream.CopyTo(ms);          
+            ms.Seek(0, SeekOrigin.Begin);
+
+            string serialized = Encoding.UTF8.GetString(ms.GetBuffer());
+
+            var fdef = FlowDefinitionSerializer.Deserialize(serialized, Program.CoreflowInstance);
+            Program.CoreflowInstance.FlowDefinitionStorage.Add(fdef);
+
+            return Json(new Response(true, "ok"));
+        }
+
 
         public IActionResult Editor(Guid id)
         {
