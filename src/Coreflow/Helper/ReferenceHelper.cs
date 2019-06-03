@@ -64,8 +64,18 @@ namespace Coreflow.Helper
         {
             return AppDomain.CurrentDomain.GetAssemblies()
                 .Where(a => !a.IsDynamic && a.Location != string.Empty)
-               // .Where(a => a.GetName().Name != "System.Private.CoreLib")
-                .Select(a => MetadataReference.CreateFromFile(a.Location));
+                .Select(a =>
+                {
+                    try
+                    {
+                        return MetadataReference.CreateFromFile(a.Location);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                    return null;
+                }).Where(a => a != null);
         }
 
 
