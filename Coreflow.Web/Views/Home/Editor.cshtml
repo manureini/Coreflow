@@ -175,27 +175,32 @@
 
     <div id="control-panel" class="panel border-panel">
 
-        <button type="button" id="RunFlowbtn" class="btn btn-primary">
-            Run flow
-        </button>
+        <div class="input-group btn-group" role="group">
+            <button type="button" id="RunFlowbtn" class="btn btn-primary">
+                Run flow
+            </button>
 
-        @{string additionClass = FlowDefinitionModelStorage.UnSavedChanges(Model.Identifier) ? "" : "disabled"; }
+            @{string additionalClass = FlowDefinitionModelStorage.UnSavedChanges(Model.Identifier) ? "" : "disabled"; }
 
-        <button type="button" id="SaveFlowbtn" class="btn btn-primary @additionClass">
-            Save flow
-        </button>
 
-        <button type="button" id="ResetFlowbtn" class="btn btn-primary">
-            Reset flow
-        </button>
+            <button type="button" id="SaveFlowbtn" class="btn btn-primary @additionalClass">
+                Save flow
+            </button>
 
-        <button type="button" id="btnShowGeneratedCode" class="btn btn-primary">
-            Show generated code
-        </button>
+            <button type="button" id="ResetFlowbtn" class="btn btn-primary">
+                Reset flow
+            </button>
+        </div>
 
-        <button type="button" id="btnDownloadFlow" class="btn btn-primary">
-            Download Flow
-        </button>
+        <div class="input-group btn-group" role="group">
+            <button type="button" id="btnShowGeneratedCode" class="btn btn-primary">
+                Show generated code
+            </button>
+
+            <button type="button" id="btnDownloadFlow" class="btn btn-primary">
+                Download Flow
+            </button>
+        </div>
 
         <div class="input-group mb-3">
             <div class="input-group-prepend">
@@ -210,76 +215,76 @@
 
     </div>
 
-    <div id="center-box" class="panel border-panel">
-        <ul class="nav nav-tabs">
-            <li><a data-toggle="tab" href="#menu_parameter">Parameter</a></li>
-            <li><a data-toggle="tab" href="#menu_ns">Namespaces</a></li>
-            <li><a data-toggle="tab" href="#menu_notes">Notes</a></li>
-        </ul>
+        <div id="center-box" class="panel border-panel">
+            <ul class="nav nav-tabs">
+                <li><a data-toggle="tab" href="#menu_parameter">Parameter</a></li>
+                <li><a data-toggle="tab" href="#menu_ns">Namespaces</a></li>
+                <li><a data-toggle="tab" href="#menu_notes">Notes</a></li>
+            </ul>
 
-        <div class="tab-content">
+            <div class="tab-content">
 
-            <div id="menu_parameter" class="tab-pane fade">
-                <table id="table-arguments">
-                    <thead>
-                        <tr>
-                            <td></td>
-                            <td width="30%">Name</td>
-                            <td width="30%">Type</td>
-                            <td width="30%">Value</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var u in Model.Parameter)
-                        {
+                <div id="menu_parameter" class="tab-pane fade">
+                    <table id="table-arguments">
+                        <thead>
                             <tr>
-                                <td><i class="fa fa-trash clickable remove-argument" data-id="@u.Name"></i></td>
-                                <td>@u.Name</td>
-                                <td>@u.Type</td>
-                                <td>@u.Expression</td>
+                                <td></td>
+                                <td width="30%">Name</td>
+                                <td width="30%">Type</td>
+                                <td width="30%">Value</td>
                             </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var u in Model.Parameter)
+                            {
+                                <tr>
+                                    <td><i class="fa fa-trash clickable remove-argument" data-id="@u.Name"></i></td>
+                                    <td>@u.Name</td>
+                                    <td>@u.Type</td>
+                                    <td>@u.Expression</td>
+                                </tr>
+                            }
+                            <tr>
+                                <td><i class="fa fa-plus clickable add-argument"></i></td>
+                                <td><input id="add-argument-name" type="text" placeholder="Name" /></td>
+                                <td><input id="add-argument-type" type="text" placeholder="Type" /></td>
+                                <td><input id="add-argument-expression" type="text" placeholder="Value" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="menu_ns" class="tab-pane fade">
+                    <ul>
+                        @foreach (string u in Model.ReferencedNamespaces)
+                        {
+                            <li><i class="fa fa-trash clickable remove-referenced-namespace" data-id="@u"></i> @u</li>
                         }
-                        <tr>
-                            <td><i class="fa fa-plus clickable add-argument"></i></td>
-                            <td><input id="add-argument-name" type="text" placeholder="Name" /></td>
-                            <td><input id="add-argument-type" type="text" placeholder="Type" /></td>
-                            <td><input id="add-argument-expression" type="text" placeholder="Value" /></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div id="menu_ns" class="tab-pane fade">
-                <ul>
-                    @foreach (string u in Model.ReferencedNamespaces)
-                    {
-                        <li><i class="fa fa-trash clickable remove-referenced-namespace" data-id="@u"></i> @u</li>
-                    }
 
-                    <li><i class="fa fa-plus clickable add-referenced-namespace"></i><input type="text" placeholder="Add Namespace" /></li>
-                </ul>
-            </div>
-            <div id="menu_notes" class="tab-pane fade">
-                <textarea id="flow-notes-textarea" class="note-textarea" data-id="flow-note">@Model.Note</textarea>
+                        <li><i class="fa fa-plus clickable add-referenced-namespace"></i><input type="text" placeholder="Add Namespace" /></li>
+                    </ul>
+                </div>
+                <div id="menu_notes" class="tab-pane fade">
+                    <textarea id="flow-notes-textarea" class="note-textarea" data-id="flow-note">@Model.Note</textarea>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div id="context-menu" class="dropdown-menu dropdown-menu-sm">
-        <a id="context-menu-note" class="dropdown-item" href="#"><i class="fa fa-sticky-note"></i> <span id="context-menu-note-text">Add</span> Note</a>
-        <a id="context-menu-delete" class="dropdown-item" href="#"><i class="fa fa-times"></i> Delete</a>
-        <a id="context-menu-color" class="dropdown-item" href="#">
-            <i class="fa fa-paint-brush"></i>
-            <div class="color-box clickable" style="background-color: #0D730D"></div>
-            <div class="color-box clickable" style="background-color: #2424CE"></div>
-            <div class="color-box clickable" style="background-color: #0A9898"></div>
-            <div class="color-box clickable" style="background-color: #8E08A7"></div>
-            <div class="color-box clickable" style="background-color: #71510A"></div>            
-            <div class="color-box clickable" style="background-color: #3e3e42" data-reset="true"></div>
-        </a>
-    </div>
+        <div id="context-menu" class="dropdown-menu dropdown-menu-sm">
+            <a id="context-menu-note" class="dropdown-item" href="#"><i class="fa fa-sticky-note"></i> <span id="context-menu-note-text">Add</span> Note</a>
+            <a id="context-menu-delete" class="dropdown-item" href="#"><i class="fa fa-times"></i> Delete</a>
+            <a id="context-menu-color" class="dropdown-item" href="#">
+                <i class="fa fa-paint-brush"></i>
+                <div class="color-box clickable" style="background-color: #0D730D"></div>
+                <div class="color-box clickable" style="background-color: #2424CE"></div>
+                <div class="color-box clickable" style="background-color: #0A9898"></div>
+                <div class="color-box clickable" style="background-color: #8E08A7"></div>
+                <div class="color-box clickable" style="background-color: #71510A"></div>
+                <div class="color-box clickable" style="background-color: #3e3e42" data-reset="true"></div>
+            </a>
+        </div>
 
-    <span id="hidden-span"></span>
-</div>
+        <span id="hidden-span"></span>
+    </div>
 
 
 <script>
