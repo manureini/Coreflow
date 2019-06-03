@@ -8,6 +8,9 @@ namespace Coreflow.Web.Controllers
     {
         public static FlowDefinitionModel GenerateModel(FlowDefinition pFlowDefinition)
         {
+            if (pFlowDefinition == null)
+                return null;
+
             FlowDefinitionModel ret = new FlowDefinitionModel()
             {
                 Name = pFlowDefinition.Name,

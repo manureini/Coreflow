@@ -72,12 +72,15 @@ namespace Coreflow.Interfaces
                 {
                     ITypeSymbol typeSymbol = type.GetTypeSymbolForType(pBuilderContext.SemanticModel);
 
-                    var converation = pBuilderContext.Compilation.ClassifyCommonConversion(ActualType, typeSymbol);
-
-                    if (!(converation.IsIdentity | converation.IsImplicit | converation.IsNumeric | converation.IsUserDefined))
+                    if (typeSymbol != null) //does not work on linux
                     {
-                        if (ParameterConverterHelper.AppendCodeWithTypeConverter(pCodewriter, ActualType, typeSymbol, Code))
-                            return; // found a conversation
+                        var converation = pBuilderContext.Compilation.ClassifyCommonConversion(ActualType, typeSymbol);
+
+                        if (!(converation.IsIdentity | converation.IsImplicit | converation.IsNumeric | converation.IsUserDefined))
+                        {
+                            if (ParameterConverterHelper.AppendCodeWithTypeConverter(pCodewriter, ActualType, typeSymbol, Code))
+                                return; // found a conversation
+                        }
                     }
                 }
             }
