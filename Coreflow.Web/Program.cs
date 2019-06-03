@@ -28,8 +28,8 @@ namespace Coreflow.Web
             */
 
             CoreflowInstance = new Coreflow(
-            //      new SimpleFlowDefinitionFileStorage(@"Flows"),
-                new RepositoryFlowDefinitionStorage("http://localhost:5701/"),
+                  new SimpleFlowDefinitionFileStorage(@"Flows"),
+              //  new RepositoryFlowDefinitionStorage("http://localhost:5701/"),
                 new SimpleFlowInstanceFileStorage("FlowInstances"),
                 new JsonFileArgumentInjectionStore("Arguments.json"),
                 "Plugins"
