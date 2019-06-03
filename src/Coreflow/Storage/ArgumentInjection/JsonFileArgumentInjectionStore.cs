@@ -14,11 +14,11 @@ namespace Coreflow.Storage.ArgumentInjection
 
         public JsonFileArgumentInjectionStore(string pFilePath)
         {
-            mFilePath = pFilePath;
+            mFilePath = Path.GetFullPath(pFilePath);
 
-            if (File.Exists(pFilePath))
+            if (File.Exists(mFilePath))
             {
-                string text = File.ReadAllText(pFilePath);
+                string text = File.ReadAllText(mFilePath);
                 mValues = new ReadOnlyDictionary<string, string>(JsonConvert.DeserializeObject<Dictionary<string, string>>(text));
             }
             else
@@ -27,7 +27,7 @@ namespace Coreflow.Storage.ArgumentInjection
                 example.TryAdd("key", "value");
 
                 string text = JsonConvert.SerializeObject(example, Formatting.Indented);
-                File.WriteAllText(pFilePath, text);
+                File.WriteAllText(mFilePath, text);
             }
         }
 
