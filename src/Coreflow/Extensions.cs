@@ -38,16 +38,18 @@ namespace Coreflow
 
         public static INamedTypeSymbol GetTypeSymbolForType(this Type type, SemanticModel semanticModel)
         {
-            if (!type.IsConstructedGenericType)
-            {
+            if (!type.IsConstructedGenericType)            
                 return semanticModel.Compilation.GetTypeByMetadataName(type.FullName);
-            }
-
+            
             // get all typeInfo's for the Type arguments 
             var typeArgumentsTypeInfos = type.GenericTypeArguments.Select(a => GetTypeSymbolForType(a, semanticModel));
 
             var openType = type.GetGenericTypeDefinition();
             var typeSymbol = semanticModel.Compilation.GetTypeByMetadataName(openType.FullName);
+
+            if (typeSymbol == null)
+                return null;
+
             return typeSymbol.Construct(typeArgumentsTypeInfos.ToArray<ITypeSymbol>());
         }
 
