@@ -21,7 +21,7 @@
 
     @{int i = 0; }
 
-    @foreach (var msg in Model.ValidationResult.Messages.Select(m => m as IFlowValidationCodeCreatorMessage).OrderByDescending(m => m.CodeCreatorIdentifiers.Count).Where(m => m != null))
+    @foreach (var msg in Model.ValidationResult.Messages.Select(m => m as IFlowValidationCodeCreatorMessage).Where(m => m != null).OrderByDescending(m => m.CodeCreatorIdentifiers?.Count).Where(m => m != null))
     {
         <div class="card">
             <div class="card-header" id="heading-@i">
