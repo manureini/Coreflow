@@ -10,9 +10,12 @@ namespace Coreflow.Storage.ArgumentInjection
     public class JsonFileArgumentInjectionStore : IArgumentInjectionStore
     {
         private readonly ReadOnlyDictionary<string, string> mValues;
+        private readonly string mFilePath;
 
         public JsonFileArgumentInjectionStore(string pFilePath)
         {
+            mFilePath = pFilePath;
+
             if (File.Exists(pFilePath))
             {
                 string text = File.ReadAllText(pFilePath);
@@ -32,6 +35,9 @@ namespace Coreflow.Storage.ArgumentInjection
         {
             if (pExpectedType != typeof(string))
                 throw new NotSupportedException("Only strings are supported for " + nameof(JsonFileArgumentInjectionStore));
+
+            if (!mValues.ContainsKey(pName))
+                throw new KeyNotFoundException($"Jsonfile {mFilePath} does not contain key {pName}");
 
             return mValues[pName] ?? string.Empty;
         }

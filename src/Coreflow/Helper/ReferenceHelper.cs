@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Coreflow.Helper
 {
-    public class ReferenceHelper
+    public static class ReferenceHelper
     {
         /*
         private const string DLL_FILE_EXTENSION = ".dll";
