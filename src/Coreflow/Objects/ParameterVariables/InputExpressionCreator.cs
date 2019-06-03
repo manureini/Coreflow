@@ -68,6 +68,7 @@ namespace Coreflow.Interfaces
 
             try
             {
+                /*
                 if (ActualType != null && type != typeof(CSharpCode) && !ActualType.TypeSymbolMatchesType(type, pBuilderContext.SemanticModel))
                 {
                     ITypeSymbol typeSymbol = type.GetTypeSymbolForType(pBuilderContext.SemanticModel);
@@ -82,7 +83,7 @@ namespace Coreflow.Interfaces
                                 return; // found a conversation
                         }
                     }
-                }
+                }*/
             }
             catch (Exception e)
             {
