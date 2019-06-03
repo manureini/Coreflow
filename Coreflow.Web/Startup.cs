@@ -5,10 +5,12 @@ using Coreflow.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Coreflow.Web
@@ -69,6 +71,11 @@ namespace Coreflow.Web
                 .AddDefaultTokenProviders();
 
 
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("10.0.0.0"), 8));
+            });
+
             services.AddAuthentication().AddCookie(options => options.ExpireTimeSpan = TimeSpan.FromMinutes(30));
 
             //TODO
@@ -107,6 +114,11 @@ namespace Coreflow.Web
             //    app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UseAuthentication();
 

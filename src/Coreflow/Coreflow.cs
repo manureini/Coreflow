@@ -40,6 +40,8 @@ namespace Coreflow
 
         public CoreflowApiServer ApiServer { get; protected set; }
 
+        public string TemporaryFilesDirectory { get; protected set; }
+
         static Coreflow()
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
@@ -69,11 +71,13 @@ namespace Coreflow
             IFlowInstanceStorage pFlowInstanceStorage,
             IArgumentInjectionStore pArgumentInjectionStore,
             string pPluginDirectory = null,
-            ILoggerFactory pLoggerFactory = null)
+            ILoggerFactory pLoggerFactory = null,
+            string pTemporaryFilesDirectory = null)
         {
             FlowDefinitionStorage = pFlowDefinitionStorage;
             FlowInstanceStorage = pFlowInstanceStorage;
             ArgumentInjectionStore = pArgumentInjectionStore;
+            TemporaryFilesDirectory = pTemporaryFilesDirectory ?? Path.GetTempPath();
 
             CodeCreatorStorage = new CodeCreatorStorage(this);
             FlowDefinitionFactory = new FlowDefinitionFactory(this);
@@ -84,6 +88,16 @@ namespace Coreflow
             {
                 LoggerFactory = new LoggerFactory();
             }
+
+            if (!Directory.Exists(TemporaryFilesDirectory))
+                Directory.CreateDirectory(TemporaryFilesDirectory);
+
+            var oldTmpFiles = Directory.GetFiles(TemporaryFilesDirectory, "*.*", SearchOption.TopDirectoryOnly);
+
+            /*
+            foreach (string file in oldTmpFiles)
+                File.Delete(file);
+                */
 
             Logger = LoggerFactory.CreateLogger(typeof(Coreflow));
             FlowLogger = LoggerFactory.CreateLogger(typeof(ICompiledFlow));
@@ -120,7 +134,7 @@ namespace Coreflow
                 var files = Directory.GetFiles(pPluginDirectory, "*.dll", SearchOption.AllDirectories);
 
                 List<Assembly> loadedAssemblies = new List<Assembly>();
-                
+
                 foreach (string file in files)
                 {
                     Logger.LogDebug("Found Plugin: " + file);

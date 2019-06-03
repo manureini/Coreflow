@@ -41,7 +41,7 @@ namespace Coreflow.Web.Controllers
             using Stream readStream = file.OpenReadStream();
 
             using MemoryStream ms = new MemoryStream();
-            readStream.CopyTo(ms);          
+            readStream.CopyTo(ms);
             ms.Seek(0, SeekOrigin.Begin);
 
             string serialized = Encoding.UTF8.GetString(ms.GetBuffer());
