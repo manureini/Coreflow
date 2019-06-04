@@ -45,6 +45,7 @@
 
   <ItemGroup>
     <Folder Include="FlowInstances\" />
+    <Folder Include="tmp\" />
   </ItemGroup>
 
 </Project>

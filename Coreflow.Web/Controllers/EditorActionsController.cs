@@ -58,32 +58,21 @@ namespace Coreflow.Web.Controllers
         [HttpPost]
         public JsonResult RunFlow([FromBody] FlowEditorRequest pRequest)
         {
+            try
+            {
+                Guid flowidentifier = pRequest.FlowIdentifier;
 
-            Guid flowidentifier = pRequest.FlowIdentifier;
+                FlowDefinitionModelStorage.PersistModel(flowidentifier);
 
-            FlowDefinitionModelStorage.PersistModel(flowidentifier);
+                Program.CoreflowInstance.CompileFlows();
+                Program.CoreflowInstance.RunFlow(flowidentifier);
 
-            Program.CoreflowInstance.CompileFlows();
-            Program.CoreflowInstance.RunFlow(flowidentifier);
-
-
-            /*
-
-          // FlowInvokeResult invokeResult = FlowInvoker.Invoke(wfDef);
-
-          var factory = wfDef.GenerateFlowCode().Compile().InstanceFactory;
-
-            var resultArgs = factory.RunInstance(new Dictionary<string, object>()
-                {
-                    { "a", 1 },
-                    {"b", 2 }
-                });
-
-    */
-            string result = "";
-            //  string result = invokeResult.ExecutedInstance.GetType().GetField("result").GetValue(invokeResult.ExecutedInstance) as string;
-
-            return Json(new Response(false, result));
+                return Json(new Response(false, "Flow executed!"));
+            }
+            catch (Exception e)
+            {
+                return Json(new Response(false, e.ToString()));
+            }
         }
 
         [HttpPost]
