@@ -449,9 +449,9 @@ function UpdatePopover() {
         title: "Note",
         html: true,
         trigger: "click",
-
+        template: '<div class="popover popover-note panel" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
         content: function () {
-            var inputHtml = $('<textarea type="text" class="input-codecreator-note note-textarea" spellcheck="false" />');
+            var inputHtml = $('<textarea type="text" class="input-codecreator-note note-textarea panel" spellcheck="false" />');
             inputHtml.val($(this).data("input-text"));
             inputHtml.data("id", $(this).closest(".codecreator").data("id"));
             return inputHtml;

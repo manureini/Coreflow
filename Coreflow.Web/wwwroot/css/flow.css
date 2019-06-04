@@ -298,8 +298,10 @@ body, .panel, .table {
 
 
 #context-menu {
-    background: #a1a5a9;
-    color: #1e1e1e;
+    background: #1e1e1e;
+    border: solid;
+    border-width: 1px;
+    border-color: #7f8081;
 }
 
     #context-menu .color-box {
@@ -312,11 +314,15 @@ body, .panel, .table {
         border-width: 1px;
     }
 
-.dropdown-item:focus, .dropdown-item:hover {
-    color: unset;
-    text-decoration: unset;
-    background-color: unset;
+.dropdown-item {
+    color: #a1a5a9;
 }
+
+    .dropdown-item:focus, .dropdown-item:hover {
+        color: #babdbf;
+        text-decoration: unset;
+        background-color: unset;
+    }
 
 #context-menu-color {
     cursor: default;
@@ -368,4 +374,21 @@ body, .panel, .table {
 
 ::-webkit-scrollbar {
     width: 12px;
+}
+
+
+.popover-note {
+    background: #5b5b5b;
+    color: #a1a5a9;
+}
+
+    .popover-note .popover-header {
+        background-color: unset;
+        color: #d2d6da;
+    }
+
+.popover-note textarea {
+    background-color: #4e4d4d;
+    resize: both;
+    color: #c8cbcf;
 }

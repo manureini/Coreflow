@@ -364,8 +364,12 @@ namespace Coreflow.Web.Controllers
                 {
                     modes.CodeCreatorModels = new Dictionary<int, List<CodeCreatorModel>>();
                     modes.SequenceCount = container.SequenceCount;
-                }
 
+                    for (int i = 0; i < modes.SequenceCount; i++)
+                    {
+                        modes.CodeCreatorModels.Add(i, new List<CodeCreatorModel>());
+                    }
+                }
 
                 UpdateCodeCreatorModel(wfDefModel, destAfter, destContainer, sequenceIndex, modes);
 
