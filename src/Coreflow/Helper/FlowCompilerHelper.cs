@@ -29,7 +29,7 @@ namespace Coreflow.Helper
             FlowCompileResult ret = new FlowCompileResult();
 
 
-            pAssemblyName ??= Guid.NewGuid().ToString() + ".dll";
+            pAssemblyName ??= Guid.NewGuid().ToString();
 
             EmitResult emitResult;
 
@@ -91,7 +91,7 @@ namespace Coreflow.Helper
         {
             int compilationNumber = Interlocked.Increment(ref mCounter);
 
-            string tmpDir = Path.GetFullPath("tmp");
+            string tmpDir = Path.GetTempPath();
 
             string pdbFileName = Path.GetFileNameWithoutExtension(pAssemblyName) + "_" + compilationNumber + ".pdb";
             string dllFileName = Path.GetFileNameWithoutExtension(pAssemblyName) + "_" + compilationNumber + ".dll";

@@ -687,25 +687,3 @@ function AddBreakpoint(pLine) {
     ]);
 }
 
-
-
-function StartDownload(url, data) {
-
-    var form = $('<form></form>').attr('action', url).attr('method', 'post'); //.attr('target', '_blank')
-
-    Object.keys(data).forEach(function (key) {
-        var value = data[key];
-
-        if (value instanceof Array) {
-            value.forEach(function (v) {
-                form.append($("<input></input>").attr('type', 'hidden').attr('name', key).attr('value', v));
-            });
-        } else {
-            form.append($("<input></input>").attr('type', 'hidden').attr('name', key).attr('value', value));
-        }
-
-    });
-
-    //send request
-    form.appendTo('body').submit().remove();
-};

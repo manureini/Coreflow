@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using Coreflow.Helper;
 using System.Text;
+using System.Net.Mime;
 
 namespace Coreflow.Web.Controllers
 {
@@ -119,6 +120,20 @@ namespace Coreflow.Web.Controllers
             Program.CoreflowInstance.CodeCreatorStorage.RemoveFactory(factoryIdentifier);
 
             return RedirectToAction(nameof(Flows));
+        }
+
+        [HttpPost]
+        public FileResult DownloadBinary()
+        {
+            Program.CoreflowInstance.CompileFlows();
+            if (Program.CoreflowInstance.LastCompileResult == null)
+            {
+                return null;
+            }
+
+            string filepath = Program.CoreflowInstance.LastCompileResult.DllFilePath;
+            var fs = System.IO.File.OpenRead(filepath);
+            return File(fs, MediaTypeNames.Application.Octet, "Flows.dll");
         }
 
         public IActionResult Privacy()

@@ -17,9 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coreflow.Activities.Common"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coreflow.Repository", "Coreflow.Repository\Coreflow.Repository.csproj", "{AE0352DA-8307-4B16-A184-BEDE20334243}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coreflow.Debug", "Coreflow.Debug\Coreflow.Debug.csproj", "{15DA410A-C937-40EB-8D68-5E60696902D0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coreflow.Activities.MySQL", "Coreflow.Activities.MySQL\Coreflow.Activities.MySQL.csproj", "{72A0AD59-41DF-43B4-9BD6-3679732EC179}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coreflow.Activities.MySQL", "Coreflow.Activities.MySQL\Coreflow.Activities.MySQL.csproj", "{72A0AD59-41DF-43B4-9BD6-3679732EC179}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,10 +53,6 @@ Global
 		{AE0352DA-8307-4B16-A184-BEDE20334243}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE0352DA-8307-4B16-A184-BEDE20334243}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE0352DA-8307-4B16-A184-BEDE20334243}.Release|Any CPU.Build.0 = Release|Any CPU
-		{15DA410A-C937-40EB-8D68-5E60696902D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{15DA410A-C937-40EB-8D68-5E60696902D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{15DA410A-C937-40EB-8D68-5E60696902D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{15DA410A-C937-40EB-8D68-5E60696902D0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{72A0AD59-41DF-43B4-9BD6-3679732EC179}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{72A0AD59-41DF-43B4-9BD6-3679732EC179}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72A0AD59-41DF-43B4-9BD6-3679732EC179}.Release|Any CPU.ActiveCfg = Release|Any CPU

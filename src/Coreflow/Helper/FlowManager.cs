@@ -48,7 +48,7 @@ namespace Coreflow.Helper
                 mFactories.Clear();
 
 
-                string assemblyName = "Flows.dll";
+                string assemblyName = "Flows";
 
                 var result = FlowCompilerHelper.CompileFlowCode(fullcode, true, assemblyName);
 

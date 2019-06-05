@@ -11,18 +11,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\src\Coreflow\Coreflow.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="FlowsAssembly_1">
-      <HintPath>GeneratedAssembly.dll</HintPath>
+    <Reference Include="Flows.dll">
+      <HintPath>D:\Downloads\Flows.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Update="Flows %281%29">
+      <HintPath>D:\Downloads\Flows (1).dll</HintPath>
     </Reference>
   </ItemGroup>
   

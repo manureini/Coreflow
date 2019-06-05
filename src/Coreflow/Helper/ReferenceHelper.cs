@@ -1,81 +1,86 @@
 ﻿using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 
 namespace Coreflow.Helper
 {
     public static class ReferenceHelper
     {
-        /*
-        private const string DLL_FILE_EXTENSION = ".dll";
+        private static string mDotnetRootPath = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles"), "dotnet") + Path.DirectorySeparatorChar;
+        private static string mRefRootPath = Path.Combine(mDotnetRootPath, "packs") + Path.DirectorySeparatorChar;
 
-        private static Dictionary<string, MetadataReference> mReferences = new Dictionary<string, MetadataReference>();
-
-        public static void ReloadReferences()
+        private static string FindReferenceAssemblyIfNeeded(string pRuntimeAssembly)
         {
-            foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic))
+            if (!pRuntimeAssembly.StartsWith(mDotnetRootPath))
+                return pRuntimeAssembly;
+
+            if (pRuntimeAssembly.Contains(".Private."))
+                return null;
+
+            string dllFileName = Path.GetFileName(pRuntimeAssembly);
+
+            var refFiles = Directory.GetFiles(mRefRootPath, dllFileName, SearchOption.AllDirectories).Where(f =>
             {
-                mReferences.Add(a.GetName().Name, MetadataReference.CreateFromFile(a.Location));
+                var runtimeasm = AssemblyName.GetAssemblyName(pRuntimeAssembly);
+                var refAsm = AssemblyName.GetAssemblyName(f);
+
+                if (runtimeasm.Version != refAsm.Version)
+                    return false;
+
+                if (Encoding.UTF8.GetString(runtimeasm.GetPublicKey()) != Encoding.UTF8.GetString(refAsm.GetPublicKey()))
+                    return false;
+
+                return true;
+            });
+
+            if (refFiles.Count() > 1)
+            {
+                Console.WriteLine($"WARNING: Search for referenced assembly {dllFileName} in {mRefRootPath} has mutiple results");
             }
-        }
 
-        public static IDictionary<Assembly, MetadataReference> GetMetadataReferences(FlowDefinition pFlowDefinition)
-        {
-            Dictionary<Assembly, MetadataReference> ret = new Dictionary<Assembly, MetadataReference>();
+            string refPath = refFiles.FirstOrDefault();
 
-            /*
-            foreach (string ns in pFlowDefinition.ReferencedNamespaces)
+            if (refPath != null && File.Exists(refPath))
             {
-                IEnumerable<Assembly> assemblies = Enumerable.Empty<Assembly>();
+                return refPath;
+            }
 
-                if (pFlowDefinition.ReferencedAssemblies != null)
-                    assemblies = pFlowDefinition.ReferencedAssemblies.Where(a => a.GetTypes().FirstOrDefault(t => t.Namespace == ns) != null);
-
-                if (assemblies.Count() == 0)
-                    assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetTypes().FirstOrDefault(t => t.Namespace == ns) != null);
-
-                if (assemblies.Count() == 0)
-                    throw new Exception("Could not find any Assembly which contains the following namespace: " + ns);
-
-                foreach (Assembly assembly in assemblies)
-                    if (!ret.ContainsKey(assembly))
-                        ret.Add(assembly, MetadataReference.CreateFromFile(assembly.Location));
-            }*/
-
-        /*
-        foreach (var assembly in pFlowDefinition.ReferencedAssemblies)
-        {
-            ret.Add(assembly, MetadataReference.CreateFromFile(assembly.Location));
+            return pRuntimeAssembly;
         }
-
-
-        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-        {
-            if (!assembly.IsDynamic && assembly.Location != string.Empty)
-                ret.Add(assembly, MetadataReference.CreateFromFile(assembly.Location));
-        }
-
-        return ret;
-    }
-    */
 
         public static IEnumerable<MetadataReference> GetMetadataReferences()
         {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .Where(a => !a.IsDynamic && a.Location != string.Empty)
-                .Select(a =>
+            var dd = typeof(Enumerable).GetTypeInfo().Assembly.Location;
+            var coreDir = Directory.GetParent(dd);
+
+            var additional = AppDomain.CurrentDomain.GetAssemblies()
+            .Where(a => !a.IsDynamic && a.Location != string.Empty)
+            .Select(a =>
+            {
+                try
                 {
-                    try
-                    {
-                        return MetadataReference.CreateFromFile(a.Location);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                    return null;
-                }).Where(a => a != null);
+                    string referenceAssembly = FindReferenceAssemblyIfNeeded(a.Location);
+
+                    if (referenceAssembly == null)
+                        return null;
+
+                    return MetadataReference.CreateFromFile(referenceAssembly);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                return null;
+            }).Where(a => a != null);
+
+
+            var result = (additional).Distinct();
+
+            return result;
         }
 
 
