@@ -4,14 +4,30 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Coreflow.Helper
 {
     public static class ReferenceHelper
     {
-        private static string mDotnetRootPath = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles"), "dotnet") + Path.DirectorySeparatorChar;
-        private static string mRefRootPath = Path.Combine(mDotnetRootPath, "packs") + Path.DirectorySeparatorChar;
+        private static string mDotnetRootPath;
+        private static string mRefRootPath;
+
+
+        static ReferenceHelper()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                mDotnetRootPath = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles"), "dotnet") + Path.DirectorySeparatorChar;
+            }
+            else
+            {
+                mDotnetRootPath = Environment.GetEnvironmentVariable("DOTNET_ROOT");
+            }
+
+            mRefRootPath = Path.Combine(mDotnetRootPath, "packs") + Path.DirectorySeparatorChar;
+        }
 
         private static string FindReferenceAssemblyIfNeeded(string pRuntimeAssembly)
         {
