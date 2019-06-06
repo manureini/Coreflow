@@ -16,6 +16,7 @@ namespace Coreflow.Helper
 
         private static Dictionary<string, MetadataReference> mReferenceCache = new Dictionary<string, MetadataReference>();
 
+        private static object mLocker = new object();
 
         static ReferenceHelper()
         {
@@ -75,42 +76,42 @@ namespace Coreflow.Helper
 
         public static IEnumerable<MetadataReference> GetMetadataReferences()
         {
-            var dd = typeof(Enumerable).GetTypeInfo().Assembly.Location;
-            var coreDir = Directory.GetParent(dd);
-
-            var additional = AppDomain.CurrentDomain.GetAssemblies()
-            .Where(a => !a.IsDynamic && a.Location != string.Empty)
-            .Select(a =>
+            lock (mLocker)
             {
-                try
+                var dd = typeof(Enumerable).GetTypeInfo().Assembly.Location;
+                var coreDir = Directory.GetParent(dd);
+
+                var additional = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic && a.Location != string.Empty)
+                .Select(a =>
                 {
-                    string location = a.Location;
+                    try
+                    {
+                        string location = a.Location;
 
-                    if (mReferenceCache.ContainsKey(location))
-                        return mReferenceCache[location];
+                        if (mReferenceCache.ContainsKey(location))
+                            return mReferenceCache[location];
 
-                    string referenceAssembly = FindReferenceAssemblyIfNeeded(location);
+                        string referenceAssembly = FindReferenceAssemblyIfNeeded(location);
 
-                    if (referenceAssembly == null)
-                        return null;
+                        if (referenceAssembly == null)
+                            return null;
 
-                    var reference = MetadataReference.CreateFromFile(referenceAssembly);
+                        var reference = MetadataReference.CreateFromFile(referenceAssembly);
 
-                    mReferenceCache.Add(location, reference);
+                        mReferenceCache.Add(location, reference);
 
-                    return reference;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-                return null;
-            }).Where(a => a != null);
+                        return reference;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                    return null;
+                }).Where(a => a != null);
 
-
-            var result = (additional).Distinct();
-
-            return result;
+                return (additional).Distinct().ToArray(); //make ToArray here because of lock
+            }
         }
 
 
