@@ -17,6 +17,8 @@ var selected;
 
 $(function () {
 
+    ShowLoading();
+
     $(".codecreator").disableSelection();
     $(".codecreator-space").disableSelection();
 
@@ -364,6 +366,8 @@ $(function () {
         });
 
         SubmitCompile();
+
+        HideLoading();
     });
 
     UpdatePopover();

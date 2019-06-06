@@ -73,5 +73,13 @@ function StartDownload(url, data) {
 };
 
 
+function ShowLoading() {
+    clearTimeout($.data(document, 'loadtimer'));
+    var wait = setTimeout(() => $("body").append('<div class="loadingoverlay loading"></div>'), 150);
+    $(document).data('loadtimer', wait);
+}
 
-
+function HideLoading() {
+    clearTimeout($.data(document, 'loadtimer'));
+    $(".loadingoverlay").remove();
+}

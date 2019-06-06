@@ -153,7 +153,7 @@ function SubmitFlowArgumentChanged(pAddValue, pName, pType, pValue) {
 
 
 function SubmitMoveAfter(sourceId, destinationAfterId, destinationContainerId, sequenceIndex) {
-
+    ShowLoading();
     OnFlowChange();
 
     var postData = {};
@@ -170,6 +170,7 @@ function SubmitMoveAfter(sourceId, destinationAfterId, destinationContainerId, s
         contentType: "application/json",
         success: function (data) {
             if (data.isSuccess) {
+                HideLoading();
                 return;
             }
             alert(data.message);
@@ -181,7 +182,7 @@ function SubmitMoveAfter(sourceId, destinationAfterId, destinationContainerId, s
 }
 
 function SubmitCreateCodeCreator(newCodeCreator, destinationAfterId, destinationContainerId, sequenceIndex, type, factory) {
-
+    ShowLoading();
     OnFlowChange();
 
     var postData = {};
@@ -211,7 +212,7 @@ function SubmitCreateCodeCreator(newCodeCreator, destinationAfterId, destination
                 });
 
                 SubmitCompile();
-
+                HideLoading();
                 return;
             }
             alert(data.message);
@@ -223,7 +224,7 @@ function SubmitCreateCodeCreator(newCodeCreator, destinationAfterId, destination
 }
 
 function SubmitDeleteCodeCreator(id) {
-
+    ShowLoading();
     OnFlowChange();
 
     var postData = {};
@@ -238,6 +239,7 @@ function SubmitDeleteCodeCreator(id) {
         success: function (data) {
             if (data.isSuccess) {
                 SubmitCompile();
+                HideLoading();
                 return;
             }
             alert(data.message);
@@ -274,7 +276,7 @@ function SubmitRunFlow() {
 
 
 function SubmitSaveFlow() {
-
+    ShowLoading();
     OnFlowSave();
 
     var postData = {};
@@ -287,6 +289,7 @@ function SubmitSaveFlow() {
         contentType: "application/json",
         success: function (data) {
             if (data.isSuccess) {
+                HideLoading();
                 return;
             }
             alert(data.message);
@@ -320,6 +323,8 @@ function SubmitResetFlow() {
 }
 
 function SubmitGetGeneratedCode(id) {
+    ShowLoading();
+
     var postData = {};
     postData["FlowIdentifier"] = currentFlowIdentifier;
     postData["Id"] = id;
@@ -338,7 +343,7 @@ function SubmitGetGeneratedCode(id) {
                 dialogeditor.layout();
             }, 200);
 
-            //navigator.clipboard.writeText(data.message);
+            HideLoading();
         },
         error: function (jqXHR, textStatus, errorThrown) {
             alert(errorThrown);
