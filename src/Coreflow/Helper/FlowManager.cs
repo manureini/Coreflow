@@ -9,10 +9,8 @@ using System.Text;
 
 namespace Coreflow.Helper
 {
-
     public class FlowManager
     {
-
         internal Dictionary<Guid, FlowInstanceFactory> mFactories = new Dictionary<Guid, FlowInstanceFactory>();
 
         private CollectibleAssemblyLoadContext mAssemblyContext;
@@ -59,30 +57,11 @@ namespace Coreflow.Helper
                 {
                     mAssemblyContext.Unload();
 
-                    //GC.Collect();
+                    GC.Collect();
                     //GC.WaitForPendingFinalizers();
                 }
 
                 mAssemblyContext = new CollectibleAssemblyLoadContext();
-
-                /*
-                result.ResultAssembly.Seek(0, SeekOrigin.Begin);
-                result.ResultSymbols.Seek(0, SeekOrigin.Begin);
-
-                using (var filestream = File.OpenWrite(assemblyName))
-                {
-                    result.ResultAssembly.CopyTo(filestream);
-                };
-
-                using (var filestream = File.OpenWrite(Path.ChangeExtension(assemblyName, "pdb")))
-                {
-                    result.ResultSymbols.CopyTo(filestream);
-                };
-
-                result.ResultAssembly.Seek(0, SeekOrigin.Begin);
-                result.ResultSymbols.Seek(0, SeekOrigin.Begin);
-
-        */
 
                 Assembly asm = mAssemblyContext.LoadFromAssemblyPath(result.DllFilePath);
 

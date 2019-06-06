@@ -14,6 +14,8 @@ namespace Coreflow.Helper
         private static string mDotnetRootPath;
         private static string mRefRootPath;
 
+        private static Dictionary<string, MetadataReference> mReferenceCache = new Dictionary<string, MetadataReference>();
+
 
         static ReferenceHelper()
         {
@@ -82,12 +84,21 @@ namespace Coreflow.Helper
             {
                 try
                 {
-                    string referenceAssembly = FindReferenceAssemblyIfNeeded(a.Location);
+                    string location = a.Location;
+
+                    if (mReferenceCache.ContainsKey(location))
+                        return mReferenceCache[location];
+
+                    string referenceAssembly = FindReferenceAssemblyIfNeeded(location);
 
                     if (referenceAssembly == null)
                         return null;
 
-                    return MetadataReference.CreateFromFile(referenceAssembly);
+                    var reference = MetadataReference.CreateFromFile(referenceAssembly);
+
+                    mReferenceCache.Add(location, reference);
+
+                    return reference;
                 }
                 catch (Exception e)
                 {
