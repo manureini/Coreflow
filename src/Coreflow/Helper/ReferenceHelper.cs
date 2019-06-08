@@ -40,8 +40,9 @@ namespace Coreflow.Helper
             if (pRuntimeAssembly.Contains(".Private."))
                 return null;
 
-            if (pRuntimeAssembly.Contains("netstandard"))
-                return null;
+
+           //if (pRuntimeAssembly.Contains("netstandard"))
+           //     return null;
 
             string dllFileName = Path.GetFileName(pRuntimeAssembly);
 
