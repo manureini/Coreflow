@@ -30,52 +30,18 @@ namespace Coreflow.Test
         public void CreateCodeTestFlow1()
         {
             FlowDefinition wfdef = TestFlows.GetTestFlow1(mCoreflow);
-
-            FlowCompileResult compileResult = wfdef.GenerateFlowCode().Compile(false);
-
-            // Console.WriteLine(compileResult.FlowCode.Code);
+            mCoreflow.FlowDefinitionStorage.Add(wfdef);
+            mCoreflow.CompileFlows();
+            mCoreflow.RunFlow(wfdef.Identifier);
         }
-
 
         [TestMethod]
         public void StartTestFlow1()
         {
-            /*            FlowDefinition wfdef = TestFlows.GetTestFlow1(mCoreflow);
-
-                        FlowCompileResult compileResult = wfdef.GenerateFlowCode().Compile();
-
-                        Type Flowtype = compileResult.ResultAssembly.GetTypes().First(t => typeof(ICompiledFlow).IsAssignableFrom(t));
-
-                        Stopwatch stopwatch = new Stopwatch();
-
-                        Console.WriteLine("START wf");
-
-                        stopwatch.Start();
-
-                        ICompiledFlow wf = Activator.CreateInstance(Flowtype) as ICompiledFlow;
-                        wf.Run();
-
-                        stopwatch.Stop();
-
-                        Console.WriteLine("Invoketime: " + stopwatch.Elapsed.TotalMilliseconds + " ms");
-                        */
-        }
-
-        [TestMethod]
-        public void CheckResultTestFlow1()
-        {
-            /*  FlowDefinition wfdef = TestFlows.GetTestFlow1(mCoreflow);
-
-              FlowCompileResult compileResult = wfdef.GenerateFlowCode().Compile();
-
-              Type Flowtype = compileResult.ResultAssembly.GetTypes().First(t => typeof(ICompiledFlow).IsAssignableFrom(t));
-
-              ICompiledFlow wf = Activator.CreateInstance(Flowtype) as ICompiledFlow;
-              wf.Run();
-
-              int result = (int)wf.GetType().GetField("Result").GetValue(wf);
-
-              Assert.AreEqual(3, result); */
+            FlowDefinition wfdef = TestFlows.GetTestFlow1(mCoreflow);
+            mCoreflow.FlowDefinitionStorage.Add(wfdef);
+            mCoreflow.CompileFlows();
+            mCoreflow.RunFlow(wfdef.Identifier);
         }
 
         [TestCleanup]

@@ -10,6 +10,9 @@ namespace Coreflow.Helper
     {
         public static Type SearchType(string pTypename)
         {
+            if (pTypename == null)
+                return null;
+
             try
             {
                 var type = Type.GetType(pTypename);
