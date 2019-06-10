@@ -11,6 +11,8 @@ namespace Coreflow.Interfaces
 
         void Remove(Guid pIdentifier);
 
+        FlowDefinition Get(Guid pIdentifier);
+
         IEnumerable<FlowDefinition> GetDefinitions();
     }
 }

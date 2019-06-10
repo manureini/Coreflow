@@ -49,13 +49,9 @@ namespace Coreflow.Web.Helper
                 string factoryIdentifier = CallFlowCreatorFactory.GetIdentifier(fdef.Identifier);
                 var factory = Program.CoreflowInstance.CodeCreatorStorage.GetAllFactories().SingleOrDefault(f => f.Identifier == factoryIdentifier) as CallFlowCreatorFactory;
 
-                if (factory != null)
+                if (factory == null)
                 {
-                    factory.FlowName = fdef.Name;
-                }
-                else
-                {
-                    Program.CoreflowInstance.CodeCreatorStorage.AddCodeCreatorFactory(new CallFlowCreatorFactory(fdef));
+                    Program.CoreflowInstance.CodeCreatorStorage.AddCodeCreatorFactory(new CallFlowCreatorFactory(Program.CoreflowInstance, fdef));
                 }
 
                 mUnsavedChanges.Remove(pIdentifier);

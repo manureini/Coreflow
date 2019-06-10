@@ -47,6 +47,11 @@ namespace Coreflow.Storage
             return Enumerable.Empty<FlowDefinition>();
         }
 
+        public FlowDefinition Get(Guid pIdentifier)
+        {
+            return GetDefinitions().FirstOrDefault(d => d.Identifier == pIdentifier);
+        }
+
         public void Remove(Guid pIdentifier)
         {
             mClient.DeleteAsync("api/FlowDefinitions/" + pIdentifier).Wait();

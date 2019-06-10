@@ -1,6 +1,7 @@
 ﻿using Coreflow.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Coreflow.Storage
 {
@@ -16,6 +17,11 @@ namespace Coreflow.Storage
         public void Dispose()
         {
             mFlowDefinitions = null;
+        }
+
+        public FlowDefinition Get(Guid pIdentifier)
+        {
+            return mFlowDefinitions.FirstOrDefault(f => f.Identifier == pIdentifier);
         }
 
         public IEnumerable<FlowDefinition> GetDefinitions()

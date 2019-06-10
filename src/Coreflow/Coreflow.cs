@@ -150,7 +150,7 @@ namespace Coreflow
 
             foreach (var flow in FlowDefinitionStorage.GetDefinitions())
             {
-                CodeCreatorStorage.AddCodeCreatorFactory(new CallFlowCreatorFactory(flow));
+                CodeCreatorStorage.AddCodeCreatorFactory(new CallFlowCreatorFactory(this, flow));
             }
         }
 

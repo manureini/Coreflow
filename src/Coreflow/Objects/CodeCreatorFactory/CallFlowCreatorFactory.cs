@@ -16,18 +16,31 @@ namespace Coreflow.Objects.CodeCreatorFactory
 
         public Guid FlowIdentifier { get; }
 
-        public string FlowName { get; set; }
+        public string FlowName => FlowDefinition.Name;
 
-        public string FlowIcon { get; set; }
+        public string FlowIcon => FlowDefinition.Icon;
 
-        public List<FlowArguments> Arguments { get; }
+        public List<FlowArguments> Arguments => FlowDefinition.Arguments;
 
-        public CallFlowCreatorFactory(FlowDefinition pFlowDefinition)
+        private WeakReference<FlowDefinition> mDefinition;
+        private Coreflow mCoreflow;
+
+        public FlowDefinition FlowDefinition
         {
+            get
+            {
+                if (mDefinition.TryGetTarget(out FlowDefinition fref))
+                    return fref;
+
+                return mCoreflow.FlowDefinitionStorage.Get(FlowIdentifier);
+            }
+        }
+
+        public CallFlowCreatorFactory(Coreflow pInstance, FlowDefinition pFlowDefinition)
+        {
+            mCoreflow = pInstance;
+            mDefinition = new WeakReference<FlowDefinition>(pFlowDefinition);
             FlowIdentifier = pFlowDefinition.Identifier;
-            FlowName = pFlowDefinition.Name;
-            FlowIcon = pFlowDefinition.Icon;
-            Arguments = pFlowDefinition.Arguments;
         }
 
         public ICodeCreator Create()

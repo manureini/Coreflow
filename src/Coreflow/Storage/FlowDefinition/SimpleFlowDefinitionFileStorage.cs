@@ -37,6 +37,13 @@ namespace Coreflow.Storage
             return ret;
         }
 
+        public FlowDefinition Get(Guid pIdentifier)
+        {
+            string filename = Path.Combine(mPath, pIdentifier.ToString());
+            string text = File.ReadAllText(filename);
+            return FlowDefinitionSerializer.Deserialize(text, mCoreflow);
+        }
+
         public void SetCoreflow(Coreflow pCoreflow)
         {
             mCoreflow = pCoreflow;

@@ -315,7 +315,6 @@ namespace Coreflow.Web.Controllers
                 if (int.TryParse(pData.SequenceIndex, out int sindex))
                     sequenceIndex = sindex;
 
-
                 var factory = Program.CoreflowInstance.CodeCreatorStorage.GetAllFactories().Single(f => f.Identifier == pData.CustomFactory);
 
                 var tmpcc = factory.Create();
