@@ -29,7 +29,7 @@ namespace Coreflow.Helper
             FlowCompileResult ret = new FlowCompileResult();
 
 
-            pAssemblyName ??= Guid.NewGuid().ToString();
+            pAssemblyName = pAssemblyName ?? Guid.NewGuid().ToString();
 
             EmitResult emitResult;
 
@@ -48,7 +48,7 @@ namespace Coreflow.Helper
 
             if (!emitResult.Success)
             {
-                string[] codeLines = pCode.Split("\n");
+                string[] codeLines = pCode.Split('\n');
 
                 IEnumerable<Diagnostic> failures = emitResult.Diagnostics.Where(
                     diagnostic => diagnostic.IsWarningAsError ||
@@ -166,9 +166,11 @@ namespace Coreflow.Helper
               .AddSyntaxTrees(tree)
               .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
-            using MemoryStream ms = new MemoryStream();
-            EmitResult emitResult = compilation.Emit(ms);
-            return emitResult;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                EmitResult emitResult = compilation.Emit(ms);
+                return emitResult;
+            }
         }
 
         public static Compilation CreateCompilation(string pAssemblyName, SyntaxTree syntaxTree)
@@ -214,7 +216,7 @@ namespace Coreflow.Helper
 
         public static int GetLineOfIdentifier(string pCode, Guid pIdentifier)
         {
-            string[] code = pCode.Split(Environment.NewLine);
+            string[] code = pCode.Split('\n');
 
             string guid = pIdentifier.ToString();
 

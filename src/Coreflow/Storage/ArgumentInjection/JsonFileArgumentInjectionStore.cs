@@ -24,7 +24,7 @@ namespace Coreflow.Storage.ArgumentInjection
             else
             {
                 var example = new Dictionary<string, string>();
-                example.TryAdd("key", "value");
+                example.Add("key", "value");
 
                 string text = JsonConvert.SerializeObject(example, Formatting.Indented);
                 File.WriteAllText(mFilePath, text);

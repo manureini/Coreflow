@@ -13,7 +13,7 @@ namespace Coreflow.Helper
     {
         internal Dictionary<Guid, FlowInstanceFactory> mFactories = new Dictionary<Guid, FlowInstanceFactory>();
 
-        private CollectibleAssemblyLoadContext mAssemblyContext;
+        //  private AssemblyCon mAssemblyContext;
 
         private string mFullCode = "";
 
@@ -53,17 +53,20 @@ namespace Coreflow.Helper
                 if (!result.Successful)
                     throw new Exception("Flows did not compile!");
 
-                if (mAssemblyContext != null)
-                {
-                    mAssemblyContext.Unload();
+                /*   if (mAssemblyContext != null)
+                   {
+                       mAssemblyContext.Unload();
 
-                    GC.Collect();
-                    //GC.WaitForPendingFinalizers();
-                }
+                       GC.Collect();
+                       //GC.WaitForPendingFinalizers();
+                   }
 
-                mAssemblyContext = new CollectibleAssemblyLoadContext();
+                   mAssemblyContext = new CollectibleAssemblyLoadContext();
 
-                Assembly asm = mAssemblyContext.LoadFromAssemblyPath(result.DllFilePath);
+                   Assembly asm = mAssemblyContext.LoadFromAssemblyPath(result.DllFilePath);*/
+
+                Assembly asm = Assembly.LoadFile(result.DllFilePath);
+
 
                 IEnumerable<Type> flows = asm.GetTypes().Where(t => typeof(ICompiledFlow).IsAssignableFrom(t));
 

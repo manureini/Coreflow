@@ -4,6 +4,6 @@ namespace Coreflow.Interfaces
 {
     public interface IArgumentInjectionStore
     {
-        public object GetArgumentValue(string pName, Type pExpectedType);
+        object GetArgumentValue(string pName, Type pExpectedType);
     }
 }

@@ -104,7 +104,7 @@ namespace Coreflow.Objects
 
         private string Reverse(string pStr)
         {
-            return string.Join(Environment.NewLine, pStr.Split(Environment.NewLine).Reverse());
+            return string.Join(Environment.NewLine, pStr.Split('\n').Reverse());
         }
 
         public override string ToString()

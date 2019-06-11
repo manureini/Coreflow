@@ -39,18 +39,20 @@ namespace Coreflow.Web.Controllers
         {
             var file = Request.Form.Files.FirstOrDefault();
 
-            using Stream readStream = file.OpenReadStream();
+            using (Stream readStream = file.OpenReadStream())
+            using (MemoryStream ms = new MemoryStream())
+            {
+                readStream.CopyTo(ms);
+                ms.Seek(0, SeekOrigin.Begin);
 
-            using MemoryStream ms = new MemoryStream();
-            readStream.CopyTo(ms);
-            ms.Seek(0, SeekOrigin.Begin);
+                string serialized = Encoding.UTF8.GetString(ms.GetBuffer());
 
-            string serialized = Encoding.UTF8.GetString(ms.GetBuffer());
+                var fdef = FlowDefinitionSerializer.Deserialize(serialized, Program.CoreflowInstance);
+                Program.CoreflowInstance.FlowDefinitionStorage.Add(fdef);
 
-            var fdef = FlowDefinitionSerializer.Deserialize(serialized, Program.CoreflowInstance);
-            Program.CoreflowInstance.FlowDefinitionStorage.Add(fdef);
+                return Json(new Response(true, "ok"));
 
-            return Json(new Response(true, "ok"));
+            }
         }
 
 

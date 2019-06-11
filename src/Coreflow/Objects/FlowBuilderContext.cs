@@ -69,12 +69,12 @@ namespace Coreflow.Objects
         public void UpdateCurrentSymbols()
         {
             string code = mCodeWriter.ToString();
-            string[] codeLines = code.Split("\n");
+            string[] codeLines = code.Split('\n');
 
             // int loc = FlowCompilerHelper.GetLineOfCode(codeLines, pIdentifiable.Identifier); 
 
             string topCode = mCodeWriter.ToStringTop();
-            string[] topCodeLines = topCode.Split("\n");
+            string[] topCodeLines = topCode.Split('\n');
 
             int loc = topCodeLines.Length;
 

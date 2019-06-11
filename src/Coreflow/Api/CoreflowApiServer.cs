@@ -53,31 +53,31 @@ namespace Coreflow.Api
 
         public void HandleClient(object obj)
         {
-            using TcpClient client = (TcpClient)obj;
-
-            using StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.UTF8);
-            using StreamReader sReader = new StreamReader(client.GetStream(), Encoding.UTF8);
-
-            while (true)
+            using (TcpClient client = (TcpClient)obj)
+            using (StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.UTF8))
+            using (StreamReader sReader = new StreamReader(client.GetStream(), Encoding.UTF8))
             {
-                string sData = sReader.ReadLine();
-
-                if (string.IsNullOrWhiteSpace(sData))
-                    break;
-
-                if (sData == nameof(LastCompiledFlowInfo))
+                while (true)
                 {
-                    var respObj = LastCompiledFlowInfo.FromCompileResult(mCoreFlow.LastCompileResult);
-                    var resp = JsonConvert.SerializeObject(respObj);
+                    string sData = sReader.ReadLine();
 
-                    sWriter.WriteLine(resp);
-                    sWriter.Flush();
+                    if (string.IsNullOrWhiteSpace(sData))
+                        break;
+
+                    if (sData == nameof(LastCompiledFlowInfo))
+                    {
+                        var respObj = LastCompiledFlowInfo.FromCompileResult(mCoreFlow.LastCompileResult);
+                        var resp = JsonConvert.SerializeObject(respObj);
+
+                        sWriter.WriteLine(resp);
+                        sWriter.Flush();
+                    }
                 }
-            }
 
-            sWriter.Close();
-            sReader.Close();
-            client.Close();
+                sWriter.Close();
+                sReader.Close();
+                client.Close();
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
-using System.Runtime.Loader;
 
 namespace Coreflow.Objects
 {
+    /*
     public class CollectibleAssemblyLoadContext : AssemblyLoadContext
     {
         public CollectibleAssemblyLoadContext() : base(isCollectible: true)
@@ -12,5 +12,5 @@ namespace Coreflow.Objects
         {
             return null;
         }
-    }
+    }*/
 }

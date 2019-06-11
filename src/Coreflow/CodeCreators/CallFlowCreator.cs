@@ -41,9 +41,9 @@ namespace Coreflow.CodeCreators
 
             List<CodeCreatorParameter> parameterList = new List<CodeCreatorParameter>();
 
-            pArguments ??= new List<FlowArguments>();
+            var args = pArguments ?? new List<FlowArguments>();
 
-            foreach (var entry in pArguments)
+            foreach (var entry in args)
             {
                 parameterList.Add(new CodeCreatorParameter()
                 {

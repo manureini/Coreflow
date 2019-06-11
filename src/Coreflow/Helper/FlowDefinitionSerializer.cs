@@ -48,7 +48,8 @@ namespace Coreflow.Helper
             var xDirection = element.Attribute("Direction");
             var xExpression = element.Attribute("Expression");
 
-            VariableDirection direction = Enum.Parse<VariableDirection>(xDirection.Value);
+            VariableDirection direction = VariableDirectionHelper.Parse(xDirection.Value);
+
             return new FlowArguments(xName.Value, Type.GetType(xType.Value), direction, xExpression?.Value);
         }
 
@@ -102,7 +103,7 @@ namespace Coreflow.Helper
             var xCategory = element.Attribute("Category");
             var xDirection = element.Attribute("Direction");
 
-            return new CodeCreatorParameter(xName.Value, xDisplayName.Value, TypeHelper.SearchType(xType.Value), xCategory.Value, Enum.Parse<VariableDirection>(xDirection.Value));
+            return new CodeCreatorParameter(xName.Value, xDisplayName.Value, TypeHelper.SearchType(xType.Value), xCategory.Value, VariableDirectionHelper.Parse(xDirection.Value));
         }
 
         public void Serializer(XmlWriter writer, CodeCreatorParameter obj)

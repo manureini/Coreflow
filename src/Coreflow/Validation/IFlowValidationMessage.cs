@@ -7,10 +7,10 @@ namespace Coreflow.Validation.Messages
 {
     public interface IFlowValidationMessage : IIdentifiable
     {
-        public FlowValidationMessageType MessageType { get; }
+        FlowValidationMessageType MessageType { get; }
 
-        public bool IsFatalError { get; }
+        bool IsFatalError { get; }
 
-        public string Message { get; }
+        string Message { get; }
     }
 }

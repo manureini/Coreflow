@@ -87,7 +87,7 @@ namespace Coreflow.Web
             services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = false;
-            }).AddNewtonsoftJson().AddRazorRuntimeCompilation();
+            }); //.AddNewtonsoftJson().AddRazorRuntimeCompilation();
 
             services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
             services.AddSession();
