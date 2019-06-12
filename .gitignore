@@ -268,3 +268,4 @@ Coreflow.Web/Database.db
 Coreflow.Repository/Flows/*
 Coreflow.Web/tmp/*
 
+Coreflow.Web/Libraries/*

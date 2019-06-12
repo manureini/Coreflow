@@ -7,9 +7,13 @@
 
   <ItemGroup>
     <Compile Remove="Flows\**" />
+    <Compile Remove="Libraries\**" />
     <Content Remove="Flows\**" />
+    <Content Remove="Libraries\**" />
     <EmbeddedResource Remove="Flows\**" />
+    <EmbeddedResource Remove="Libraries\**" />
     <None Remove="Flows\**" />
+    <None Remove="Libraries\**" />
   </ItemGroup>
 
   <ItemGroup>
