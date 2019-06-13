@@ -2,6 +2,7 @@
 using Coreflow.Storage;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,13 +11,13 @@ namespace Coreflow.Test.Performance
 {
     class Program
     {
-        public static int count = 5_000_000;
+        public static int count = 100_000;
         public static Coreflow mCoreflow;
         public static Guid mIdentifier;
         public static CountdownEvent mCountdownEvent;
 
         static void Main(string[] args)
-        {             
+        {
             Stopwatch watchInit = new Stopwatch();
             watchInit.Start();
 
@@ -35,8 +36,8 @@ namespace Coreflow.Test.Performance
 
             Console.WriteLine("init: " + watchInit.GetNanoseconds() + "ns");
 
-            {
 
+            {
                 Stopwatch watchFirst = new Stopwatch();
 
                 watchFirst.Start();
@@ -46,27 +47,23 @@ namespace Coreflow.Test.Performance
                 Console.WriteLine("first: " + watchFirst.GetNanoseconds() + "ns");
             }
 
+            File.Delete("out");
+
             {
                 Stopwatch watchSecond = new Stopwatch();
 
-                watchSecond.Start();
-                mCoreflow.RunFlow(mIdentifier);
-                watchSecond.Stop();
+                for (int j = 1; j < 100; j++)
+                {
+                    watchSecond.Reset();
+                    watchSecond.Start();
+                    for (int i = 0; i < j; i++)
+                        mCoreflow.RunFlow(mIdentifier);
+                    watchSecond.Stop();
 
-                Console.WriteLine("second single: " + watchSecond.GetNanoseconds() + "ns");
-            }
-
-            {
-                Stopwatch watchFive = new Stopwatch();
-
-                watchFive.Start();
-
-                for (int i = 0; i < 5; i++)
-                    mCoreflow.RunFlow(mIdentifier);
-
-                watchFive.Stop();
-
-                Console.WriteLine("5x start: " + (watchFive.GetNanoseconds() / 5) + "ns");
+                    string text = j + ":  " + watchSecond.GetNanoseconds() + "ns";
+                    File.AppendAllText("out", Environment.NewLine + text);
+                    Console.WriteLine(text);
+                }
             }
 
 
@@ -81,7 +78,7 @@ namespace Coreflow.Test.Performance
 
                 watchMany.Stop();
 
-                Console.WriteLine("many: " + (watchMany.GetNanoseconds() / count) + "ns");
+                Console.WriteLine("many: " + (watchMany.GetNanoseconds()) + "ns");
             }
 
 
@@ -107,9 +104,7 @@ namespace Coreflow.Test.Performance
 
                 watchMultiThread.Stop();
 
-                Console.WriteLine("multithread: " + (watchMultiThread.GetNanoseconds() / (count * threadCount)) + "ns");
-
-
+                Console.WriteLine("multithread: " + (watchMultiThread.GetNanoseconds()) + "ns");
             }
 
 
@@ -119,13 +114,12 @@ namespace Coreflow.Test.Performance
         {
             var factory = mCoreflow.FlowManager.GetFactory(mIdentifier);
 
-            PiCalculator calc = new PiCalculator();
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < 100_000; i++)
             {
-                //  factory.RunInstance();
+                factory.RunInstance();
 
-                calc.GetPi(20, 3_000_000);
+                //  calc.GetPi(20, 3_000_000);
 
             }
 
