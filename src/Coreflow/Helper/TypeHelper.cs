@@ -45,7 +45,7 @@ namespace Coreflow.Helper
                 return GetCodeForEmptyIEnumerable(pType);
             }
 
-            return "default(" + pType.FullName + ")";
+            return "default(global::" + pType.FullName + ")";
         }
 
         public static string GetCodeForEmptyIEnumerable(Type pType)
@@ -55,7 +55,7 @@ namespace Coreflow.Helper
 
             Type genericType = pType.GenericTypeArguments.Single();
 
-            return $"Enumerable.Empty<{genericType.FullName}>()";
+            return $"Enumerable.Empty<global::{genericType.FullName}>()";
         }
 
         public static bool IsValidVariableName(string pName)
