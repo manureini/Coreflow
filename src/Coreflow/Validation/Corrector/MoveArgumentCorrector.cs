@@ -20,7 +20,7 @@ namespace Coreflow.Validation.Corrector
 
         public override bool CanCorrect()
         {
-            if (Message.MessageType != FlowValidationMessageType.ArgumentButNoParameter)
+            if (!(Message is ArgumentButNoParameterMessage))
                 return false;
 
             var ccmsg = Message as ArgumentButNoParameterMessage;

@@ -13,7 +13,8 @@ namespace Coreflow.Validation
             typeof(AddArgumentCorrector),
             typeof(DeleteArgumentCorrector),
             typeof(MoveArgumentCorrector),
-            typeof(ChangeArgumentTypeCorrector)
+            typeof(ChangeArgumentTypeCorrector),
+            typeof(DeleteCodeCreatorCorrector)
         };
 
         private static ICorrector CreateCorrector(Type pType, FlowDefinition pFlowDefinition, List<IFlowValidationMessage> pMessages, IFlowValidationMessage pMessage)

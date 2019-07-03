@@ -11,9 +11,7 @@ namespace Coreflow.Validation.Messages
     {
         public string Message => $"Parameter {Parameter.Name} is defined, but there is no argument with that name.";
 
-        public FlowValidationMessageType MessageType => FlowValidationMessageType.ParameterButNoArgument;
-
-        public bool IsFatalError => false;
+        public bool IsFatalError => true;
 
         public string CodeCreatorTypeIdentifier { get; }
 

@@ -387,8 +387,14 @@ body, .panel, .table {
         color: #d2d6da;
     }
 
-.popover-note textarea {
-    background-color: #4e4d4d;
-    resize: both;
-    color: #c8cbcf;
+    .popover-note textarea {
+        background-color: #4e4d4d;
+        resize: both;
+        color: #c8cbcf;
+    }
+
+
+.accordion > .card:only-of-type {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
 }

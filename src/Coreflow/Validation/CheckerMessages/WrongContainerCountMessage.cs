@@ -8,11 +8,9 @@ namespace Coreflow.Validation.Messages
     {
         public string Message => "The container count is inconsistent";
 
-        public FlowValidationMessageType MessageType => FlowValidationMessageType.WrongCodeCreatorContainerCount;
-
         public Guid Identifier { get; set; }
 
-        public bool IsFatalError => false;
+        public bool IsFatalError => true;
 
         public int CurrentCount { get; }
 

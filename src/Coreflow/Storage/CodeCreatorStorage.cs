@@ -2,6 +2,7 @@
 using Coreflow.Helper;
 using Coreflow.Interfaces;
 using Coreflow.Objects;
+using Coreflow.Objects.CodeCreatorFactory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,7 +64,10 @@ namespace Coreflow.Storage
             if (mDefaultConstructorFactories.ContainsKey(type))
                 return mDefaultConstructorFactories[type];
 
-            return mCustomCodeCCreatorFactories[pFactoryIdentifier];
+            if (pFactoryIdentifier != null && mCustomCodeCCreatorFactories.ContainsKey(pFactoryIdentifier))
+                return mCustomCodeCCreatorFactories[pFactoryIdentifier];
+
+            return new CodeCreatorMissingFactory(pType, pFactoryIdentifier);
         }
 
         public void RemoveFactory(string pFactoryIdentifier)

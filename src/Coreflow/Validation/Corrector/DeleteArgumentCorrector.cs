@@ -17,7 +17,7 @@ namespace Coreflow.Validation.Corrector
 
         public override bool CanCorrect()
         {
-            return Message.MessageType == FlowValidationMessageType.ArgumentButNoParameter;
+            return Message is ArgumentButNoParameterMessage;
         }
 
         public override object GetData()

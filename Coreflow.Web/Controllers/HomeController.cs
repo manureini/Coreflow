@@ -55,7 +55,6 @@ namespace Coreflow.Web.Controllers
             }
         }
 
-
         public IActionResult Editor(Guid id)
         {
             if (id == Guid.Empty)

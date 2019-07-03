@@ -114,6 +114,33 @@ namespace Coreflow
         }
 
 
+
+        public ICodeCreator FindParentCodeCreatorOf(Guid pCodeCreatorIdentifier)
+        {
+            if (CodeCreator.Identifier == pCodeCreatorIdentifier)
+                return null;
+
+            return FindParentCodeCreatorOf(CodeCreator, pCodeCreatorIdentifier);
+        }
+
+        private ICodeCreator FindParentCodeCreatorOf(ICodeCreator pCodeCreator, Guid pCodeCreatorIdentifier)
+        {
+            if (pCodeCreator is ICodeCreatorContainerCreator container)
+                foreach (var ccContainer in container.CodeCreators)
+                {
+                    foreach (var cc in ccContainer)
+                    {
+                        if (cc.Identifier == pCodeCreatorIdentifier)
+                            return container;
+
+                        return FindParentCodeCreatorOf(cc, pCodeCreatorIdentifier);
+                    }
+                }
+
+            return null;
+        }
+
+
         public FlowCode GenerateFlowCode()
         {
             return FlowBuilderHelper.GenerateFlowCode(this);

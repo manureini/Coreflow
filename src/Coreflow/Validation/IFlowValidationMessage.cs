@@ -7,8 +7,6 @@ namespace Coreflow.Validation.Messages
 {
     public interface IFlowValidationMessage : IIdentifiable
     {
-        FlowValidationMessageType MessageType { get; }
-
         bool IsFatalError { get; }
 
         string Message { get; }

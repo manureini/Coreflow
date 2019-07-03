@@ -16,6 +16,7 @@ namespace Coreflow.Validation
             new ParameterButNoArgumentChecker(),
             new WrongContainerCountChecker(),
             new ArgumentWrongTypeChecker(),
+            new MissingCodeCreatorChecker()
         };
 
         public static FlowValidationResult Validate(FlowDefinition pFlowDefinition)

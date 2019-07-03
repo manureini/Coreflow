@@ -42,22 +42,5 @@ namespace Coreflow.Validation.Checker
             msg.CodeCreatorIdentifiers.Add(pCodeCreator.Identifier);
         }
 
-
-        /*
-        private void AddToResult<T>(ref List<IFlowValidationMessage> pMessages, ICodeCreator pCodeCreator, CodeCreatorParameter pParameter, Func<IFlowValidationMessage, bool> pFilter)
-        {
-            string typeIdentifier = pCodeCreator.GetTypeIdentifier();
-
-            T msg = (T)pMessages.Where(m => m is T).FirstOrDefault(pFilter);
-
-            if (msg == null)
-            {
-                pMessages.Add(new ParameterButNoArgumentMessage(typeIdentifier, pParameter, pCodeCreator.Identifier));
-                return;
-            }
-
-            msg.CodeCreatorIdentifiers.Add(pCodeCreator.Identifier);
-        }*/
-
     }
 }

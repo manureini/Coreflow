@@ -11,9 +11,7 @@ namespace Coreflow.Validation.CheckerMessages
     {
         public string Message => $"Type of argument {Parameter.Name} is wrong";
 
-        public FlowValidationMessageType MessageType => FlowValidationMessageType.ArgumentWrongType;
-
-        public bool IsFatalError => false;
+        public bool IsFatalError => true;
 
         public string CodeCreatorTypeIdentifier { get; }
 
