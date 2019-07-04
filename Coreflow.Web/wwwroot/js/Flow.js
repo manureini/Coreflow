@@ -245,8 +245,7 @@ $(function () {
     $("#ResetFlowbtn").click(SubmitResetFlow);
 
     $(document).on("change", ".input-displayname", function () {
-        var ccid = $(this).parents("div").eq(0).data("id");
-        //   var ccid = $(this).parent().closest('div').data("id");
+        var ccid = $(this).closest(".codecreator").data("id");
 
         if ($(this).attr('id') == "input-flow-name") {
             ccid = "flow-name";
