@@ -6,24 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="GeneratedAssembly.dll" />
-    <None Remove="GeneratedAssembly.pdb" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\src\Coreflow\Coreflow.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Flows.dll">
-      <HintPath>D:\Downloads\Flows.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Update="Flows %281%29">
-      <HintPath>D:\Downloads\Flows (1).dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  
 </Project>

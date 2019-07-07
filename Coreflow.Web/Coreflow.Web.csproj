@@ -8,22 +8,14 @@
   <ItemGroup>
     <Compile Remove="Flows\**" />
     <Compile Remove="Libraries\**" />
-    <Content Remove="Flows\**" />
-    <Content Remove="Libraries\**" />
     <EmbeddedResource Remove="Flows\**" />
     <EmbeddedResource Remove="Libraries\**" />
     <None Remove="Flows\**" />
     <None Remove="Libraries\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="LastCompiledCode.cs" />
-    <Compile Remove="LastCompiledCodeFormatted.cs" />
-    <Compile Remove="LastGeneratedCode.cs" />
-  </ItemGroup>
 
   <ItemGroup>
-    <None Remove="c90ee65b-2726-4f0f-b866-053f3c138cf9 - Copy" />
     <None Remove="Database.db" />
   </ItemGroup>
 
@@ -45,11 +37,6 @@
     <Content Update="Views\Account\Login.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="FlowInstances\" />
-    <Folder Include="tmp\" />
   </ItemGroup>
 
 </Project>

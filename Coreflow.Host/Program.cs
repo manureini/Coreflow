@@ -43,8 +43,6 @@ namespace Coreflow.Host
         {
             Thread.Sleep(3000);
 
-            FlowRunner.RunFlow();
-
             var configureNamedOptions = new ConfigureNamedOptions<ConsoleLoggerOptions>("", null);
             var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
             var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleLoggerOptions>>(), new OptionsCache<ConsoleLoggerOptions>());
