@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Coreflow.Runtime.Storage.FlowDefinition
+namespace Coreflow.Runtime.Storage
 {
     public class PreCompiledAssemblyFlowDefinitionStorage : IFlowDefinitionStorage
     {

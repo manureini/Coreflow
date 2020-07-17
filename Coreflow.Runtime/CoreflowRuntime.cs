@@ -1,5 +1,5 @@
 ﻿using Coreflow.Interfaces;
-using Coreflow.Runtime.Storage.FlowDefinition;
+using Coreflow.Runtime.Storage;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

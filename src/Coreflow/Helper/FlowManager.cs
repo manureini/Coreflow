@@ -4,8 +4,6 @@ using Coreflow.Runtime;
 using Coreflow.Runtime.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -13,9 +11,6 @@ namespace Coreflow.Helper
 {
     public class FlowManager : RuntimeFlowManager
     {
-
-        //  private AssemblyCon mAssemblyContext;
-
         private string mFullCode = "";
 
         public FlowManager(CoreflowRuntime pCoreflow) : base(pCoreflow)
@@ -28,11 +23,28 @@ namespace Coreflow.Helper
             {
                 var combinedCode = new StringBuilder();
 
+                List<string> typenames = new List<string>();
+
                 foreach (var flow in pFlows)
                 {
                     FlowCode fcode = FlowBuilderHelper.GenerateFlowCode((FlowDefinition)flow);
                     combinedCode.Append(fcode.Code);
+
+                    typenames.Add($"typeof(global::{fcode.FullGeneratedTypeName})");
                 }
+
+                combinedCode.AppendLine("public static class GeneratedFlowsInfo { ");
+
+                combinedCode.AppendLine("public static readonly global::System.Type[] FlowTypes = new global::System.Type[] {");
+
+                if (typenames.Count > 0)
+                {
+                    combinedCode.Append(string.Join(",", typenames));
+                }
+
+                combinedCode.AppendLine(" };");
+
+                combinedCode.AppendLine(" }");
 
                 string fullcode = combinedCode.ToString();
 

@@ -53,6 +53,8 @@ namespace Coreflow
 
             string flowid = pFlowDefinition.Identifier.ToString().ToVariableName();
 
+            ret.FullGeneratedTypeName = FLOW_NAMESPACE_PREFIX + flowid + "." + FLOW_CLASS_PREFIX + flowid;
+
             //   cw.AppendLineTop("[assembly: global::System.Runtime.Versioning.TargetFrameworkAttribute(\".NETCoreApp, Version = v3.0\", FrameworkDisplayName = \"\")]");
 
             cw.AppendLineTop("namespace " + FLOW_NAMESPACE_PREFIX + flowid + " {");
