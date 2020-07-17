@@ -269,3 +269,4 @@ Coreflow.Repository/Flows/*
 Coreflow.Web/tmp/*
 
 Coreflow.Web/Libraries/*
+Coreflow.Web/Plugins/*
