@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Coreflow.Interfaces
+namespace Coreflow.Runtime
 {
     public interface IIdentifiable
     {

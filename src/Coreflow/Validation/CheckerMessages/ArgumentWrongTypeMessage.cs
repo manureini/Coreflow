@@ -3,7 +3,6 @@ using Coreflow.Objects;
 using Coreflow.Validation.Messages;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Coreflow.Validation.CheckerMessages
 {

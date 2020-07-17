@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Coreflow.Objects
+﻿namespace Coreflow.Objects
 {
     /*
     public class CollectibleAssemblyLoadContext : AssemblyLoadContext

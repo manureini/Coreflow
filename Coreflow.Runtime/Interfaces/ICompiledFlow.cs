@@ -1,9 +1,8 @@
-﻿using Coreflow.Runtime;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 
-namespace Coreflow.Interfaces
+namespace Coreflow.Runtime
 {
     public interface ICompiledFlow
     {

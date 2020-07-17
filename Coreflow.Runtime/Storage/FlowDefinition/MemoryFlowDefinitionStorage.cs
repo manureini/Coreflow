@@ -1,11 +1,8 @@
-﻿using Coreflow.Interfaces;
-using Coreflow.Runtime;
-using Coreflow.Runtime.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Coreflow.Storage
+namespace Coreflow.Runtime.Storage
 {
     public class MemoryFlowDefinitionStorage : IFlowDefinitionStorage
     {

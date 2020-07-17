@@ -1,6 +1,5 @@
 ﻿using Coreflow.Objects;
 using Coreflow.Runtime;
-using Coreflow.Runtime.Interfaces;
 using ExtendedXmlSerializer.Configuration;
 using ExtendedXmlSerializer.ExtensionModel.Content;
 using ExtendedXmlSerializer.ExtensionModel.Xml;

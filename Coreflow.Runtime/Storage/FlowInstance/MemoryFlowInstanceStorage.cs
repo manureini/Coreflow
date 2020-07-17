@@ -1,8 +1,7 @@
-﻿using Coreflow.Interfaces;
-using Coreflow.Objects;
+﻿using Coreflow.Objects;
 using System.Collections.Generic;
 
-namespace Coreflow.Storage
+namespace Coreflow.Runtime.Storage
 {
     public class MemoryFlowInstanceStorage : IFlowInstanceStorage
     {

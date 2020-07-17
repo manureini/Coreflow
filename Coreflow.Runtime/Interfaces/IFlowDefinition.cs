@@ -1,9 +1,4 @@
-﻿using Coreflow.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Coreflow.Runtime.Interfaces
+﻿namespace Coreflow.Runtime
 {
     public interface IFlowDefinition : IIdentifiable
     {

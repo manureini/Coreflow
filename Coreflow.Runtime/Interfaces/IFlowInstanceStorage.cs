@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Coreflow.Interfaces
+namespace Coreflow.Runtime
 {
     public interface IFlowInstanceStorage : IDisposable
     {

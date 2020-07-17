@@ -1,8 +1,7 @@
-﻿using Coreflow.Runtime.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Coreflow.Interfaces
+namespace Coreflow.Runtime
 {
     public interface IFlowDefinitionStorage : IDisposable
     {

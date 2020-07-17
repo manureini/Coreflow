@@ -1,8 +1,7 @@
-﻿using Coreflow.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 
-namespace Coreflow.Storage
+namespace Coreflow.Runtime.Storage
 {
     public class DictionaryArgumentInjectionStore : IArgumentInjectionStore
     {

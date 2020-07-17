@@ -1,6 +1,5 @@
 ﻿using Coreflow.Interfaces;
 using Coreflow.Objects;
-using System;
 using System.IO;
 
 namespace Coreflow.Activities.OrangePi

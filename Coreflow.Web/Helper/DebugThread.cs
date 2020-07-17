@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Coreflow.Web.Helper
+﻿namespace Coreflow.Web.Helper
 {
     public class DebugThread
     {

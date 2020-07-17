@@ -1,5 +1,4 @@
-﻿using Coreflow.Helper;
-using Microsoft.VisualStudio.Shared.VSCodeDebugProtocol;
+﻿using Microsoft.VisualStudio.Shared.VSCodeDebugProtocol;
 using Microsoft.VisualStudio.Shared.VSCodeDebugProtocol.Messages;
 using System;
 using System.Collections.Concurrent;
@@ -7,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Coreflow.Web.Helper
 {
