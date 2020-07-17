@@ -101,14 +101,14 @@ namespace Coreflow.Web.Controllers
 
         public IActionResult Flows()
         {
-            var Flows = Program.CoreflowInstance.FlowDefinitionStorage.GetDefinitions();
-            return View(Flows);
+            var flows = Program.CoreflowInstance.FlowDefinitionStorage.GetDefinitions().Select(f => f as FlowDefinition);
+            return View(flows);
         }
 
         public IActionResult Instances()
         {
-            var Flows = Program.CoreflowInstance.FlowInstanceStorage.GetInstances();
-            return View(Flows);
+            var instances = Program.CoreflowInstance.FlowInstanceStorage.GetInstances();
+            return View(instances);
         }
 
         public IActionResult DeleteFlow(Guid id)

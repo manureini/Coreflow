@@ -1,5 +1,7 @@
 ﻿using Coreflow.Helper;
 using Coreflow.Interfaces;
+using Coreflow.Runtime;
+using Coreflow.Runtime.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,7 +16,7 @@ namespace Coreflow.Storage
     {
         private static readonly HttpClient mClient = new HttpClient();
 
-        private Coreflow mCoreflow;
+        private CoreflowRuntime mCoreflow;
 
         public RepositoryFlowDefinitionStorage(string pUrl)
         {
@@ -23,7 +25,7 @@ namespace Coreflow.Storage
             mClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public void Add(FlowDefinition pFlowDefinition)
+        public void Add(IFlowDefinition pFlowDefinition)
         {
             string serialized = JsonConvert.SerializeObject(FlowDefinitionSerializer.Serialize(pFlowDefinition));
 
@@ -33,7 +35,7 @@ namespace Coreflow.Storage
                 throw new Exception("Flow could not be added!");
         }
 
-        public IEnumerable<FlowDefinition> GetDefinitions()
+        public IEnumerable<IFlowDefinition> GetDefinitions()
         {
             var response = mClient.GetAsync("api/FlowDefinitions").Result;
 
@@ -44,10 +46,10 @@ namespace Coreflow.Storage
                 return serializedFlows.Select(f => FlowDefinitionSerializer.Deserialize(f, mCoreflow));
             }
 
-            return Enumerable.Empty<FlowDefinition>();
+            return Enumerable.Empty<IFlowDefinition>();
         }
 
-        public FlowDefinition Get(Guid pIdentifier)
+        public IFlowDefinition Get(Guid pIdentifier)
         {
             return GetDefinitions().FirstOrDefault(d => d.Identifier == pIdentifier);
         }
@@ -57,7 +59,7 @@ namespace Coreflow.Storage
             mClient.DeleteAsync("api/FlowDefinitions/" + pIdentifier).Wait();
         }
 
-        public void SetCoreflow(Coreflow pCoreflow)
+        public void SetCoreflow(CoreflowRuntime pCoreflow)
         {
             mCoreflow = pCoreflow;
         }

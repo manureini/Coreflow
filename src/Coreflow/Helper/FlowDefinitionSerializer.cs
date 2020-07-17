@@ -1,4 +1,6 @@
 ﻿using Coreflow.Objects;
+using Coreflow.Runtime;
+using Coreflow.Runtime.Interfaces;
 using ExtendedXmlSerializer.Configuration;
 using ExtendedXmlSerializer.ExtensionModel.Content;
 using ExtendedXmlSerializer.ExtensionModel.Xml;
@@ -25,13 +27,13 @@ namespace Coreflow.Helper
         //                               .Emit(EmitBehaviors.Assigned) does currently not work with lists
 
 
-        public static string Serialize(FlowDefinition pFlowDefinition)
+        public static string Serialize(IFlowDefinition pFlowDefinition)
         {
             return Serializer.Serialize(new XmlWriterSettings() { Indent = true }, pFlowDefinition);
         }
 
 
-        public static FlowDefinition Deserialize(string pFlowDefinition, Coreflow pCoreflow)
+        public static FlowDefinition Deserialize(string pFlowDefinition, CoreflowRuntime pCoreflow)
         {
             FlowDefinition ret = Serializer.Deserialize<FlowDefinition>(pFlowDefinition);
             ret.Coreflow = pCoreflow;

@@ -1,6 +1,7 @@
 ﻿using Coreflow.Helper;
 using Coreflow.Interfaces;
 using Coreflow.Objects;
+using Coreflow.Runtime;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.Extensions.Logging;
@@ -52,7 +53,7 @@ namespace Coreflow
 
             string flowid = pFlowDefinition.Identifier.ToString().ToVariableName();
 
-         //   cw.AppendLineTop("[assembly: global::System.Runtime.Versioning.TargetFrameworkAttribute(\".NETCoreApp, Version = v3.0\", FrameworkDisplayName = \"\")]");
+            //   cw.AppendLineTop("[assembly: global::System.Runtime.Versioning.TargetFrameworkAttribute(\".NETCoreApp, Version = v3.0\", FrameworkDisplayName = \"\")]");
 
             cw.AppendLineTop("namespace " + FLOW_NAMESPACE_PREFIX + flowid + " {");
 
@@ -68,7 +69,7 @@ namespace Coreflow
             cw.WriteIdentifierTagTop(pFlowDefinition);
             cw.WriteContainerTagTop(pFlowDefinition);
 
-            cw.AppendLineTop($"[Coreflow.Objects.FlowIdentifierAttribute(\"{pFlowDefinition.Identifier.ToString()}\")]");
+            cw.AppendLineTop($"[global::{typeof(FlowIdentifierAttribute).FullName}(\"{pFlowDefinition.Identifier}\",\"{pFlowDefinition.Name}\")]");
 
             //Currently idk which letters needs an escape
             cw.AppendLineTop("public class " + FLOW_CLASS_PREFIX + flowid + " : " + typeof(ICompiledFlow).FullName + "  {");
@@ -79,15 +80,15 @@ namespace Coreflow
             cw.AppendLineBottom("} /* Class */"); //Close Class
 
 
-            cw.AppendLineTop($"public System.Guid " + nameof(ICompiledFlow.InstanceId) + " {get; set;} = Guid.NewGuid();");
+            cw.AppendLineTop($"public global::System.Guid " + nameof(ICompiledFlow.InstanceId) + " {get; set;} = Guid.NewGuid();");
 
-            cw.AppendLineTop($"public Coreflow.{nameof(Coreflow)} {nameof(ICompiledFlow.CoreflowInstace)}");
+            cw.AppendLineTop($"public global::{typeof(CoreflowRuntime).FullName} {nameof(ICompiledFlow.CoreflowInstace)}");
             cw.AppendTop("{ get; set; }");
 
-            cw.AppendLineTop($"public Coreflow.Interfaces.{nameof(IArgumentInjectionStore)} {nameof(ICompiledFlow.ArgumentInjectionStore)}");
+            cw.AppendLineTop($"public global::{typeof(IArgumentInjectionStore).FullName} {nameof(ICompiledFlow.ArgumentInjectionStore)}");
             cw.AppendTop("{ get; set; }");
 
-            cw.AppendLineTop($"public Microsoft.Extensions.Logging.{nameof(ILogger)} {nameof(ICompiledFlow.Logger)}");
+            cw.AppendLineTop($"public global::{typeof(ILogger).FullName} {nameof(ICompiledFlow.Logger)}");
             cw.AppendTop("{ get; set; }");
 
 

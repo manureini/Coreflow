@@ -100,7 +100,6 @@ namespace Coreflow.Helper
             assemblyPath = Path.Combine(tmpDir, dllFileName);
             pdbPath = Path.Combine(tmpDir, pdbFileName);
 
-
             File.WriteAllText(sourcePath, FlowBuilderHelper.FormatCode(pCode));
 
             Encoding encoding = Encoding.UTF8;
@@ -120,7 +119,8 @@ namespace Coreflow.Helper
               .WithOptions(
                 new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
                   .WithOptimizationLevel(OptimizationLevel.Debug)
-                  .WithPlatform(Platform.AnyCpu))
+                  .WithPlatform(Platform.AnyCpu)
+                  )
               .AddReferences(references)
               .AddSyntaxTrees(encoded);
 

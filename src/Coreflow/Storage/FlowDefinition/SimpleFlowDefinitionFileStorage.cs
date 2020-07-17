@@ -1,5 +1,7 @@
 ﻿using Coreflow.Helper;
 using Coreflow.Interfaces;
+using Coreflow.Runtime;
+using Coreflow.Runtime.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +11,7 @@ namespace Coreflow.Storage
     public class SimpleFlowDefinitionFileStorage : IFlowDefinitionStorage
     {
         private string mPath;
-        private Coreflow mCoreflow;
+        private CoreflowRuntime mCoreflow;
 
         public SimpleFlowDefinitionFileStorage(string pPath)
         {
@@ -17,16 +19,16 @@ namespace Coreflow.Storage
             Directory.CreateDirectory(mPath);
         }
 
-        public void Add(FlowDefinition pFlowDefinition)
+        public void Add(IFlowDefinition pFlowDefinition)
         {
             string text = FlowDefinitionSerializer.Serialize(pFlowDefinition);
             string filename = Path.Combine(mPath, pFlowDefinition.Identifier.ToString());
             File.WriteAllText(filename, text);
         }
 
-        public IEnumerable<FlowDefinition> GetDefinitions()
+        public IEnumerable<IFlowDefinition> GetDefinitions()
         {
-            List<FlowDefinition> ret = new List<FlowDefinition>();
+            List<IFlowDefinition> ret = new List<IFlowDefinition>();
 
             foreach (string file in Directory.GetFiles(mPath))
             {
@@ -37,14 +39,14 @@ namespace Coreflow.Storage
             return ret;
         }
 
-        public FlowDefinition Get(Guid pIdentifier)
+        public IFlowDefinition Get(Guid pIdentifier)
         {
             string filename = Path.Combine(mPath, pIdentifier.ToString());
             string text = File.ReadAllText(filename);
             return FlowDefinitionSerializer.Deserialize(text, mCoreflow);
         }
 
-        public void SetCoreflow(Coreflow pCoreflow)
+        public void SetCoreflow(CoreflowRuntime pCoreflow)
         {
             mCoreflow = pCoreflow;
         }

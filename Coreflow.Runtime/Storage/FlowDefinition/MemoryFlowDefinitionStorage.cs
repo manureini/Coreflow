@@ -1,4 +1,6 @@
 ﻿using Coreflow.Interfaces;
+using Coreflow.Runtime;
+using Coreflow.Runtime.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +9,9 @@ namespace Coreflow.Storage
 {
     public class MemoryFlowDefinitionStorage : IFlowDefinitionStorage
     {
-        private List<FlowDefinition> mFlowDefinitions = new List<FlowDefinition>();
+        private List<IFlowDefinition> mFlowDefinitions = new List<IFlowDefinition>();
 
-        public void Add(FlowDefinition pFlowDefinition)
+        public void Add(IFlowDefinition pFlowDefinition)
         {
             mFlowDefinitions.Add(pFlowDefinition);
         }
@@ -19,12 +21,12 @@ namespace Coreflow.Storage
             mFlowDefinitions = null;
         }
 
-        public FlowDefinition Get(Guid pIdentifier)
+        public IFlowDefinition Get(Guid pIdentifier)
         {
             return mFlowDefinitions.FirstOrDefault(f => f.Identifier == pIdentifier);
         }
 
-        public IEnumerable<FlowDefinition> GetDefinitions()
+        public IEnumerable<IFlowDefinition> GetDefinitions()
         {
             return mFlowDefinitions;
         }
@@ -34,7 +36,7 @@ namespace Coreflow.Storage
             mFlowDefinitions.RemoveAll(w => w.Identifier == pIdentifier);
         }
 
-        public void SetCoreflow(Coreflow pCoreflow)
+        public void SetCoreflow(CoreflowRuntime pCoreflow)
         {
         }
     }

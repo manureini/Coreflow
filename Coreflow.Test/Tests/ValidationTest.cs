@@ -27,12 +27,13 @@ namespace Coreflow.Test.Tests
         [TestMethod]
         public void ValidateFlows()
         {
-            foreach (var definition in mCoreflow.FlowDefinitionStorage.GetDefinitions())
+            foreach (var idefinition in mCoreflow.FlowDefinitionStorage.GetDefinitions())
             {
+                var definition = (FlowDefinition)idefinition;
+
                 var result = FlowValidationHelper.Validate(definition);
 
                 var corrector = CorrectorHelper.GetCorrectors(definition, result.Messages);
-
 
             }
         }

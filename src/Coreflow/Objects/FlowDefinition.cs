@@ -1,11 +1,13 @@
 ﻿using Coreflow.Interfaces;
 using Coreflow.Objects;
+using Coreflow.Runtime;
+using Coreflow.Runtime.Interfaces;
 using System;
 using System.Collections.Generic;
 
 namespace Coreflow
 {
-    public class FlowDefinition : IIdentifiable, IUiDesignable
+    public class FlowDefinition : IFlowDefinition, IUiDesignable
     {
         public List<string> ReferencedNamespaces { get; set; }
 
@@ -26,7 +28,7 @@ namespace Coreflow
         private object mLocker = new object();
 
         // not serialized
-        public Coreflow Coreflow { get; set; }
+        public CoreflowRuntime Coreflow { get; set; }
 
         [Obsolete("Only serializer")]
         public FlowDefinition()

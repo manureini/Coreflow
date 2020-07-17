@@ -137,7 +137,7 @@ namespace Coreflow.Web.Controllers
 
             foreach (var flow in FlowDefinitionModelStorage.CombineStoredAndTmpFlows())
             {
-                FlowCode fcode = flow.GenerateFlowCode();
+                FlowCode fcode = ((FlowDefinition)flow).GenerateFlowCode();
                 combinedCode.Append(fcode.Code);
             }
 

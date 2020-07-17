@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Coreflow.Runtime;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 
@@ -8,7 +9,7 @@ namespace Coreflow.Interfaces
     {
         Guid InstanceId { get; set; }
 
-        Coreflow CoreflowInstace { get; set; }
+        CoreflowRuntime CoreflowInstace { get; set; }
 
         IArgumentInjectionStore ArgumentInjectionStore { get; set; }
 

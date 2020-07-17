@@ -32,7 +32,7 @@ namespace Coreflow.Objects.CodeCreatorFactory
                 if (mDefinition.TryGetTarget(out FlowDefinition fref))
                     return fref;
 
-                return mCoreflow.FlowDefinitionStorage.Get(FlowIdentifier);
+                return (FlowDefinition)mCoreflow.FlowDefinitionStorage.Get(FlowIdentifier);
             }
         }
 

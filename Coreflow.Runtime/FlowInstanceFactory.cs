@@ -1,4 +1,5 @@
 ﻿using Coreflow.Interfaces;
+using Coreflow.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -11,7 +12,7 @@ namespace Coreflow.Objects
         public delegate ICompiledFlow FlowCreator();
 
 
-        public Coreflow Coreflow { get; protected set; }
+        public CoreflowRuntime Coreflow { get; protected set; }
 
         public Guid DefinitionGuid { get; protected set; }
 
@@ -19,7 +20,7 @@ namespace Coreflow.Objects
 
         public bool IsDisposed { get; protected set; }
 
-        internal FlowInstanceFactory(Coreflow pCoreFlow, Guid pDefinitionGuid, Type pDynamicFlowType)
+        public FlowInstanceFactory(CoreflowRuntime pCoreFlow, Guid pDefinitionGuid, Type pDynamicFlowType)
         {
             Coreflow = pCoreFlow;
             DefinitionGuid = pDefinitionGuid;

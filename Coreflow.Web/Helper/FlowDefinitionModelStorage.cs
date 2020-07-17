@@ -1,4 +1,5 @@
 ﻿using Coreflow.Objects.CodeCreatorFactory;
+using Coreflow.Runtime.Interfaces;
 using Coreflow.Web.Controllers;
 using Coreflow.Web.Models;
 using System;
@@ -78,7 +79,7 @@ namespace Coreflow.Web.Helper
                     return mModels[pIdentifier];
 
                 var fdef = Program.CoreflowInstance.FlowDefinitionStorage.GetDefinitions().FirstOrDefault(d => d.Identifier == pIdentifier);
-                var fmodel = FlowDefinitionModelMappingHelper.GenerateModel(fdef);
+                var fmodel = FlowDefinitionModelMappingHelper.GenerateModel((FlowDefinition)fdef);
 
                 mModels.Add(fmodel.Identifier, fmodel);
                 return fmodel;
@@ -94,7 +95,7 @@ namespace Coreflow.Web.Helper
             }
         }
 
-        public static IEnumerable<FlowDefinition> CombineStoredAndTmpFlows()
+        public static IEnumerable<IFlowDefinition> CombineStoredAndTmpFlows()
         {
             lock (mLocker)
             {

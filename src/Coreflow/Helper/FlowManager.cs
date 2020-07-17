@@ -1,5 +1,7 @@
 ﻿using Coreflow.Interfaces;
 using Coreflow.Objects;
+using Coreflow.Runtime;
+using Coreflow.Runtime.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,17 +11,18 @@ using System.Text;
 
 namespace Coreflow.Helper
 {
-    public class FlowManager
+    public class FlowManager : RuntimeFlowManager
     {
-        internal Dictionary<Guid, FlowInstanceFactory> mFactories = new Dictionary<Guid, FlowInstanceFactory>();
 
         //  private AssemblyCon mAssemblyContext;
 
         private string mFullCode = "";
 
-        private object mLocker = new object();
+        public FlowManager(CoreflowRuntime pCoreflow) : base(pCoreflow)
+        {
+        }
 
-        public FlowCompileResult CompileFlowsCreateAndLoadAssembly(Coreflow pCoreflowInstance, IEnumerable<FlowDefinition> pFlows)
+        public FlowCompileResult CompileFlowsCreateAndLoadAssembly(Coreflow pCoreflowInstance, IEnumerable<IFlowDefinition> pFlows)
         {
             lock (mLocker)
             {
@@ -27,7 +30,7 @@ namespace Coreflow.Helper
 
                 foreach (var flow in pFlows)
                 {
-                    FlowCode fcode = FlowBuilderHelper.GenerateFlowCode(flow);
+                    FlowCode fcode = FlowBuilderHelper.GenerateFlowCode((FlowDefinition)flow);
                     combinedCode.Append(fcode.Code);
                 }
 
@@ -67,25 +70,16 @@ namespace Coreflow.Helper
 
                 Assembly asm = Assembly.LoadFile(result.DllFilePath);
 
-
-                IEnumerable<Type> flows = asm.GetTypes().Where(t => typeof(ICompiledFlow).IsAssignableFrom(t));
-
-                foreach (var flowtype in flows)
-                {
-                    var attribute = flowtype.GetCustomAttribute<FlowIdentifierAttribute>();
-                    mFactories.Add(attribute.Identifier, new FlowInstanceFactory(pCoreflowInstance, attribute.Identifier, flowtype));
-                }
+                UpdateFactories(asm);
 
                 return result;
             }
         }
 
-        public FlowInstanceFactory GetFactory(Guid pFlowIdentifier)
-        {
-            lock (mLocker)
-            {
-                return mFactories[pFlowIdentifier];
-            }
-        }
+
+
+
+
+
     }
 }

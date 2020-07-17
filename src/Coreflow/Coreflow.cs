@@ -5,6 +5,7 @@ using Coreflow.Helper;
 using Coreflow.Interfaces;
 using Coreflow.Objects;
 using Coreflow.Objects.CodeCreatorFactory;
+using Coreflow.Runtime;
 using Coreflow.Storage;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,50 +17,16 @@ using System.Reflection;
 
 namespace Coreflow
 {
-    public class Coreflow : IDisposable
+    public class Coreflow : CoreflowRuntime
     {
         public CodeCreatorStorage CodeCreatorStorage { get; }
 
         public FlowDefinitionFactory FlowDefinitionFactory { get; }
 
-        public IFlowDefinitionStorage FlowDefinitionStorage { get; }
-
-        public IFlowInstanceStorage FlowInstanceStorage { get; }
-
-        public IArgumentInjectionStore ArgumentInjectionStore { get; }
-
-        public FlowManager FlowManager { get; } = new FlowManager();
-
-        public ILoggerFactory LoggerFactory { get; set; }
-
-        public ILogger Logger { get; }
-
-        public ILogger FlowLogger { get; }
-
         public FlowCompileResult LastCompileResult { get; protected set; }
 
         public CoreflowApiServer ApiServer { get; protected set; }
 
-        public string TemporaryFilesDirectory { get; protected set; }
-
-        static Coreflow()
-        {
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-        }
-
-        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            string toFindName = new AssemblyName(args.Name).FullName;
-
-            if (toFindName.Contains(".resources"))
-                return null;
-
-            foreach (Assembly an in AppDomain.CurrentDomain.GetAssemblies())
-                if (an.GetName().FullName == toFindName)
-                    return an;
-
-            return null;
-        }
 
         public void StartApiServer(object ipAddress)
         {
@@ -72,38 +39,12 @@ namespace Coreflow
             IArgumentInjectionStore pArgumentInjectionStore,
             string pPluginDirectory = null,
             ILoggerFactory pLoggerFactory = null,
-            string pTemporaryFilesDirectory = null)
+            string pTemporaryFilesDirectory = null) : base(pFlowDefinitionStorage, pFlowInstanceStorage, pArgumentInjectionStore, pLoggerFactory, pTemporaryFilesDirectory)
         {
-            FlowDefinitionStorage = pFlowDefinitionStorage;
-            FlowInstanceStorage = pFlowInstanceStorage;
-            ArgumentInjectionStore = pArgumentInjectionStore;
-            TemporaryFilesDirectory = pTemporaryFilesDirectory ?? Path.GetTempPath();
 
             CodeCreatorStorage = new CodeCreatorStorage(this);
             FlowDefinitionFactory = new FlowDefinitionFactory(this);
-
-            LoggerFactory = pLoggerFactory;
-
-            if (LoggerFactory == null)
-            {
-                LoggerFactory = new LoggerFactory();
-            }
-
-            if (!Directory.Exists(TemporaryFilesDirectory))
-                Directory.CreateDirectory(TemporaryFilesDirectory);
-
-            var oldTmpFiles = Directory.GetFiles(TemporaryFilesDirectory, "*.*", SearchOption.TopDirectoryOnly);
-
-            /*
-            foreach (string file in oldTmpFiles)
-                File.Delete(file);
-                */
-
-            Logger = LoggerFactory.CreateLogger(typeof(Coreflow));
-            FlowLogger = LoggerFactory.CreateLogger(typeof(ICompiledFlow));
-
-
-            FlowDefinitionStorage.SetCoreflow(this);
+            FlowManager = new FlowManager(this);
 
             CodeCreatorStorage.AddCodeActivity(typeof(ConsoleWriteLineActivity));
             CodeCreatorStorage.AddCodeActivity(typeof(SleepActivity));
@@ -150,13 +91,13 @@ namespace Coreflow
 
             foreach (var flow in FlowDefinitionStorage.GetDefinitions())
             {
-                CodeCreatorStorage.AddCodeCreatorFactory(new CallFlowCreatorFactory(this, flow));
+                CodeCreatorStorage.AddCodeCreatorFactory(new CallFlowCreatorFactory(this, (FlowDefinition)flow));
             }
         }
 
         public void CompileFlows()
         {
-            var result = FlowManager.CompileFlowsCreateAndLoadAssembly(this, FlowDefinitionStorage.GetDefinitions());
+            var result = ((FlowManager)FlowManager).CompileFlowsCreateAndLoadAssembly(this, FlowDefinitionStorage.GetDefinitions());
 
             if (result != null)
             {
@@ -164,25 +105,10 @@ namespace Coreflow
             }
         }
 
-        public Guid? GetFlowIdentifier(string pFlowName)
-        {
-            return FlowDefinitionStorage.GetDefinitions().FirstOrDefault(d => d.Name == pFlowName)?.Identifier;
-        }
-
-        public IDictionary<string, object> RunFlow(Guid pIdentifier, IDictionary<string, object> pArguments = null)
-        {
-            return FlowManager.GetFactory(pIdentifier).RunInstance(pArguments);
-        }
-
         public void StartApiServer(IPAddress pLocalIpAddress, int pPort)
         {
             ApiServer = new CoreflowApiServer(this, pLocalIpAddress, pPort);
             ApiServer.Start();
-        }
-
-        public void Dispose()
-        {
-            FlowDefinitionStorage.Dispose();
         }
     }
 }
