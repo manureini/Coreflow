@@ -97,26 +97,36 @@ namespace Coreflow
             cw.AppendLineTop();
 
             if (pFlowDefinition.Arguments != null)
-                foreach (FlowArguments parameter in pFlowDefinition.Arguments)
+                foreach (FlowArguments arg in pFlowDefinition.Arguments)
                 {
-                    string value = $"default({parameter.Type.FullName})";
+                    if (arg.Type == null)
+                    {
+                        cw.AppendLineTop($"//ERROR Parameter {arg.Name}: Type not found");
+                        continue;
+                    }
 
-                    if (parameter.Expression != null && !string.IsNullOrWhiteSpace(parameter.Expression))
-                        value = parameter.Expression;
+                    var typeCode = TypeHelper.TypeNameToCode(arg.Type);
 
-                    cw.AppendLineTop($"public {parameter.Type.FullName} {parameter.Name} = {value};");
+                    string value = $"default({typeCode})";
+
+                    if (arg.Expression != null && !string.IsNullOrWhiteSpace(arg.Expression))
+                        value = arg.Expression;
+
+                    cw.AppendLineTop($"public {typeCode} {arg.Name} = {value};");
                 }
 
 
             cw.AppendLineTop();
 
 
-            cw.AppendLineTop("public void SetArguments(IDictionary<string, object> pArguments) {");
+            cw.AppendLineTop("public void SetArguments(" + TypeHelper.TypeNameToCode(typeof(IDictionary<string, object>)) + " pArguments) {");
 
             if (pFlowDefinition.Arguments != null)
                 foreach (FlowArguments arg in pFlowDefinition.Arguments)
                 {
-                    cw.AppendLineTop("if (pArguments.ContainsKey(\"" + arg.Name + "\"))  { " + arg.Name + " = (" + arg.Type.FullName + ")pArguments[\"" + arg.Name + "\"];  }");
+                    if (arg.Type == null)
+                        continue;
+                    cw.AppendLineTop("if (pArguments.ContainsKey(\"" + arg.Name + "\"))  { " + arg.Name + " = (" + TypeHelper.TypeNameToCode(arg.Type) + ")pArguments[\"" + arg.Name + "\"];  }");
                 }
 
             cw.AppendLineTop("}");
@@ -124,14 +134,32 @@ namespace Coreflow
             cw.AppendLineTop();
 
 
-            cw.AppendLineTop("public IDictionary<string, object> GetArguments() {");
-            cw.AppendLineTop("Dictionary<string, object> ret = new Dictionary<string, object>();");
+            cw.AppendLineTop("public " + TypeHelper.TypeNameToCode(typeof(IDictionary<string, object>)) + " GetArguments() {");
+            cw.AppendLineTop("var ret = new " + TypeHelper.TypeNameToCode(typeof(Dictionary<string, object>)) + "()");
 
-            if (pFlowDefinition.Arguments != null)
-                foreach (FlowArguments arg in pFlowDefinition.Arguments)
+            if (pFlowDefinition.Arguments != null && pFlowDefinition.Arguments.Any())
+            {
+                cw.AppendLineTop("{");
+                cw.AppendLineTop();
+
+                for (int i = 0; i < pFlowDefinition.Arguments.Count; i++)
                 {
-                    cw.AppendLineTop("ret.Add(\"" + arg.Name + "\", " + arg.Name + ");");
+                    FlowArguments arg = pFlowDefinition.Arguments[i];
+                    if (arg.Type == null)
+                        continue;
+
+                    cw.AppendTop("{\"" + arg.Name + "\", " + arg.Name + "}");
+
+                    if (i < pFlowDefinition.Arguments.Count - 1)
+                    {
+                        cw.AppendTop(",");
+                    }
                 }
+
+                cw.AppendLineTop("}");
+            }
+
+            cw.AppendTop(";");
 
             cw.AppendLineTop("return ret;");
             cw.AppendLineTop("}");

@@ -57,7 +57,7 @@ namespace Coreflow.Helper
         public void Serializer(XmlWriter writer, FlowArguments obj)
         {
             writer.WriteAttributeString("Name", obj.Name);
-            writer.WriteAttributeString("Type", obj.Type.AssemblyQualifiedName);
+            writer.WriteAttributeString("Type", obj.Type?.AssemblyQualifiedName);
             writer.WriteAttributeString("Direction", obj.Direction.ToString());
             writer.WriteAttributeString("Expression", obj.Expression);
         }
@@ -98,22 +98,31 @@ namespace Coreflow.Helper
     {
         public CodeCreatorParameter Deserialize(XElement element)
         {
-            var xName = element.Attribute("Name");
-            var xDisplayName = element.Attribute("DisplayName");
-            var xType = element.Attribute("Type");
-            var xCategory = element.Attribute("Category");
-            var xDirection = element.Attribute("Direction");
+            var xName = element.Attribute(nameof(CodeCreatorParameter.Name));
+            var xDisplayName = element.Attribute(nameof(CodeCreatorParameter.DisplayName));
+            var xType = element.Attribute(nameof(CodeCreatorParameter.Type));
+            var xCategory = element.Attribute(nameof(CodeCreatorParameter.Category));
+            var xDirection = element.Attribute(nameof(CodeCreatorParameter.Direction));
+            var xDefaultValueCode = element.Attribute(nameof(CodeCreatorParameter.DefaultValueCode));
 
-            return new CodeCreatorParameter(xName.Value, xDisplayName.Value, TypeHelper.SearchType(xType.Value), xCategory.Value, VariableDirectionHelper.Parse(xDirection.Value));
+            return new CodeCreatorParameter(
+                xName.Value,
+                xDisplayName.Value,
+                TypeHelper.SearchType(xType.Value),
+                xCategory.Value,
+                VariableDirectionHelper.Parse(xDirection.Value),
+                xDefaultValueCode.Value
+                );
         }
 
         public void Serializer(XmlWriter writer, CodeCreatorParameter obj)
         {
-            writer.WriteAttributeString("Name", obj.Name);
-            writer.WriteAttributeString("DisplayName", obj.DisplayName);
-            writer.WriteAttributeString("Type", obj.Type.AssemblyQualifiedName);
-            writer.WriteAttributeString("Category", obj.Category);
-            writer.WriteAttributeString("Direction", obj.Direction.ToString());
+            writer.WriteAttributeString(nameof(CodeCreatorParameter.Name), obj.Name);
+            writer.WriteAttributeString(nameof(CodeCreatorParameter.DisplayName), obj.DisplayName);
+            writer.WriteAttributeString(nameof(CodeCreatorParameter.Type), obj.Type.AssemblyQualifiedName);
+            writer.WriteAttributeString(nameof(CodeCreatorParameter.Category), obj.Category);
+            writer.WriteAttributeString(nameof(CodeCreatorParameter.Direction), obj.Direction.ToString());
+            writer.WriteAttributeString(nameof(CodeCreatorParameter.DefaultValueCode), obj.DefaultValueCode);
         }
     }
 

@@ -16,7 +16,7 @@ namespace Coreflow.Web.Helper
                  var model = CodeCreatorModelHelper.CreateModel(cc, null, null);
                  model.CustomFactory = v.Identifier;
                  model.Identifier = Guid.Empty;
-                 model.Arguments = model.Parameters?.Select(p => new ArgumentModel(Guid.Empty, p.Name, p.Type.AssemblyQualifiedName, "")).ToList() ?? new List<ArgumentModel>();
+                 model.Arguments = model.Parameters?.Select(p => new ArgumentModel(Guid.Empty, p.Name, p.Type?.AssemblyQualifiedName, "")).ToList() ?? new List<ArgumentModel>();
                  return model;
              }).ToList();
         }

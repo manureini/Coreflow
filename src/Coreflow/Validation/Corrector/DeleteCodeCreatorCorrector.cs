@@ -15,7 +15,9 @@ namespace Coreflow.Validation.Corrector
 
         public override bool CanCorrect()
         {
-            return Message is MissingCodeCreatorMessage;
+            return Message is MissingCodeCreatorMessage ||
+                Message is ParameterButNoArgumentMessage ||
+                Message is ArgumentButNoParameterMessage;
         }
 
         public override object GetData()

@@ -15,7 +15,7 @@ namespace Coreflow.Helper
                 return new PlaceholderArgument(pName, pCode, pIdentifier);
 
             if (param.Direction == VariableDirection.In)
-                return new InputExpressionCreator(pName, pCode, pIdentifier, pType);
+                return new InputExpressionCreator(pName, pCode, pIdentifier, pType, param.DefaultValueCode);
             else if (param.Direction == VariableDirection.Out)
             {
                 bool isSimpleVariableName = !pCode.Trim().Contains(" ") && !pCode.Contains("\"");

@@ -84,6 +84,16 @@ namespace Coreflow
 
                 foreach (var asm in loadedAssemblies)
                 {
+                    var pluginType = asm.GetTypes().Where(t => typeof(IPlugin).IsAssignableFrom(t));
+                    if (pluginType.Count() > 1)
+                        throw new Exception($"{asm.FullName} contains multple {nameof(IPlugin)} classes");
+
+                    if (pluginType.Any())
+                    {
+                        var pluginInstance = (IPlugin)Activator.CreateInstance(pluginType.First());
+                        pluginInstance.OnEnable();
+                    }
+
                     CodeCreatorStorage.AddCodeCreatorDefaultConstructor(asm.GetTypes().Where(t => typeof(ICodeCreator).IsAssignableFrom(t)));
                     CodeCreatorStorage.AddCodeActivity(asm.GetTypes().Where(t => typeof(ICodeActivity).IsAssignableFrom(t)));
                 }

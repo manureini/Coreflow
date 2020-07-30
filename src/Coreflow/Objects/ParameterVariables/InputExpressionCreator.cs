@@ -18,6 +18,8 @@ namespace Coreflow.Interfaces
         //Type "Type" and serializer does not work
         public string Type { get; set; }
 
+        public string DefaultValueCode { get; set; }
+
         public ITypeSymbol ActualType { get; internal set; }
 
         public InputExpressionCreator()
@@ -30,10 +32,11 @@ namespace Coreflow.Interfaces
             Code = pExpression;
         }
 
-        public InputExpressionCreator(string pName, string pExpression, Guid pIdentifier, string pType) : this(pName, pExpression)
+        public InputExpressionCreator(string pName, string pExpression, Guid pIdentifier, string pType, string pDefaultValueCode) : this(pName, pExpression)
         {
             Identifier = pIdentifier;
             Type = pType;
+            DefaultValueCode = pDefaultValueCode;
         }
 
         public void Initialize(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
@@ -50,10 +53,17 @@ namespace Coreflow.Interfaces
 
             if (string.IsNullOrWhiteSpace(Code))
             {
+                if(!string.IsNullOrWhiteSpace(DefaultValueCode))
+                {
+                    if (type.IsByRef && !DefaultValueCode.StartsWith("ref "))
+                        DefaultValueCode = "ref " + DefaultValueCode;
+                    pCodewriter.AppendLineTop(DefaultValueCode);
+                    return;
+                }
+
                 pCodewriter.AppendLineTop(TypeHelper.GetDefaultInitializationCodeSnippet(type));
                 return;
             }
-
 
             if (Code.StartsWith("$"))
             {

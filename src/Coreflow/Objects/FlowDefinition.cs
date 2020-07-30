@@ -134,7 +134,9 @@ namespace Coreflow
                         if (cc.Identifier == pCodeCreatorIdentifier)
                             return container;
 
-                        return FindParentCodeCreatorOf(cc, pCodeCreatorIdentifier);
+                        var result = FindParentCodeCreatorOf(cc, pCodeCreatorIdentifier);
+                        if (result != null)
+                            return result;
                     }
                 }
 

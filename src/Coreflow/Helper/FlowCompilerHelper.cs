@@ -198,6 +198,9 @@ namespace Coreflow.Helper
 
         private static Guid GetIdentifier(string[] pCode, int pLineOfCode)
         {
+            if (pLineOfCode >= pCode.Length)
+                return Guid.Empty;
+
             for (pLineOfCode--; pLineOfCode > 0; pLineOfCode--)
             {
                 var regexResult = mIdRegex.Match(pCode[pLineOfCode]);
@@ -208,7 +211,6 @@ namespace Coreflow.Helper
             }
 
             return Guid.Empty;
-
 
             //throw new Exception("GetIdentifier: Identifier not found!");
         }

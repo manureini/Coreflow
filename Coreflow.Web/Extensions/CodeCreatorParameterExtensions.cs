@@ -15,7 +15,7 @@ namespace Coreflow.Web.Extensions
             for (int i = 0; i < pList.Count(); i++)
             {
                 var cParameter = pList[i];
-                ret.Add(new CodeCreatorParameterModel(cParameter.Name, cParameter.DisplayName, cParameter.Type, cParameter.Category, cParameter.Direction, i));
+                ret.Add(new CodeCreatorParameterModel(cParameter.Name, cParameter.DisplayName, cParameter.Type, cParameter.Category, cParameter.Direction, cParameter.DefaultValueCode, i));
             }
 
             return ret;

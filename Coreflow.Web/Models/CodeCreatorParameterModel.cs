@@ -12,7 +12,7 @@ namespace Coreflow.Web.Models
         {
         }
 
-        public CodeCreatorParameterModel(string pName, string pDisplayName, Type pType, string pCategory, VariableDirection pDirection, int pIndex) : base(pName, pDisplayName, pType, pCategory, pDirection)
+        public CodeCreatorParameterModel(string pName, string pDisplayName, Type pType, string pCategory, VariableDirection pDirection, string pDefaultValueCode, int pIndex) : base(pName, pDisplayName, pType, pCategory, pDirection, pDefaultValueCode)
         {
             Index = pIndex;
         }

@@ -19,7 +19,7 @@ namespace Coreflow.CodeCreators
 
         public Guid Identifier { get; set; } = Guid.NewGuid();
 
-        public string VariableIdentifier => $"CodeActivityCreator<{typeof(T).FullName}>";
+        public string VariableIdentifier => $"CodeActivityCreator<{TypeHelper.TypeNameToCode(typeof(T))}> ";
 
         public string Name
         {
@@ -174,6 +174,11 @@ namespace Coreflow.CodeCreators
 
             if (attr != null)
                 ret.DisplayName = attr.DisplayName;
+
+            var defaultValueAttr = pParameterInfo.GetCustomAttribute<DefaultValueAttribute>();
+
+            if (defaultValueAttr != null)
+                ret.DefaultValueCode = defaultValueAttr.DefaultValueCode;
 
             return ret;
         }

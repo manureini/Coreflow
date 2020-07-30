@@ -1,4 +1,6 @@
-﻿namespace Coreflow.Test.Tests
+﻿using Coreflow.Runtime.Storage;
+
+namespace Coreflow.Test.Tests
 {
     internal static class TestHelper
     {
