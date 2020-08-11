@@ -47,7 +47,7 @@ namespace Coreflow.Helper
 
             if (!emitResult.Success)
             {
-                string[] codeLines = pCode.Split('\n');
+                string[] codeLines = pCode.Split(Environment.NewLine);
 
                 IEnumerable<Diagnostic> failures = emitResult.Diagnostics.Where(
                     diagnostic => diagnostic.IsWarningAsError ||
@@ -219,7 +219,7 @@ namespace Coreflow.Helper
 
         public static int GetLineOfIdentifier(string pCode, Guid pIdentifier)
         {
-            string[] code = pCode.Split('\n');
+            string[] code = pCode.Split(Environment.NewLine);
 
             string guid = pIdentifier.ToString();
 
@@ -234,20 +234,5 @@ namespace Coreflow.Helper
 
             throw new Exception("GetLineOfCode: Identifier not found!");
         }
-
-        private static int GetContainerLineOfCode(string[] pCode, int pLineOfCode)
-        {
-            for (pLineOfCode--; pLineOfCode > 0; pLineOfCode--)
-            {
-                var regexResult = mContainerRegex.Match(pCode[pLineOfCode]);
-                if (regexResult.Success)
-                {
-                    return pLineOfCode;
-                }
-            }
-
-            throw new Exception("GetContainer: Container not found!");
-        }
-
     }
 }

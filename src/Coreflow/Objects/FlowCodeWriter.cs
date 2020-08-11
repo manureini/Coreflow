@@ -8,6 +8,8 @@ namespace Coreflow.Objects
 {
     public class FlowCodeWriter
     {
+        public const string CURSOR_LOC = "/* !!! ------------------------- # CodeWriter Cursor # -------------------------------------- !!!*/";
+
         private StringBuilder mTopStringBuilder = new StringBuilder();
         private StringBuilder mBottomStringBuilder = new StringBuilder();
 
@@ -104,12 +106,12 @@ namespace Coreflow.Objects
 
         private string Reverse(string pStr)
         {
-            return string.Join(Environment.NewLine, pStr.Split('\n').Reverse());
+            return string.Join(Environment.NewLine, pStr.Split(Environment.NewLine).Reverse());
         }
 
         public override string ToString()
         {
-            return ToStringTop() + Environment.NewLine + "/* !!! --------------------------------------------------------------- !!!*/" + Environment.NewLine + ToStringBottom();
+            return ToStringTop() + Environment.NewLine + CURSOR_LOC + Environment.NewLine + ToStringBottom();
         }
     }
 }

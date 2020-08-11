@@ -62,11 +62,11 @@ namespace Coreflow.CodeCreators
 
 
         public void Initialize(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
-        {            
+        {
             string typeName = "global::" + typeof(T).FullName;
             string variableName = pBuilderContext.CreateLocalVariableName(this);
 
-            pCodeWriter.AppendLineTop($"{typeName} {variableName} = new {typeName}();");
+            pCodeWriter.AppendLineTop($"var {variableName} = new {typeName}();");
 
             foreach (FieldInfo fi in typeof(T).GetFields())
             {
@@ -102,7 +102,7 @@ namespace Coreflow.CodeCreators
 
                     string code = iec.Code;
 
-                    if(string.IsNullOrWhiteSpace(code))
+                    if (string.IsNullOrWhiteSpace(code))
                     {
                         code = iec.DefaultValueCode;
                     }
@@ -124,7 +124,7 @@ namespace Coreflow.CodeCreators
 
                     if (symbol == null)
                     {
-                        Console.WriteLine($"WARNING: Variable: {variableName} could not be found in current context. Flow is inconsistent!");
+                        Console.WriteLine($"WARNING: Variable: {variableName} could not be found in current context. Flow could inconsistent or bug in a code creator!");
                     }
 
                     if (symbol != null && symbol.Type.TypeKind != TypeKind.Error)

@@ -69,40 +69,19 @@ namespace Coreflow.Objects
         public void UpdateCurrentSymbols()
         {
             string code = mCodeWriter.ToString();
-            string[] codeLines = code.Split('\n');
-
-            // int loc = FlowCompilerHelper.GetLineOfCode(codeLines, pIdentifiable.Identifier); 
-
-            string topCode = mCodeWriter.ToStringTop();
-            string[] topCodeLines = topCode.Split('\n');
-
-            int loc = topCodeLines.Length;
 
             SyntaxTree = FlowCompilerHelper.ParseTextNotDebuggable(code);
 
-            SyntaxNode sn = GetNode(SyntaxTree, loc);
+            SyntaxNode sn = GetCursorNode(SyntaxTree);
 
             CurrentSymbols = CompilationLookUpSymbols(SyntaxTree, sn as CSharpSyntaxNode);
         }
 
-        protected SyntaxNode GetNode(SyntaxTree tree, int lineNumber)
+        protected SyntaxNode GetCursorNode(SyntaxTree tree)
         {
-            /*  while (lineNumber > 0)
-              {
-                  var lineSpan = tree.GetText().Lines[lineNumber].Span;
+            var cursorLine = tree.GetText().Lines.FirstOrDefault(l => l.ToString() == FlowCodeWriter.CURSOR_LOC);
 
-                  var ret = tree.GetRoot().FindNode(lineSpan);
-
-                  if (ret != null)
-                      return ret;
-
-                  lineNumber--;
-              }
-
-              return null;*/
-
-
-            var lineSpan = tree.GetText().Lines[lineNumber].Span;
+            var lineSpan = cursorLine.Span;
 
             return tree.GetRoot().FindNode(lineSpan);
         }
@@ -113,12 +92,21 @@ namespace Coreflow.Objects
 
             var diagnostics = Compilation.GetDiagnostics();
 
-            if (diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).Any())
+            var errors = diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error);
+
+            if (errors.Any())
             {
                 //TODO Now it is possible that we can not resolve a type of a symbol. We hope the user will correct that error in code asap!
                 //It's possible that we call another flow and we don't know the type here. But this can be ignored right now
                 //Add a warning or something?
                 //Throw exception?
+
+                Console.WriteLine($"WARNING: Errors in {nameof(CompilationLookUpSymbols)}. This could be an bug in a code creator or just a call to another flow");
+
+                foreach (var error in errors)
+                {
+                    Console.WriteLine(error);
+                }
             }
 
             SemanticModel = Compilation.GetSemanticModel(tree);
