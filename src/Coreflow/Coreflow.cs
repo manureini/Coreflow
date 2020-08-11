@@ -107,7 +107,7 @@ namespace Coreflow
 
         public void CompileFlows()
         {
-            var result = ((FlowManager)FlowManager).CompileFlowsCreateAndLoadAssembly(this, FlowDefinitionStorage.GetDefinitions());
+            var result = ((FlowManager)FlowManager).CompileFlowsCreateAndLoadAssembly(FlowDefinitionStorage.GetDefinitions());
 
             if (result != null)
             {

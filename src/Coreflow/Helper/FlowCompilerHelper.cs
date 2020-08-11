@@ -90,7 +90,9 @@ namespace Coreflow.Helper
         {
             int compilationNumber = Interlocked.Increment(ref mCounter);
 
-            string tmpDir = Path.GetTempPath();
+            string tmpDir = Path.Combine(Path.GetTempPath(), "Coreflow", Guid.NewGuid().ToString());
+
+            Directory.CreateDirectory(tmpDir);
 
             string pdbFileName = Path.GetFileNameWithoutExtension(pAssemblyName) + "_" + compilationNumber + ".pdb";
             string dllFileName = Path.GetFileNameWithoutExtension(pAssemblyName) + "_" + compilationNumber + ".dll";

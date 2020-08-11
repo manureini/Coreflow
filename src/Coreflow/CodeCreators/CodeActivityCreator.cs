@@ -99,7 +99,15 @@ namespace Coreflow.CodeCreators
                 if (argument is InputExpressionCreator iec)
                 {
                     string variableName = argument.Identifier.ToString().ToVariableName();
-                    pCodeWriter.AppendLineTop($"var {variableName} = {iec.Code};");
+
+                    string code = iec.Code;
+
+                    if(string.IsNullOrWhiteSpace(code))
+                    {
+                        code = iec.DefaultValueCode;
+                    }
+
+                    pCodeWriter.AppendLineTop($"var {variableName} = {code};");
                 }
             }
 
@@ -116,7 +124,7 @@ namespace Coreflow.CodeCreators
 
                     if (symbol == null)
                     {
-                        Console.WriteLine("WARNING: Variable could not be found in current context. Flow is inconsistent!");
+                        Console.WriteLine($"WARNING: Variable: {variableName} could not be found in current context. Flow is inconsistent!");
                     }
 
                     if (symbol != null && symbol.Type.TypeKind != TypeKind.Error)

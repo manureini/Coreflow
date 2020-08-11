@@ -23,6 +23,8 @@ namespace Coreflow.Helper
             if (pTypeName == null)
                 return null;
 
+            pTypeName = pTypeName.Trim();
+
             try
             {
                 var type = Type.GetType((string)pTypeName);

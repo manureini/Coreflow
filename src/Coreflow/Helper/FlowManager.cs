@@ -16,7 +16,7 @@ namespace Coreflow.Helper
         {
         }
 
-        public FlowCompileResult CompileFlowsCreateAndLoadAssembly(Coreflow pCoreflowInstance, IEnumerable<IFlowDefinition> pFlows)
+        public FlowCompileResult CompileFlowsCreateAndLoadAssembly(IEnumerable<IFlowDefinition> pFlows)
         {
             lock (mLocker)
             {
