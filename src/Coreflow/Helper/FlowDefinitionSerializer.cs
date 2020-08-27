@@ -16,7 +16,7 @@ namespace Coreflow.Helper
     {
         private static IExtendedXmlSerializer Serializer = new ConfigurationContainer()
                                                             .UseOptimizedNamespaces()
-                                                            .CustomSerializer<FlowArguments, FlowArgumentSerializer>()
+                                                            .CustomSerializer<FlowArgument, FlowArgumentSerializer>()
                                                             .CustomSerializer<CodeCreatorParameter, CodeCreatorParameterSerializer>()
                                                             .CustomSerializer<Assembly, AssemblySerializer>()
                                                             .ConfigureType<FlowDefinition>().Member(x => x.Coreflow).Ignore()
@@ -40,9 +40,9 @@ namespace Coreflow.Helper
         }
     }
 
-    public class FlowArgumentSerializer : IExtendedXmlCustomSerializer<FlowArguments>
+    public class FlowArgumentSerializer : IExtendedXmlCustomSerializer<FlowArgument>
     {
-        public FlowArguments Deserialize(XElement element)
+        public FlowArgument Deserialize(XElement element)
         {
             var xName = element.Attribute("Name");
             var xType = element.Attribute("Type");
@@ -51,10 +51,10 @@ namespace Coreflow.Helper
 
             VariableDirection direction = VariableDirectionHelper.Parse(xDirection.Value);
 
-            return new FlowArguments(xName.Value, Type.GetType(xType.Value), direction, xExpression?.Value);
+            return new FlowArgument(xName.Value, Type.GetType(xType.Value), direction, xExpression?.Value);
         }
 
-        public void Serializer(XmlWriter writer, FlowArguments obj)
+        public void Serializer(XmlWriter writer, FlowArgument obj)
         {
             writer.WriteAttributeString("Name", obj.Name);
             writer.WriteAttributeString("Type", obj.Type?.AssemblyQualifiedName);

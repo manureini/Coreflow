@@ -97,7 +97,7 @@ namespace Coreflow
             cw.AppendLineTop();
 
             if (pFlowDefinition.Arguments != null)
-                foreach (FlowArguments arg in pFlowDefinition.Arguments)
+                foreach (FlowArgument arg in pFlowDefinition.Arguments)
                 {
                     if (arg.Type == null)
                     {
@@ -122,7 +122,7 @@ namespace Coreflow
             cw.AppendLineTop("public void SetArguments(" + TypeHelper.TypeNameToCode(typeof(IDictionary<string, object>)) + " pArguments) {");
 
             if (pFlowDefinition.Arguments != null)
-                foreach (FlowArguments arg in pFlowDefinition.Arguments)
+                foreach (FlowArgument arg in pFlowDefinition.Arguments)
                 {
                     if (arg.Type == null)
                         continue;
@@ -144,7 +144,7 @@ namespace Coreflow
 
                 for (int i = 0; i < pFlowDefinition.Arguments.Count; i++)
                 {
-                    FlowArguments arg = pFlowDefinition.Arguments[i];
+                    FlowArgument arg = pFlowDefinition.Arguments[i];
                     if (arg.Type == null)
                         continue;
 

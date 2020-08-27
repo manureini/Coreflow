@@ -57,6 +57,12 @@ namespace Coreflow.Storage
             mClient.DeleteAsync("api/FlowDefinitions/" + pIdentifier).Wait();
         }
 
+        public void Update(IFlowDefinition pFlowDefinition)
+        {
+            Remove(pFlowDefinition.Identifier);
+            Add(pFlowDefinition);
+        }
+
         public void SetCoreflow(CoreflowRuntime pCoreflow)
         {
             mCoreflow = pCoreflow;
@@ -65,6 +71,6 @@ namespace Coreflow.Storage
         public void Dispose()
         {
             mClient.Dispose();
-        }
+        }       
     }
 }

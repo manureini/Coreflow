@@ -20,7 +20,7 @@ namespace Coreflow.Objects.CodeCreatorFactory
 
         public string FlowIcon => FlowDefinition.Icon;
 
-        public List<FlowArguments> Arguments => FlowDefinition.Arguments;
+        public List<FlowArgument> Arguments => FlowDefinition.Arguments;
 
         private WeakReference<FlowDefinition> mDefinition;
         private Coreflow mCoreflow;

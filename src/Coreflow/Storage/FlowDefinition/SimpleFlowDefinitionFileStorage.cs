@@ -55,6 +55,12 @@ namespace Coreflow.Storage
             File.Delete(filename);
         }
 
+        public void Update(IFlowDefinition pFlowDefinition)
+        {
+            Remove(pFlowDefinition.Identifier);
+            Add(pFlowDefinition);
+        }
+
         public void Dispose()
         {
         }

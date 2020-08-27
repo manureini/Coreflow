@@ -211,7 +211,7 @@ namespace Coreflow.Web.Controllers
                 if (pData.AddValue)
                 {
                     Type type = TypeHelper.SearchType(pData.Type);
-                    wfDefModel.Parameter.Add(new FlowArguments(pData.Name, type, VariableDirection.In, pData.Value));
+                    wfDefModel.Parameter.Add(new FlowArgument(pData.Name, type, VariableDirection.In, pData.Value));
                 }
                 else
                 {

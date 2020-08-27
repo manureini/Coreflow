@@ -34,7 +34,7 @@ namespace Coreflow.CodeCreators
         {
         }
 
-        public CallFlowCreator(Guid pFlowId, string pFlowName, string pFlowIcon, List<FlowArguments> pArguments)
+        public CallFlowCreator(Guid pFlowId, string pFlowName, string pFlowIcon, List<FlowArgument> pArguments)
         {
             FlowVariableName = pFlowId.ToString().ToVariableName();
             FlowName = pFlowName;
@@ -42,7 +42,7 @@ namespace Coreflow.CodeCreators
 
             List<CodeCreatorParameter> parameterList = new List<CodeCreatorParameter>();
 
-            var args = pArguments ?? new List<FlowArguments>();
+            var args = pArguments ?? new List<FlowArgument>();
 
             foreach (var entry in args)
             {

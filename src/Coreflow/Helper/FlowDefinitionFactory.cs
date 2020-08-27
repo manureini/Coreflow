@@ -43,7 +43,7 @@ namespace Coreflow.Helper
             {
                 Name = pName,
                 ReferencedNamespaces = DefaultReferencedNamespaces,
-                Arguments = new List<FlowArguments>(),
+                Arguments = new List<FlowArgument>(),
             };
             return w;
         }

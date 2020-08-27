@@ -2,7 +2,7 @@
 
 namespace Coreflow.Objects
 {
-    public class FlowArguments
+    public class FlowArgument
     {
         public string Name { get; set; }
 
@@ -12,14 +12,15 @@ namespace Coreflow.Objects
 
         public VariableDirection Direction { get; set; }
 
-        public FlowArguments()
+        public FlowArgument()
         {
         }
 
-        public FlowArguments(string pName, Type pType, VariableDirection pDirection, string pExpression = null)
+        public FlowArgument(string pName, Type pType, VariableDirection pDirection, string pExpression = null)
         {
             Name = pName;
             Type = pType;
+            Direction = pDirection;
             Expression = pExpression;
         }
     }

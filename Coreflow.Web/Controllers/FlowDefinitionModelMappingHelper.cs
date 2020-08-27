@@ -18,7 +18,7 @@ namespace Coreflow.Web.Controllers
                 ReferencedNamespaces = pFlowDefinition.ReferencedNamespaces,
                 Identifier = pFlowDefinition.Identifier,
                 CodeCreatorModel = CodeCreatorModelHelper.CreateModel(pFlowDefinition.CodeCreator, null, pFlowDefinition),
-                Parameter = pFlowDefinition.Arguments ?? new List<Objects.FlowArguments>()
+                Parameter = pFlowDefinition.Arguments ?? new List<Objects.FlowArgument>()
             };
 
             if (pFlowDefinition.Metadata != null && pFlowDefinition.Metadata.ContainsKey(Guid.Empty))

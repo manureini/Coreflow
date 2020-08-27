@@ -53,12 +53,17 @@ namespace Coreflow.Runtime.Storage
             throw new NotSupportedException();
         }
 
+        public void Update(IFlowDefinition pFlowDefinition)
+        {
+            throw new NotSupportedException();
+        }
+
         public void SetCoreflow(CoreflowRuntime pCoreflow)
         {
         }
 
         public void Dispose()
         {
-        }
+        }   
     }
 }

@@ -33,6 +33,12 @@ namespace Coreflow.Runtime.Storage
             mFlowDefinitions.RemoveAll(w => w.Identifier == pIdentifier);
         }
 
+        public void Update(IFlowDefinition pFlowDefinition)
+        {
+            Remove(pFlowDefinition.Identifier);
+            Add(pFlowDefinition);
+        }
+
         public void SetCoreflow(CoreflowRuntime pCoreflow)
         {
         }

@@ -11,8 +11,8 @@ namespace Coreflow.Test
         {
             FlowDefinition wf = pCoreflow.FlowDefinitionFactory.Create("test");
 
-            wf.Arguments.Add(new FlowArguments("pInput", typeof(string), VariableDirection.In, "\"DefaultInputValue\""));
-            wf.Arguments.Add(new FlowArguments("Result", typeof(int), VariableDirection.Out));
+            wf.Arguments.Add(new FlowArgument("pInput", typeof(string), VariableDirection.In, "\"DefaultInputValue\""));
+            wf.Arguments.Add(new FlowArgument("Result", typeof(int), VariableDirection.Out));
 
             SequenceCreator sequence = new SequenceCreator(null);
 

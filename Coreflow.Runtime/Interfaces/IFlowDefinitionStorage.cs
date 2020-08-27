@@ -5,11 +5,13 @@ namespace Coreflow.Runtime
 {
     public interface IFlowDefinitionStorage : IDisposable
     {
-        void SetCoreflow(Coreflow.Runtime.CoreflowRuntime pCoreflow); //Todo
+        void SetCoreflow(CoreflowRuntime pCoreflow);
 
         void Add(IFlowDefinition pFlowDefinition);
 
         void Remove(Guid pIdentifier);
+
+        void Update(IFlowDefinition pFlowDefinition);
 
         IFlowDefinition Get(Guid pIdentifier);
 

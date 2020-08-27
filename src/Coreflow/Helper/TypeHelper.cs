@@ -1,6 +1,7 @@
 ﻿using Coreflow.Interfaces;
 using Microsoft.CodeAnalysis.CSharp;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -13,6 +14,7 @@ namespace Coreflow.Helper
         {
             SearchType(typeof(IDictionary<,>).FullName);
             SearchType(typeof(List<>).FullName);
+            SearchType(typeof(IEnumerable<>).FullName);
         }
 
         private static Regex mGenericTypeCSharpRegex = new Regex(@"(.*)`([0-9]*)\[(?:\[(.+?)\]?,?)*\]");
@@ -200,6 +202,14 @@ namespace Coreflow.Helper
 
                 case "idictionary`2":
                     parsedTypeName = typeof(IDictionary<,>).FullName;
+                    break;
+
+                case "ienumerable`1":
+                    parsedTypeName = typeof(IEnumerable<>).FullName;
+                    break;
+
+                case "ienumerable":
+                    parsedTypeName = typeof(IEnumerable).FullName;
                     break;
             }
 

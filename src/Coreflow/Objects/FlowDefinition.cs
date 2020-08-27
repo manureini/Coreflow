@@ -10,7 +10,7 @@ namespace Coreflow
     {
         public List<string> ReferencedNamespaces { get; set; }
 
-        public List<FlowArguments> Arguments { get; set; }
+        public List<FlowArgument> Arguments { get; set; }
 
         public Dictionary<Guid, Dictionary<string, object>> Metadata { get; set; }
 
