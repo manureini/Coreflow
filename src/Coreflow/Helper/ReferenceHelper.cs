@@ -61,6 +61,12 @@ namespace Coreflow.Helper
                 Console.WriteLine($"WARNING: Search for referenced assembly {dllFileName} in {mRefRootPath} has mutiple results");
             }
 
+            if(pRuntimeAssembly.Contains("netstandard.dll") && refFiles.Count() > 1)
+            {
+                refFiles = refFiles.Where(r => r.Contains("netcore"));
+                Console.WriteLine($"WARNING: netstandard.dll has multiple resulsts force using reference with netcore");
+            }
+
             string refPath = refFiles.FirstOrDefault();
 
             if (refPath != null && File.Exists(refPath))
