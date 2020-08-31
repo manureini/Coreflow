@@ -33,7 +33,9 @@ namespace Coreflow.Validation.Corrector
             {
                 var cc = pFlowDefinition.FindCodeCreator(ccid) as IParametrized;
                 var parameter = cc.GetParameters().Single(p => p.Name == name);
-                cc.Arguments.Add(ArgumentHelper.CreateArgument(parameter, name, parameter.Type.AssemblyQualifiedName, "", Guid.NewGuid()));
+                int index = Array.FindIndex(cc.GetParameters(), c => c.Name == name);
+
+                cc.Arguments.Insert(index, ArgumentHelper.CreateArgument(parameter, name, parameter.Type.AssemblyQualifiedName, "", Guid.NewGuid()));
             }
         }
     }
