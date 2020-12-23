@@ -1,6 +1,6 @@
 ﻿using Coreflow.Validation.Messages;
-using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace Coreflow.Validation
 {
@@ -23,16 +23,20 @@ namespace Coreflow.Validation
 
         public string GetSerializedData()
         {
-            return JsonConvert.SerializeObject(new CorrectorData()
+            var correctorData = new CorrectorData()
             {
                 Data = GetData(),
                 Type = this.GetType().AssemblyQualifiedName,
                 CodeCreators = Message is IFlowValidationCodeCreatorMessage ccmsg ? ccmsg.CodeCreatorIdentifiers : null
-            },
+            };
+
+            return JsonSerializer.Serialize(correctorData);
+
+            /*
             new JsonSerializerSettings()
             {
                 TypeNameHandling = TypeNameHandling.All
-            });
+            });*/
         }
 
         public abstract bool CanCorrect();

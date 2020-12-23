@@ -1,9 +1,10 @@
 ﻿using Coreflow.Runtime;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Coreflow.Storage.ArgumentInjection
 {
@@ -19,14 +20,17 @@ namespace Coreflow.Storage.ArgumentInjection
             if (File.Exists(mFilePath))
             {
                 string text = File.ReadAllText(mFilePath);
-                mValues = new ReadOnlyDictionary<string, string>(JsonConvert.DeserializeObject<Dictionary<string, string>>(text));
+                mValues = new ReadOnlyDictionary<string, string>(JsonSerializer.Deserialize<Dictionary<string, string>>(text));
             }
             else
             {
                 var example = new Dictionary<string, string>();
                 example.Add("key", "value");
 
-                string text = JsonConvert.SerializeObject(example, Formatting.Indented);
+                string text = JsonSerializer.Serialize(example, new JsonSerializerOptions()
+                {
+                    WriteIndented = true
+                });
                 File.WriteAllText(mFilePath, text);
             }
         }

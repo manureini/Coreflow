@@ -1,9 +1,9 @@
 ﻿using Coreflow.Api.Responses;
-using Newtonsoft.Json;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 
 namespace Coreflow.Api
 {
@@ -40,7 +40,7 @@ namespace Coreflow.Api
 
             string resp = mStreamReader.ReadLine();
 
-            return JsonConvert.DeserializeObject<LastCompiledFlowInfo>(resp);
+            return JsonSerializer.Deserialize<LastCompiledFlowInfo>(resp);
         }
 
         public void Close()

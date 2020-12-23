@@ -1,12 +1,12 @@
 ﻿using Coreflow.Helper;
 using Coreflow.Runtime;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 
 namespace Coreflow.Storage
 {
@@ -25,7 +25,7 @@ namespace Coreflow.Storage
 
         public void Add(IFlowDefinition pFlowDefinition)
         {
-            string serialized = JsonConvert.SerializeObject(FlowDefinitionSerializer.Serialize(pFlowDefinition));
+            string serialized = JsonSerializer.Serialize(FlowDefinitionSerializer.Serialize(pFlowDefinition));
 
             var response = mClient.PostAsync("api/FlowDefinitions/" + pFlowDefinition.Identifier, new StringContent(serialized, Encoding.UTF8, "application/json")).Result;
 
@@ -40,7 +40,7 @@ namespace Coreflow.Storage
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = response.Content.ReadAsStringAsync().Result;
-                var serializedFlows = JsonConvert.DeserializeObject<IEnumerable<string>>(responseContent);
+                var serializedFlows = JsonSerializer.Deserialize<IEnumerable<string>>(responseContent);
                 return serializedFlows.Select(f => FlowDefinitionSerializer.Deserialize(f, mCoreflow));
             }
 

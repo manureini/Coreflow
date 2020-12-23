@@ -1,10 +1,10 @@
 ﻿using Coreflow.Api.Responses;
-using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 
 namespace Coreflow.Api
@@ -66,7 +66,7 @@ namespace Coreflow.Api
                     if (sData == nameof(LastCompiledFlowInfo))
                     {
                         var respObj = LastCompiledFlowInfo.FromCompileResult(mCoreFlow.LastCompileResult);
-                        var resp = JsonConvert.SerializeObject(respObj);
+                        var resp = JsonSerializer.Serialize(respObj);
 
                         sWriter.WriteLine(resp);
                         sWriter.Flush();
