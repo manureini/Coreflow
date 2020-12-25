@@ -1,0 +1,61 @@
+﻿
+
+.code-editor-monaco {
+    width: 300px;
+    height: 100px;
+}
+
+
+.codecreator {
+    background: #3e3e42;
+    border: solid;
+    border-width: 1px;
+    border-color: grey;
+    margin: 20px;
+    border-radius: 3px;
+    padding: 2px;
+}
+
+    .codecreator > .codecreator-parameters {
+        display: none;
+    }
+
+    .codecreator i {
+        padding-left: 5px;
+    }
+
+    .codecreator .breakpoint {
+        background: red;
+    }
+
+    .codecreator .codecreator-active {
+        background: #535359;
+    }
+
+.codecreator-space {
+    background: #7d7d80;
+    min-height: 70px;
+    border-radius: 3px;
+    margin: 20px;
+}
+
+.codecreator-container {
+    border: solid;
+    border-width: 1px;
+    border-color: grey;
+}
+
+.codecreator-container-sequence {
+    border: solid;
+    border-width: 1px;
+    border-color: grey;
+}
+
+.codecreator-panel-parameter-container > .codecreator {
+    margin: 0;
+}
+
+.ui-draggable-dragging {
+    z-index: 99;
+    min-width: 35vw;
+}

@@ -12,6 +12,9 @@ namespace Coreflow.Blazor
     {
         public static string GetDisplayName(this ICodeCreator pCodeCreator, FlowDefinition pFlowDefinition)
         {
+            if (pCodeCreator == null)
+                return null;
+
             if (pFlowDefinition != null)
             {
                 if (pFlowDefinition.GetMetadata(pCodeCreator.Identifier, Constants.USER_DISPLAY_NAME) is string userDisplayName && !string.IsNullOrWhiteSpace(userDisplayName))

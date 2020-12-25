@@ -1,0 +1,114 @@
+﻿
+<div class=@CssClass style=@CssStyle title=@CodeCreator.GetType().FullName @onclick=OnFocus @onclick:stopPropagation @onclick:preventDefault>
+
+    <div class="codecreator-title">
+        <span class="codecreator-title-left">
+            <i class=@IconCssClass></i>
+            <input type="text" class="input-displayname displayname" spellcheck="false" value="@DisplayName" @onchange="OnDisplayNameChange" />
+        </span>
+        <span class="codecreator-title-right">
+            @if (UserNote != null)
+            {
+                <a class="codecreator-note" href="#" tabindex="0">
+                    <i class="fa fa-sticky-note"></i>
+                </a>
+            }
+        </span>
+    </div>
+
+
+    @if (CodeCreator is ICodeCreatorContainerCreator containerCreator)
+    {
+        <div class="codecreator-container-sequences">
+
+            @for (int i = 0; i < containerCreator.SequenceCount; i++)
+            {
+                <div class="codecreator-container-sequence">
+                    <div class="codecreator-container-start" data-index="@i"></div>
+
+                    @if (containerCreator.CodeCreators != null && containerCreator.CodeCreators.Count > i)
+                    {
+                        @foreach (var creator in containerCreator.CodeCreators[i])
+                        {
+                            <DefaultCodeCreatorEditor FlowDefinition="FlowDefinition" CodeCreator="creator" />
+                        }
+                    }
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public FlowDefinition FlowDefinition { get; set; }
+
+    [Parameter]
+    public ICodeCreator CodeCreator { get; set; }
+
+    [CascadingParameter]
+    public FlowEditor FlowEditor { get; set; }
+
+
+    protected string DisplayName { get; set; }
+    protected string IconCssClass { get; set; }
+
+    protected string UserColor { get; set; }
+    protected string UserNote { get; set; }
+
+    protected string CssStyle
+    {
+        get
+        {
+            if (UserColor != null)
+            {
+                return "background: " + UserColor;
+            }
+
+            return string.Empty;
+        }
+    }
+
+    protected string CssClass
+    {
+        get
+        {
+            string ret = "codecreator";
+
+            if (FlowEditor.SelectedCodeCreator == CodeCreator)
+            {
+                ret += " codecreator-active";
+            }
+
+            return ret;
+        }
+    }
+
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        DisplayName = CodeCreator.GetDisplayName(FlowDefinition);
+        IconCssClass = CodeCreator.GetIconClassName();
+
+        UserColor = FlowDefinition.GetMetadata(CodeCreator.Identifier, Constants.USER_COLOR) as string;
+        UserNote = FlowDefinition.GetMetadata(CodeCreator.Identifier, Constants.USER_NOTE) as string;
+    }
+
+    private void OnDisplayNameChange(ChangeEventArgs args)
+    {
+        DisplayName = (string)args.Value;
+    }
+
+    private Task OnFocus()
+    {
+        return FlowEditor.OnSelectCodeCreator(CodeCreator);
+    }
+
+}

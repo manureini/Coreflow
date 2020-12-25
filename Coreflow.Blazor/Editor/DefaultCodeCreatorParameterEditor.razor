@@ -1,7 +1,7 @@
 ﻿
 <div class="codecreator-parameter-editor">
 
-    @if (CodeCreator is IParametrized parametrized)
+    @if (CodeCreator != null && CodeCreator is IParametrized parametrized)
     {
         @foreach (var groupingPm in parametrized.GetParameters().GroupBy(p => p.Category))
         {
@@ -19,7 +19,9 @@
 
                     <tr data-name="@pm.Name">
                         <td data-toggle="tooltip" title="@pm.Direction @pm.Name @pm.Type">@pm.GetDisplayNameOrName()</td>
-                        <td><div class="codecreator-parameters-table-text"/>@argument.Code</td>
+                        <td>
+                            <CodeEditor @bind-Code="@argument.Code" IsInline="true" />
+                        </td>
                     </tr>
                 }
 

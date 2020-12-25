@@ -1,0 +1,24 @@
+﻿@page "/"
+
+
+<FlowEditor FlowDefinition="mFlowDefinition" />
+
+
+@code {
+
+    private CoreflowService mCoreflowService;
+
+    private FlowDefinition mFlowDefinition { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var storage = new SimpleFlowDefinitionFileStorage(@"C:\GitHub\Coreflow\Coreflow.Web\Flows");
+        var instanceStorage = new NoFlowInstanceStorage();
+        var injection = new DictionaryArgumentInjectionStore(new System.Collections.Concurrent.ConcurrentDictionary<string, object>());
+
+        mCoreflowService = new CoreflowService(storage, instanceStorage, injection, "Plugins");
+
+        mFlowDefinition = (FlowDefinition)mCoreflowService.FlowDefinitionStorage.GetDefinitions().First();
+    }
+
+} 

@@ -1,0 +1,101 @@
+﻿
+
+<MonacoEditor @ref="mEditor" Id=@mId ConstructionOptions="EditorConstructionOptions" CssClass=@("code-editor-monaco "  + (IsInline ? "code-editor-monaco-inline" : "code-editor-monaco-fullscreen")) OnDidChangeModelContent="OnCodeChanged" OnDidInit="UpdateValue" />
+
+
+@code {
+
+
+    protected string mCode = string.Empty;
+
+    [Parameter]
+    public string Code
+    {
+        get
+        {
+            return mCode;
+        }
+        set
+        {
+            mCode = value ?? string.Empty;
+            UpdateValue();
+        }
+    }
+
+    [Parameter]
+    public EventCallback<string> CodeChanged { get; set; }
+
+    [Parameter]
+    public bool IsInline { get; set; }
+
+
+    protected MonacoEditor mEditor;
+
+
+    protected string mId;
+    protected bool mIsInitialized;
+
+    protected override void OnInitialized()
+    {
+        mId = Guid.NewGuid().ToString();
+    }
+
+    protected StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
+    {
+        var options = new StandaloneEditorConstructionOptions
+        {
+            AutomaticLayout = true,
+            Language = "csharp",
+            Theme = "vs-dark",
+            GlyphMargin = true,
+            ScrollBeyondLastLine = false,
+            Value = string.Empty
+        };
+
+        if (IsInline)
+        {
+            options.Contextmenu = false;
+            options.Minimap = new MinimapOptions()
+            {
+                Enabled = false
+            };
+            options.LineNumbers = "off";
+            options.GlyphMargin = false;
+            options.Folding = false;
+            options.LineDecorationsWidth = "0";
+            options.LineNumbersMinChars = 0;
+
+            options.Scrollbar = new ScrollbarOptions()
+            {
+                HorizontalScrollbarSize = 0,
+                VerticalScrollbarSize = 0
+            };
+        }
+
+        return options;
+    }
+
+    protected async void OnCodeChanged(ModelContentChangedEvent pArgs)
+    {
+        if (!mIsInitialized)
+            return;
+
+        mCode = await mEditor.GetValue();
+        await CodeChanged.InvokeAsync(mCode);
+    }
+
+    protected async void UpdateValue()
+    {
+        if (mEditor == null)
+            return;
+
+        var value = await mEditor.GetValue();
+        if (value != Code)
+        {
+            await mEditor.SetValue(Code);
+        }
+
+        mIsInitialized = true;
+    }
+
+}

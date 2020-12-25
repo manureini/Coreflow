@@ -1,0 +1,46 @@
+﻿
+<CascadingValue Value="this">
+
+    <DefaultCodeCreatorEditor FlowDefinition="FlowDefinition" CodeCreator="FlowDefinition.CodeCreator" />
+
+    <DefaultCodeCreatorParameterEditor CodeCreator="SelectedCodeCreator" />
+
+</CascadingValue>
+
+@code {
+
+
+    [Parameter]
+    public FlowDefinition FlowDefinition { get; set; }
+
+    protected FlowEditorEvents Events { get; set; }
+
+    internal ICodeCreator SelectedCodeCreator;
+
+    protected override void OnInitialized()
+    {
+        SelectedCodeCreator = FlowDefinition.CodeCreator;
+
+
+
+    }
+
+    internal async Task OnSelectCodeCreator(ICodeCreator pCodeCreator)
+    {
+        SelectedCodeCreator = pCodeCreator;
+
+        if (Events?.OnAfterSelect != null)
+        {
+            await Events.OnAfterSelect.InvokeAsync();
+        }
+
+        StateHasChanged();
+    }
+
+    public void RegisterEvents(FlowEditorEvents pEvents)
+    {
+        Events = pEvents;
+    }
+
+
+}
