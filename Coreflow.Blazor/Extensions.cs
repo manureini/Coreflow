@@ -57,5 +57,44 @@ namespace Coreflow.Blazor
 
             return null;
         }
+
+        public static (ICodeCreatorContainerCreator parent, int indexContext) FindParentOf(this FlowDefinition pFlowDefinition, ICodeCreator pCodeCreator, ICodeCreator pParent = null)
+        {
+            if (pFlowDefinition == null)
+                return (null, -1);
+
+            var parent = pParent;
+
+            if (parent == null)
+            {
+                parent = pFlowDefinition.CodeCreator;
+                if (parent == pCodeCreator)
+                    return (null, 0);
+            }
+
+            var container = parent as ICodeCreatorContainerCreator;
+
+            if (container == null)
+                return (null, -1);
+
+            for (int i = 0; i < container.CodeCreators.Count; i++)
+            {
+                List<ICodeCreator> childContexts = container.CodeCreators[i];
+
+                foreach (var child in childContexts)
+                {
+                    if (child == pCodeCreator)
+                        return (container, i);
+
+                    var result = FindParentOf(pFlowDefinition, pCodeCreator, child);
+
+                    if (result.indexContext != -1)
+                        return result;
+                }
+            }
+
+            return (null, -1);
+        }
+
     }
 }

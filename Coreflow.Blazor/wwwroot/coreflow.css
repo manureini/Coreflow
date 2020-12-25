@@ -28,7 +28,7 @@
         background: red;
     }
 
-    .codecreator .codecreator-active {
+    .codecreator.codecreator-active {
         background: #535359;
     }
 
@@ -53,6 +53,13 @@
 
 .codecreator-panel-parameter-container > .codecreator {
     margin: 0;
+}
+
+.codecreator-dropzone {
+    background: #7d7d80;
+    height: 20px;
+    border-radius: 3px;
+    margin: 20px;
 }
 
 .ui-draggable-dragging {

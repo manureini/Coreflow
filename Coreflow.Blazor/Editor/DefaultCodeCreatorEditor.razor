@@ -1,10 +1,20 @@
 ﻿
-<div class=@CssClass style=@CssStyle title=@CodeCreator.GetType().FullName @onclick=OnFocus @onclick:stopPropagation @onclick:preventDefault>
+@if (DropZoneEnabled && !PreviousCodeCreatorIsSelected && CodeCreator != FlowDefinition.CodeCreator)
+{
+    <div class="codecreator-dropzone" @ondrop="OnDropBefore" ondragover="event.preventDefault();"></div>
+}
+
+<div class=@CssClass style=@CssStyle title=@CodeCreator.GetType().FullName @onclick=OnFocus @onclick:stopPropagation @onclick:preventDefault
+     draggable="true"
+     @ondragstart="OnDragStart" @ondragstart:stopPropagation
+     @ondragend="OnDragEnd" @ondragend:stopPropagation
+     @onkeydown="OnKeyDown" @onkeydown:stopPropagation tabindex="0"
+     >
 
     <div class="codecreator-title">
         <span class="codecreator-title-left">
             <i class=@IconCssClass></i>
-            <input type="text" class="input-displayname displayname" spellcheck="false" value="@DisplayName" @onchange="OnDisplayNameChange" />
+            <input type="text" class="input-displayname displayname" spellcheck="false" value="@DisplayName" @onchange="OnDisplayNameChange" @onkeydown:stopPropagation />
         </span>
         <span class="codecreator-title-right">
             @if (UserNote != null)
@@ -16,7 +26,6 @@
         </span>
     </div>
 
-
     @if (CodeCreator is ICodeCreatorContainerCreator containerCreator)
     {
         <div class="codecreator-container-sequences">
@@ -26,12 +35,25 @@
                 <div class="codecreator-container-sequence">
                     <div class="codecreator-container-start" data-index="@i"></div>
 
+                    @{
+                        ICodeCreator lastCodeCreator = null;
+                    }
+
                     @if (containerCreator.CodeCreators != null && containerCreator.CodeCreators.Count > i)
                     {
                         @foreach (var creator in containerCreator.CodeCreators[i])
                         {
-                            <DefaultCodeCreatorEditor FlowDefinition="FlowDefinition" CodeCreator="creator" />
+                            var prevIsSelected = lastCodeCreator != null && lastCodeCreator == FlowEditor.SelectedCodeCreator;
+                            lastCodeCreator = creator;
+
+                            <DefaultCodeCreatorEditor FlowDefinition="FlowDefinition" CodeCreator="creator" DropZoneEnabled="DropZoneEnabled" PreviousCodeCreatorIsSelected="prevIsSelected" />
                         }
+                    }
+
+                    @if (DropZoneEnabled && lastCodeCreator != FlowEditor.SelectedCodeCreator)
+                    {
+                        int sequenceIndex = i;
+                        <div class="codecreator-dropzone" @ondrop="() => OnDrop(containerCreator, sequenceIndex)" ondragover="event.preventDefault();"></div>
                     }
 
                 </div>
@@ -50,6 +72,12 @@
 
     [Parameter]
     public ICodeCreator CodeCreator { get; set; }
+
+    [Parameter]
+    public bool DropZoneEnabled { get; set; }
+
+    [Parameter]
+    public bool PreviousCodeCreatorIsSelected { get; set; }
 
     [CascadingParameter]
     public FlowEditor FlowEditor { get; set; }
@@ -89,26 +117,58 @@
         }
     }
 
-
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
-        base.OnInitialized();
-
         DisplayName = CodeCreator.GetDisplayName(FlowDefinition);
         IconCssClass = CodeCreator.GetIconClassName();
 
         UserColor = FlowDefinition.GetMetadata(CodeCreator.Identifier, Constants.USER_COLOR) as string;
         UserNote = FlowDefinition.GetMetadata(CodeCreator.Identifier, Constants.USER_NOTE) as string;
+
+        DropZoneEnabled = DropZoneEnabled && !(CodeCreator == FlowEditor.SelectedCodeCreator);
     }
 
-    private void OnDisplayNameChange(ChangeEventArgs args)
+    protected void OnDisplayNameChange(ChangeEventArgs args)
     {
         DisplayName = (string)args.Value;
+        FlowDefinition.SetMetadata(CodeCreator.Identifier, Constants.USER_DISPLAY_NAME, DisplayName);
     }
 
-    private Task OnFocus()
+    protected Task OnFocus()
     {
         return FlowEditor.OnSelectCodeCreator(CodeCreator);
+    }
+
+    protected void OnDragStart(DragEventArgs pArgs)
+    {
+        pArgs.DataTransfer.DropEffect = "move";
+        pArgs.DataTransfer.EffectAllowed = "move";
+        FlowEditor.ShowDropZones(CodeCreator);
+    }
+
+    protected void OnDragEnd()
+    {
+        FlowEditor.HideDropZones();
+    }
+
+    protected void OnDropBefore()
+    {
+        FlowEditor.MoveSelectedCodeCreatorBefore(CodeCreator);
+    }
+
+    protected void OnDrop(ICodeCreatorContainerCreator pContainer, int pSequence)
+    {
+        FlowEditor.MoveSelectedCodeCreatorIn(pContainer, pSequence);
+    }
+
+    protected void OnKeyDown(KeyboardEventArgs pArgs)
+    {
+        FlowEditor.SelectedCodeCreator = CodeCreator;
+
+        if(pArgs.Key == "Delete")
+        {
+            FlowEditor.RemoveSelectedCodeCreator();
+        }
     }
 
 }
