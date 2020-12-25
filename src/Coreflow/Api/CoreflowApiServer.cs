@@ -12,12 +12,12 @@ namespace Coreflow.Api
     public class CoreflowApiServer
     {
         private TcpListener mTcpListener;
-        private Coreflow mCoreFlow;
+        private CoreflowService mCoreFlow;
 
         private int Port { get; set; }
         private IPAddress LocalAddress { get; set; }
 
-        internal CoreflowApiServer(Coreflow pInstance, IPAddress pLocalAddress, int pPort)
+        internal CoreflowApiServer(CoreflowService pInstance, IPAddress pLocalAddress, int pPort)
         {
             mCoreFlow = pInstance;
             Port = pPort;

@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coreflow.Test.Performance",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coreflow.Activities.OrangePi", "Coreflow.Activities.OrangePi\Coreflow.Activities.OrangePi.csproj", "{7D1985A2-68E8-417C-8DA4-0A7EA2F652A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coreflow.Runtime", "Coreflow.Runtime\Coreflow.Runtime.csproj", "{EBEEB737-F567-4425-9AE1-B8BB4F3CEEC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coreflow.Runtime", "Coreflow.Runtime\Coreflow.Runtime.csproj", "{EBEEB737-F567-4425-9AE1-B8BB4F3CEEC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coreflow.Blazor", "Coreflow.Blazor\Coreflow.Blazor.csproj", "{9DF3EDE1-7F5B-4553-A87F-7E534C1A8931}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{EBEEB737-F567-4425-9AE1-B8BB4F3CEEC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBEEB737-F567-4425-9AE1-B8BB4F3CEEC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBEEB737-F567-4425-9AE1-B8BB4F3CEEC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DF3EDE1-7F5B-4553-A87F-7E534C1A8931}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DF3EDE1-7F5B-4553-A87F-7E534C1A8931}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DF3EDE1-7F5B-4553-A87F-7E534C1A8931}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DF3EDE1-7F5B-4553-A87F-7E534C1A8931}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

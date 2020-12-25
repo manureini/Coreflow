@@ -1,8 +1,7 @@
-﻿using Coreflow.Interfaces;
-using Coreflow.Objects;
+﻿using Coreflow.Objects;
 using Coreflow.Runtime;
 
-namespace Coreflow
+namespace Coreflow.Interfaces
 {
     public interface ICodeCreator : IIdentifiable
     {

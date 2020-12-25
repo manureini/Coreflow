@@ -11,7 +11,7 @@ namespace Coreflow.Test.Performance
     class Program
     {
         public static int count = 100_000;
-        public static Coreflow mCoreflow;
+        public static CoreflowService mCoreflow;
         public static Guid mIdentifier;
         public static CountdownEvent mCountdownEvent;
 
@@ -23,7 +23,7 @@ namespace Coreflow.Test.Performance
             var dstorage = new SimpleFlowDefinitionFileStorage(@"Flows");
             var istorage = new NoFlowInstanceStorage();
 
-            mCoreflow = new Coreflow(dstorage, istorage, null);
+            mCoreflow = new CoreflowService(dstorage, istorage, null);
 
             var def = mCoreflow.FlowDefinitionStorage.GetDefinitions().First(d => d.Name == "empty");
 

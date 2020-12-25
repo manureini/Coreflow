@@ -23,7 +23,7 @@ namespace Coreflow.Objects.CodeCreatorFactory
         public List<FlowArgument> Arguments => FlowDefinition.Arguments;
 
         private WeakReference<FlowDefinition> mDefinition;
-        private Coreflow mCoreflow;
+        private CoreflowService mCoreflow;
 
         public FlowDefinition FlowDefinition
         {
@@ -36,7 +36,7 @@ namespace Coreflow.Objects.CodeCreatorFactory
             }
         }
 
-        public CallFlowCreatorFactory(Coreflow pInstance, FlowDefinition pFlowDefinition)
+        public CallFlowCreatorFactory(CoreflowService pInstance, FlowDefinition pFlowDefinition)
         {
             mCoreflow = pInstance;
             mDefinition = new WeakReference<FlowDefinition>(pFlowDefinition);

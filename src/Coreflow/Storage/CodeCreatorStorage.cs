@@ -15,9 +15,9 @@ namespace Coreflow.Storage
 
         private readonly Dictionary<Type, ICodeCreatorFactory> mDefaultConstructorFactories = new Dictionary<Type, ICodeCreatorFactory>();
 
-        private Coreflow mCoreflow;
+        private CoreflowService mCoreflow;
 
-        internal CodeCreatorStorage(Coreflow pCoreflow)
+        internal CodeCreatorStorage(CoreflowService pCoreflow)
         {
             mCoreflow = pCoreflow;
         }

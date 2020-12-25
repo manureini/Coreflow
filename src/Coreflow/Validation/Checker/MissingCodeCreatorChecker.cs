@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Coreflow.CodeCreators;
+using Coreflow.Interfaces;
 using Coreflow.Validation.Messages;
 
 namespace Coreflow.Validation.Checker

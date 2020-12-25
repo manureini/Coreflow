@@ -34,7 +34,7 @@ namespace Coreflow
         {
         }
 
-        internal FlowDefinition(Coreflow pCoreflow)
+        internal FlowDefinition(CoreflowService pCoreflow)
         {
             Coreflow = pCoreflow;
         }

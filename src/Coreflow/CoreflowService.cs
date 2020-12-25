@@ -17,7 +17,7 @@ using System.Reflection;
 
 namespace Coreflow
 {
-    public class Coreflow : CoreflowRuntime
+    public class CoreflowService : CoreflowRuntime
     {
         public CodeCreatorStorage CodeCreatorStorage { get; }
 
@@ -33,7 +33,7 @@ namespace Coreflow
             throw new NotImplementedException();
         }
 
-        public Coreflow(
+        public CoreflowService(
             IFlowDefinitionStorage pFlowDefinitionStorage,
             IFlowInstanceStorage pFlowInstanceStorage,
             IArgumentInjectionStore pArgumentInjectionStore,

@@ -6,7 +6,7 @@ namespace Coreflow.Test
     [TestClass]
     public class RunningTests
     {
-        private Coreflow mCoreflow;
+        private CoreflowService mCoreflow;
 
         [TestInitialize]
         public void Initialize()

@@ -59,7 +59,6 @@ namespace Coreflow
             return pTypeSymbol.ToDisplayString(symbolDisplayFormat);
         }
 
-
         public static string GetTypeIdentifier(this ICodeCreator pCodeCreator)
         {
             if (pCodeCreator is ICustomFactoryCodeCreator c)
@@ -69,7 +68,5 @@ namespace Coreflow
 
             return pCodeCreator.GetType().FullName;
         }
-
-
     }
 }

@@ -46,7 +46,7 @@ namespace Coreflow.Host
             var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleLoggerOptions>>(), new OptionsCache<ConsoleLoggerOptions>());
             var loggerFactory = new LoggerFactory(new[] { new ConsoleLoggerProvider(optionsMonitor) }, new LoggerFilterOptions { MinLevel = LogLevel.Trace });
 
-            Coreflow coreflowInstance = new Coreflow(
+            CoreflowService coreflowInstance = new CoreflowService(
             //      new SimpleFlowDefinitionFileStorage(@"Flows"),
                 new RepositoryFlowDefinitionStorage("http://localhost:5701/"),
                 new SimpleFlowInstanceFileStorage("FlowInstances"),

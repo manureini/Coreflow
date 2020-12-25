@@ -8,12 +8,12 @@ namespace Coreflow.Test.Tests
     [TestClass]
     public class ValidationTest
     {
-        private Coreflow mCoreflow;
+        private CoreflowService mCoreflow;
 
         [TestInitialize]
         public void Initialize()
         {
-            mCoreflow = new Coreflow(
+            mCoreflow = new CoreflowService(
                new SimpleFlowDefinitionFileStorage(@"C:\GitHub\Coreflow\Coreflow.Repository\Flows"),
                new SimpleFlowInstanceFileStorage("FlowInstances"),
                new JsonFileArgumentInjectionStore("Arguments.json")

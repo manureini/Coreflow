@@ -8,7 +8,7 @@ namespace Coreflow.Validation.CheckerMessages
 {
     public class ArgumentWrongTypeMessage : IFlowValidationCodeCreatorMessage
     {
-        public string Message => $"Type of argument {Parameter.Name} is wrong";
+        public string Message => $"Type of argument {Parameter.Name} is wrong.\nCurrent: {CurrentType}\nExpected: {ExpectedType?.AssemblyQualifiedName}";
 
         public bool IsFatalError => true;
 
@@ -22,11 +22,17 @@ namespace Coreflow.Validation.CheckerMessages
 
         public Guid Identifier { get; set; } = Guid.NewGuid();
 
-        internal ArgumentWrongTypeMessage(string pCodeCreatorTypeIdentifier, CodeCreatorParameter pParameter, IArgument pArgument, Guid pFirstCodeCreator)
+        public string CurrentType { get; }
+
+        public Type ExpectedType { get; }
+
+        internal ArgumentWrongTypeMessage(string pCodeCreatorTypeIdentifier, CodeCreatorParameter pParameter, IArgument pArgument, Guid pFirstCodeCreator, string pCurrentType, Type pExpectedType)
         {
             CodeCreatorTypeIdentifier = pCodeCreatorTypeIdentifier;
             Parameter = pParameter;
             Argument = pArgument;
+            CurrentType = pCurrentType;
+            ExpectedType = pExpectedType;
             CodeCreatorIdentifiers.Add(pFirstCodeCreator);
         }
     }

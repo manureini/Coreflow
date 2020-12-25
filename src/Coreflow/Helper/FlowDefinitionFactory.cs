@@ -6,7 +6,7 @@ namespace Coreflow.Helper
 {
     public class FlowDefinitionFactory
     {
-        private Coreflow mCoreflow;
+        private CoreflowService mCoreflow;
 
 
         public List<string> DefaultReferencedNamespaces = new List<string>()
@@ -21,7 +21,7 @@ namespace Coreflow.Helper
    //         nameof(Coreflow)
         };
 
-        internal FlowDefinitionFactory(Coreflow pCoreflow)
+        internal FlowDefinitionFactory(CoreflowService pCoreflow)
         {
             mCoreflow = pCoreflow;
         }

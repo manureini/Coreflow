@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Coreflow.Interfaces;
 using Coreflow.Objects;
@@ -19,13 +20,13 @@ namespace Coreflow.Validation.Checker
 
                     if (arg != null && arg is InputExpressionCreator iec && iec.Type != param.Type.AssemblyQualifiedName)
                     {
-                        AddToResult(ref pMessages, pCodeCreator, param, arg);
+                        AddToResult(ref pMessages, pCodeCreator, param, arg, iec.Type, param.Type);
                     }
                 }
             }
         }
 
-        private void AddToResult(ref List<IFlowValidationMessage> pMessages, ICodeCreator pCodeCreator, CodeCreatorParameter pParameter, IArgument pArgument)
+        private void AddToResult(ref List<IFlowValidationMessage> pMessages, ICodeCreator pCodeCreator, CodeCreatorParameter pParameter, IArgument pArgument, string pCurrentType, Type pExpectedType)
         {
             string typeIdentifier = pCodeCreator.GetTypeIdentifier();
 
@@ -33,7 +34,7 @@ namespace Coreflow.Validation.Checker
 
             if (msg == null)
             {
-                pMessages.Add(new ArgumentWrongTypeMessage(typeIdentifier, pParameter, pArgument, pCodeCreator.Identifier));
+                pMessages.Add(new ArgumentWrongTypeMessage(typeIdentifier, pParameter, pArgument, pCodeCreator.Identifier, pCurrentType, pExpectedType));
                 return;
             }
 

@@ -15,7 +15,7 @@ namespace Coreflow.Web
 {
     public class Program
     {
-        public static Coreflow CoreflowInstance;
+        public static CoreflowService CoreflowInstance;
 
 
         static Program()
@@ -59,7 +59,7 @@ namespace Coreflow.Web
             var loggerFactory = new LoggerFactory(new[] { new ConsoleLoggerProvider(optionsMonitor) }, new LoggerFilterOptions { MinLevel = LogLevel.Trace });
 
 
-            CoreflowInstance = new Coreflow(
+            CoreflowInstance = new CoreflowService(
                   new SimpleFlowDefinitionFileStorage(@"Flows"),
                 //  new RepositoryFlowDefinitionStorage("http://localhost:5701/"),
                 new SimpleFlowInstanceFileStorage("FlowInstances"),

@@ -7,7 +7,7 @@ namespace Coreflow.Test
     [TestClass]
     public class SerializationTests
     {
-        private Coreflow mCoreflow;
+        private CoreflowService mCoreflow;
 
         [TestInitialize]
         public void Initialize()

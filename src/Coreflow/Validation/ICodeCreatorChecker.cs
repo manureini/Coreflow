@@ -1,4 +1,5 @@
-﻿using Coreflow.Validation.Messages;
+﻿using Coreflow.Interfaces;
+using Coreflow.Validation.Messages;
 using System.Collections.Generic;
 
 namespace Coreflow.Validation

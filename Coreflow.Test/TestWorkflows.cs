@@ -7,7 +7,7 @@ namespace Coreflow.Test
 {
     public static class TestFlows
     {
-        public static FlowDefinition GetTestFlow1(Coreflow pCoreflow)
+        public static FlowDefinition GetTestFlow1(CoreflowService pCoreflow)
         {
             FlowDefinition wf = pCoreflow.FlowDefinitionFactory.Create("test");
 

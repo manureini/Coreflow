@@ -1,0 +1,53 @@
+﻿
+<div class="codecreator-parameter-editor">
+
+    @if (CodeCreator is IParametrized parametrized)
+    {
+        @foreach (var groupingPm in parametrized.GetParameters().GroupBy(p => p.Category))
+        {
+            <p>@groupingPm.Key</p>
+
+            <table id="codecreator-parameter-editor-table">
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                </tr>
+
+                @foreach (var pm in groupingPm)
+                {
+                    var argument = parametrized.Arguments.First(a => a.Name == pm.Name);
+
+                    <tr data-name="@pm.Name">
+                        <td data-toggle="tooltip" title="@pm.Direction @pm.Name @pm.Type">@pm.GetDisplayNameOrName()</td>
+                        <td><div class="codecreator-parameters-table-text"/>@argument.Code</td>
+                    </tr>
+                }
+
+            </table>
+        }
+    }
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public ICodeCreator CodeCreator { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+
+
+    }
+
+
+
+    private void HandleValidSubmit()
+    {
+
+    }
+
+
+}
