@@ -70,7 +70,7 @@ namespace Coreflow.Objects
         {
             string code = mCodeWriter.ToString();
 
-            SyntaxTree = FlowCompilerHelper.ParseTextNotDebuggable(code);
+            SyntaxTree = FlowCompilerHelper.ParseCode(code);
 
             SyntaxNode sn = GetCursorNode(SyntaxTree);
 

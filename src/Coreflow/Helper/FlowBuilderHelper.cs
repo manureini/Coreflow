@@ -202,7 +202,7 @@ namespace Coreflow
 
         public static string FormatCode(string pCode)
         {
-            return FormatCode(FlowCompilerHelper.ParseTextNotDebuggable(pCode));
+            return FormatCode(FlowCompilerHelper.ParseCode(pCode));
         }
 
         private static string FormatCode(SyntaxTree pSyntaxTree)

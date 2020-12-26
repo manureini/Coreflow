@@ -16,7 +16,7 @@
 
     @if (!DropZonesVisible)
     {
-        <DefaultCodeCreatorParameterEditor CodeCreator="SelectedCodeCreator" />
+        <DefaultCodeCreatorParameterEditor @ref="mParameterEditor" CodeCreator="SelectedCodeCreator" />
     }
 
 </CascadingValue>
@@ -38,6 +38,8 @@
 
     protected string Code { get; set; }
 
+    protected DefaultCodeCreatorParameterEditor mParameterEditor;
+
     protected override void OnParametersSet()
     {
     }
@@ -51,7 +53,7 @@
             await Events.OnAfterSelect.InvokeAsync();
         }
 
-        StateHasChanged();
+        InvokeStateHasChanged();
     }
 
     public void RegisterEvents(FlowEditorEvents pEvents)
@@ -63,13 +65,13 @@
     {
         SelectedCodeCreator = pCodeCreator;
         DropZonesVisible = true;
-        StateHasChanged();
+        InvokeStateHasChanged();
     }
 
     public void HideDropZones()
     {
         DropZonesVisible = false;
-        StateHasChanged();
+        InvokeStateHasChanged();
     }
 
     public void MoveSelectedCodeCreatorBefore(ICodeCreator pAfterCodeCreator)
@@ -99,7 +101,7 @@
         if (oldIndex != -1)
             oldParentCCList.RemoveAt(oldIndex);
 
-        StateHasChanged();
+        InvokeStateHasChanged();
     }
 
     public void MoveSelectedCodeCreatorIn(ICodeCreatorContainerCreator pContainer, int pSequence)
@@ -125,12 +127,13 @@
                 oldIndex++;
 
         oldParentCCList.RemoveAt(oldIndex);
-        StateHasChanged();
+        InvokeStateHasChanged();
     }
 
     public void SetSelectedCodeCreatorAsRoot()
     {
         FlowDefinition.CodeCreator = SelectedCodeCreator;
+        InvokeStateHasChanged();
     }
 
     public void RemoveSelectedCodeCreator()
@@ -138,7 +141,8 @@
         if (SelectedCodeCreator == FlowDefinition.CodeCreator)
         {
             FlowDefinition.CodeCreator = null;
-            StateHasChanged();
+            SelectedCodeCreator = null;
+            InvokeStateHasChanged();
             return;
         }
 
@@ -147,7 +151,9 @@
         var oldParentCCList = oldParentInfo.parent.CodeCreators[oldParentInfo.indexContext];
         int oldIndex = oldParentCCList.IndexOf(SelectedCodeCreator);
         oldParentCCList.RemoveAt(oldIndex);
-        StateHasChanged();
+
+        SelectedCodeCreator = null;
+        InvokeStateHasChanged();
     }
 
     public void ShowCode()
@@ -161,7 +167,12 @@
         }
 
         Code = flowCode.FormattedCode;
-
     }
+
+    public void InvokeStateHasChanged()
+    {
+        StateHasChanged();    
+    }
+
 
 }

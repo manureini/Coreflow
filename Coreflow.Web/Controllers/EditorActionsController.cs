@@ -120,7 +120,7 @@ namespace Coreflow.Web.Controllers
         public JsonResult CompileFlow()
         {
             FlowCode fcode = GenerateCombinedCode();
-            var result = FlowCompilerHelper.CompileFlowCode(fcode.Code, false, "dummy");
+            var result = FlowCompilerHelper.CompileFlowCode(fcode.Code, false, "tmp");
 
             IDictionary<string, string> errors = new Dictionary<string, string>();
 

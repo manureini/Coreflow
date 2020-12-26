@@ -5,6 +5,8 @@
 
 @code {
 
+    private string mCurrentDisplayedCode;
+
     [Parameter]
     public string Code { get; set; }
 
@@ -14,30 +16,32 @@
     [Parameter]
     public bool IsInline { get; set; }
 
-
     protected MonacoEditor mEditor;
-
-
     protected string mId;
-    protected bool mIsInitialized;
+
+    protected System.Timers.Timer mTimer;
 
     protected override void OnInitialized()
     {
         mId = Guid.NewGuid().ToString();
+
+        mTimer = new System.Timers.Timer();
+        mTimer.Interval = 250;
+        mTimer.Elapsed += SendCodeChanged;
+        mTimer.AutoReset = false;
     }
 
-    protected override async Task OnParametersSetAsync()
+    protected override void OnParametersSet()
     {
-        if (mEditor == null)
-            return;
+        Code ??= string.Empty;
 
-        var value = await mEditor.GetValue();
-        if (value != Code)
+        if (Code != mCurrentDisplayedCode)
         {
-            await mEditor.SetValue(Code);
-        }
+            mCurrentDisplayedCode = Code;
 
-        mIsInitialized = true;
+            if (mEditor != null)
+                _ = mEditor.SetValue(Code);
+        }
     }
 
     protected StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
@@ -49,7 +53,7 @@
             Theme = "vs-dark",
             GlyphMargin = true,
             ScrollBeyondLastLine = false,
-            Value = Code,
+            Value = mCurrentDisplayedCode,
         };
 
         if (IsInline)
@@ -75,13 +79,19 @@
         return options;
     }
 
-    protected async Task OnCodeChanged(ModelContentChangedEvent pArgs)
+    protected void OnCodeChanged(ModelContentChangedEvent pArgs)
     {
-        if (!mIsInitialized)
-            return;
-
-        Code = await mEditor.GetValue();
-        await CodeChanged.InvokeAsync(Code);
+        mTimer.Stop();
+        mTimer.Start();
     }
 
+    protected void SendCodeChanged(object source, System.Timers.ElapsedEventArgs e)
+    {
+        _ = InvokeAsync(async () =>
+         {
+             mTimer.Stop();
+             mCurrentDisplayedCode = await mEditor.GetValue();
+             _ = CodeChanged.InvokeAsync(mCurrentDisplayedCode);
+         });
+    }
 }

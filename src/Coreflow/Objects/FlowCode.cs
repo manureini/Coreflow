@@ -10,11 +10,6 @@ namespace Coreflow.Objects
 
         public string FormattedCode => FlowBuilderHelper.FormatCode(Code);
 
-        public FlowDefinition Definition { get; set; }
-
-        public FlowCompileResult Compile(bool pDebug)
-        {
-            return FlowCompilerHelper.CompileFlowCode(Code, pDebug);
-        }
+        public FlowDefinition Definition { get; set; }        
     }
 }

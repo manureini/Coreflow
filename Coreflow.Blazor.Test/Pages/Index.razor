@@ -18,7 +18,7 @@
         var instanceStorage = new NoFlowInstanceStorage();
         var injection = new DictionaryArgumentInjectionStore(new System.Collections.Concurrent.ConcurrentDictionary<string, object>());
 
-        mCoreflowService = new CoreflowService(storage, instanceStorage, injection, "Plugins");
+        mCoreflowService = new CoreflowService(storage, instanceStorage, injection);
 
         mFlowDefinition = mCoreflowService.FlowDefinitionFactory.Create("test");
 
@@ -27,8 +27,15 @@
 
     public void RunFlow()
     {
-        mCoreflowService.CompileFlows();
-        mCoreflowService.RunFlow(mFlowDefinition.Identifier);
+        try
+        {
+            mCoreflowService.CompileFlows(false);
+            mCoreflowService.RunFlow(mFlowDefinition.Identifier);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 
 } 

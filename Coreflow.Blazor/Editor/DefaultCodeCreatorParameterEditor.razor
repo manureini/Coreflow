@@ -34,22 +34,34 @@
 
 @code {
 
-    [Parameter]
-    public ICodeCreator CodeCreator { get; set; }
+    private ICodeCreator mCodeCreator = null;
 
+    [Parameter]
+    public ICodeCreator CodeCreator
+    {
+        get
+        {
+            return mCodeCreator;
+        }
+        set
+        {
+            mCodeCreator = value;
+            StateHasChanged();
+        }
+    }
 
     protected override void OnInitialized()
     {
-
-
     }
 
-
-
-    private void HandleValidSubmit()
+    protected override void OnParametersSet()
     {
-
+  
     }
 
+    public void InvokeStateHasChanged()
+    {
+        base.StateHasChanged();
+    }
 
 }

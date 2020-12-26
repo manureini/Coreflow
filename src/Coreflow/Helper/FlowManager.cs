@@ -29,9 +29,13 @@ namespace Coreflow.Helper
                 {
                     FlowCode fcode = FlowBuilderHelper.GenerateFlowCode((FlowDefinition)flow);
                     combinedCode.Append(fcode.Code);
+                    combinedCode.AppendLine();
 
                     typenames.Add($"typeof(global::{fcode.FullGeneratedTypeName})");
                 }
+
+                combinedCode.AppendLine();
+                combinedCode.AppendLine();
 
                 combinedCode.AppendLine("public static class GeneratedFlowsInfo { ");
 
@@ -60,7 +64,7 @@ namespace Coreflow.Helper
 
                 mFactories.Clear();
 
-                var result = FlowCompilerHelper.CompileFlowCode(fullcode, pDebug);
+                var result = FlowCompilerHelper.CompileFlowCode(fullcode, pDebug, mCoreflow.TemporaryFilesDirectory);
 
                 if (!result.Successful)
                     throw new Exception("Flows did not compile!");
@@ -79,7 +83,7 @@ namespace Coreflow.Helper
 
                 Assembly asm;
 
-                if (RuntimeInformation.OSArchitecture == Architecture.Wasm)
+                if (mCoreflow.TemporaryFilesDirectory == null)
                 {
                     asm = AppDomain.CurrentDomain.Load(result.AssemblyBinary);
                 }
@@ -93,11 +97,5 @@ namespace Coreflow.Helper
                 return result;
             }
         }
-
-
-
-
-
-
     }
 }

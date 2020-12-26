@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Coreflow.Runtime
 {
@@ -56,7 +57,21 @@ namespace Coreflow.Runtime
             FlowDefinitionStorage = pFlowDefinitionStorage;
             FlowInstanceStorage = pFlowInstanceStorage;
             ArgumentInjectionStore = pArgumentInjectionStore;
-            TemporaryFilesDirectory = pTemporaryFilesDirectory ?? Path.GetTempPath();
+
+            if (RuntimeInformation.OSArchitecture != Architecture.Wasm)
+            {
+                TemporaryFilesDirectory = pTemporaryFilesDirectory ?? Path.Combine(Path.GetTempPath(), "CoreflowTmp");
+
+                if (!Directory.Exists(TemporaryFilesDirectory))
+                    Directory.CreateDirectory(TemporaryFilesDirectory);
+
+                var oldTmpFiles = Directory.GetFiles(TemporaryFilesDirectory, "*.*", SearchOption.TopDirectoryOnly);
+
+                /*
+                foreach (string file in oldTmpFiles)
+                    File.Delete(file);
+                    */
+            }
 
             LoggerFactory = pLoggerFactory;
 
@@ -71,18 +86,6 @@ namespace Coreflow.Runtime
             {
                 LoggerFactory = new LoggerFactory();
             }
-
-            if (!Directory.Exists(TemporaryFilesDirectory))
-                Directory.CreateDirectory(TemporaryFilesDirectory);
-
-
-            var oldTmpFiles = Directory.GetFiles(TemporaryFilesDirectory, "*.*", SearchOption.TopDirectoryOnly);
-
-            /*
-            foreach (string file in oldTmpFiles)
-                File.Delete(file);
-                */
-
 
             Logger = LoggerFactory.CreateLogger(typeof(CoreflowRuntime));
             FlowLogger = LoggerFactory.CreateLogger(typeof(ICompiledFlow));

@@ -27,7 +27,6 @@ namespace Coreflow
 
         public CoreflowApiServer ApiServer { get; protected set; }
 
-
         public void StartApiServer(object ipAddress)
         {
             throw new NotImplementedException();
