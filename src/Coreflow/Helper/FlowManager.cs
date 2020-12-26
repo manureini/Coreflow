@@ -16,7 +16,7 @@ namespace Coreflow.Helper
         {
         }
 
-        public FlowCompileResult CompileFlowsCreateAndLoadAssembly(IEnumerable<IFlowDefinition> pFlows)
+        public FlowCompileResult CompileFlowsCreateAndLoadAssembly(IEnumerable<IFlowDefinition> pFlows, bool pDebug)
         {
             lock (mLocker)
             {
@@ -62,7 +62,7 @@ namespace Coreflow.Helper
 
                 string assemblyName = "Flows";
 
-                var result = FlowCompilerHelper.CompileFlowCode(fullcode, true, assemblyName);
+                var result = FlowCompilerHelper.CompileFlowCode(fullcode, pDebug, assemblyName);
 
                 if (!result.Successful)
                     throw new Exception("Flows did not compile!");

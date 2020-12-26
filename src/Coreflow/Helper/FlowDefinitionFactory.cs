@@ -39,13 +39,14 @@ namespace Coreflow.Helper
 
         public FlowDefinition Create(string pName)
         {
-            FlowDefinition w = new FlowDefinition(mCoreflow)
+            var flowDefinition = new FlowDefinition(mCoreflow)
             {
                 Name = pName,
                 ReferencedNamespaces = DefaultReferencedNamespaces,
                 Arguments = new List<FlowArgument>(),
             };
-            return w;
+            mCoreflow.FlowDefinitionStorage.Add(flowDefinition);
+            return flowDefinition;
         }
     }
 }

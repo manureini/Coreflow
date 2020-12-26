@@ -1,0 +1,72 @@
+﻿<div class="panel border-panel">
+
+    @foreach (var grouped in mAllCodeCreators.GroupBy(c => c.codecreator is IUiDesignable cd ? cd.Category : null).OrderBy(g => g.Key))
+    {
+        <h5>@grouped.Key</h5>
+        @foreach (var entry in grouped.Select(g => (factory: g.factory, codeCreator: g.codecreator, displayName: g.codecreator.GetDisplayName())).OrderBy(c => c.displayName))
+        {
+            <div class="codecreator-panel-parameter"
+                 draggable="true"
+                 @ondragstart="(args) => OnDragStart(args, entry.factory)" @ondragstart:stopPropagation
+                 @ondragend="OnDragEnd" @ondragend:stopPropagation>
+                <i class="@entry.codeCreator.GetIconClassName()"></i><span class="displayname">@entry.displayName</span>
+            </div>
+        }
+    }
+
+</div>
+
+@code {
+
+
+    [Parameter]
+    public Coreflow.Storage.CodeCreatorStorage CodeCreatorStorage { get; set; }
+
+    [CascadingParameter]
+    public FlowEditor FlowEditor { get; set; }
+
+
+    protected (ICodeCreatorFactory factory, ICodeCreator codecreator)[] mAllCodeCreators;
+
+    protected override void OnParametersSet()
+    {
+        mAllCodeCreators = CodeCreatorStorage.GetAllFactories().Select(f => (f, f.Create())).ToArray();
+    }
+
+    protected void OnDragStart(DragEventArgs pArgs, ICodeCreatorFactory pCodeCreatorFactory)
+    {
+        pArgs.DataTransfer.DropEffect = "move";
+        pArgs.DataTransfer.EffectAllowed = "move";
+
+        var codeCreator = pCodeCreatorFactory.Create();
+
+        if (codeCreator is IParametrized parametrized)
+        {
+            parametrized.Arguments = new List<IArgument>();
+
+            foreach (var parameter in parametrized.GetParameters())
+            {
+                var argument = Coreflow.Helper.ArgumentHelper.CreateArgument(parameter);
+                parametrized.Arguments.Add(argument);
+            }
+        }
+
+        if (codeCreator is ICodeCreatorContainerCreator container)
+        {
+            container.CodeCreators = new List<List<ICodeCreator>>();
+
+            for (int i = 0; i < container.SequenceCount; i++)
+            {
+                container.CodeCreators.Add(new List<ICodeCreator>());
+            }
+        }
+
+        FlowEditor.ShowDropZones(codeCreator);
+    }
+
+    protected void OnDragEnd()
+    {
+        FlowEditor.HideDropZones();
+    }
+
+}

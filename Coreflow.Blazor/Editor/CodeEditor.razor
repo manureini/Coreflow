@@ -1,26 +1,12 @@
 ﻿
 
-<MonacoEditor @ref="mEditor" Id=@mId ConstructionOptions="EditorConstructionOptions" CssClass=@("code-editor-monaco "  + (IsInline ? "code-editor-monaco-inline" : "code-editor-monaco-fullscreen")) OnDidChangeModelContent="OnCodeChanged" OnDidInit="UpdateValue" />
+<MonacoEditor @ref="mEditor" Id=@mId ConstructionOptions="EditorConstructionOptions" CssClass=@("code-editor-monaco "  + (IsInline ? "code-editor-monaco-inline" : "code-editor-monaco-fullscreen")) OnDidChangeModelContent="OnCodeChanged" />
 
 
 @code {
 
-
-    protected string mCode = string.Empty;
-
     [Parameter]
-    public string Code
-    {
-        get
-        {
-            return mCode;
-        }
-        set
-        {
-            mCode = value ?? string.Empty;
-            UpdateValue();
-        }
-    }
+    public string Code { get; set; }
 
     [Parameter]
     public EventCallback<string> CodeChanged { get; set; }
@@ -40,6 +26,20 @@
         mId = Guid.NewGuid().ToString();
     }
 
+    protected override async Task OnParametersSetAsync()
+    {
+        if (mEditor == null)
+            return;
+
+        var value = await mEditor.GetValue();
+        if (value != Code)
+        {
+            await mEditor.SetValue(Code);
+        }
+
+        mIsInitialized = true;
+    }
+
     protected StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
     {
         var options = new StandaloneEditorConstructionOptions
@@ -49,7 +49,7 @@
             Theme = "vs-dark",
             GlyphMargin = true,
             ScrollBeyondLastLine = false,
-            Value = string.Empty
+            Value = Code,
         };
 
         if (IsInline)
@@ -80,22 +80,8 @@
         if (!mIsInitialized)
             return;
 
-        mCode = await mEditor.GetValue();
-        await CodeChanged.InvokeAsync(mCode);
-    }
-
-    protected async void UpdateValue()
-    {
-        if (mEditor == null)
-            return;
-
-        var value = await mEditor.GetValue();
-        if (value != Code)
-        {
-            await mEditor.SetValue(Code);
-        }
-
-        mIsInitialized = true;
+        Code = await mEditor.GetValue();
+        await CodeChanged.InvokeAsync(Code);
     }
 
 }

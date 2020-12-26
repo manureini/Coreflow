@@ -1,4 +1,5 @@
-﻿using Coreflow.Interfaces;
+﻿using Coreflow.Helper;
+using Coreflow.Interfaces;
 using Coreflow.Objects;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Coreflow.Blazor
 {
     public static class Extensions
     {
-        public static string GetDisplayName(this ICodeCreator pCodeCreator, FlowDefinition pFlowDefinition)
+        public static string GetDisplayName(this ICodeCreator pCodeCreator, FlowDefinition pFlowDefinition = null)
         {
             if (pCodeCreator == null)
                 return null;

@@ -10,6 +10,10 @@ namespace Coreflow.Interfaces
         {
         }
 
+        public InputOutputVariableNameCreator(string pName) : base(pName)
+        {
+        }
+
         public InputOutputVariableNameCreator(string pName, string pVariableName) : base(pName, pVariableName, pName)
         {
         }

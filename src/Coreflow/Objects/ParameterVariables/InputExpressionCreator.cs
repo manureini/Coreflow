@@ -39,6 +39,13 @@ namespace Coreflow.Interfaces
             DefaultValueCode = pDefaultValueCode;
         }
 
+        public InputExpressionCreator(string pName, string pType, string pDefaultValueCode)
+        {
+            Name = pName;
+            Type = pType;
+            DefaultValueCode = pDefaultValueCode;
+        }
+
         public void Initialize(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
         }
@@ -49,11 +56,11 @@ namespace Coreflow.Interfaces
 
             Type type = TypeHelper.SearchType(Type);
 
-            Code = Code.Trim();
+            Code = Code?.Trim();
 
             if (string.IsNullOrWhiteSpace(Code))
             {
-                if(!string.IsNullOrWhiteSpace(DefaultValueCode))
+                if (!string.IsNullOrWhiteSpace(DefaultValueCode))
                 {
                     if (type.IsByRef && !DefaultValueCode.StartsWith("ref "))
                         DefaultValueCode = "ref " + DefaultValueCode;

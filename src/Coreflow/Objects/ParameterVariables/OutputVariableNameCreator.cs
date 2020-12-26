@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Coreflow.Interfaces
 {
+    [Obsolete]
     public class OutputVariableNameCreator : AbstractVariableCreator
     {
         public OutputVariableNameCreator()

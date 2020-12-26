@@ -1,11 +1,18 @@
 ﻿
+
+
+<button @onclick="ShowCode">Show Code</button>
+
+@if (Code != null)
+{
+    <CodeEditor Code="@Code" />
+}
+
 <CascadingValue Value="this">
 
+    <CodeCreatorList CodeCreatorStorage="CodeCreatorStorage" />
 
-    @if (FlowDefinition.CodeCreator != null)
-    {
-        <DefaultCodeCreatorEditor FlowDefinition="FlowDefinition" CodeCreator="FlowDefinition.CodeCreator" DropZoneEnabled="DropZonesVisible" />
-    }
+    <DefaultCodeCreatorEditor FlowDefinition="FlowDefinition" CodeCreator="FlowDefinition.CodeCreator" DropZoneEnabled="DropZonesVisible" />
 
     @if (!DropZonesVisible)
     {
@@ -20,11 +27,16 @@
     [Parameter]
     public FlowDefinition FlowDefinition { get; set; }
 
+    [Parameter]
+    public CodeCreatorStorage CodeCreatorStorage { get; set; }
+
     protected FlowEditorEvents Events { get; set; }
 
     public ICodeCreator SelectedCodeCreator { get; set; }
 
     protected bool DropZonesVisible { get; set; }
+
+    protected string Code { get; set; }
 
     protected override void OnParametersSet()
     {
@@ -62,26 +74,45 @@
 
     public void MoveSelectedCodeCreatorBefore(ICodeCreator pAfterCodeCreator)
     {
-        var oldParentInfo = FlowDefinition.FindParentOf(SelectedCodeCreator);
-        var oldParentCCList = oldParentInfo.parent.CodeCreators[oldParentInfo.indexContext];
-        int oldIndex = oldParentCCList.IndexOf(SelectedCodeCreator);
-
         var newParentInfo = FlowDefinition.FindParentOf(pAfterCodeCreator);
         var newParentCCList = newParentInfo.parent.CodeCreators[newParentInfo.indexContext];
         int newIndex = newParentCCList.IndexOf(pAfterCodeCreator);
+
+        var oldParentInfo = FlowDefinition.FindParentOf(SelectedCodeCreator);
+
+        if (oldParentInfo.parent == null)
+        {
+            newParentCCList.Insert(newIndex, SelectedCodeCreator);
+            StateHasChanged();
+            return;
+        }
+
+        List<ICodeCreator> oldParentCCList = oldParentInfo.parent.CodeCreators[oldParentInfo.indexContext];
+        int oldIndex = oldParentCCList.IndexOf(SelectedCodeCreator);
+
         newParentCCList.Insert(newIndex, SelectedCodeCreator);
 
         if (newParentInfo.parent == oldParentInfo.parent)
             if (oldIndex >= newIndex)
                 oldIndex++;
 
-        oldParentCCList.RemoveAt(oldIndex);
+        if (oldIndex != -1)
+            oldParentCCList.RemoveAt(oldIndex);
+
         StateHasChanged();
     }
 
     public void MoveSelectedCodeCreatorIn(ICodeCreatorContainerCreator pContainer, int pSequence)
     {
         var oldParentInfo = FlowDefinition.FindParentOf(SelectedCodeCreator);
+
+        if (oldParentInfo.parent == null)
+        {
+            pContainer.CodeCreators[pSequence].Add(SelectedCodeCreator);
+            StateHasChanged();
+            return;
+        }
+
         var oldParentCCList = oldParentInfo.parent.CodeCreators[oldParentInfo.indexContext];
         int oldIndex = oldParentCCList.IndexOf(SelectedCodeCreator);
 
@@ -95,6 +126,11 @@
 
         oldParentCCList.RemoveAt(oldIndex);
         StateHasChanged();
+    }
+
+    public void SetSelectedCodeCreatorAsRoot()
+    {
+        FlowDefinition.CodeCreator = SelectedCodeCreator;
     }
 
     public void RemoveSelectedCodeCreator()
@@ -112,6 +148,11 @@
         int oldIndex = oldParentCCList.IndexOf(SelectedCodeCreator);
         oldParentCCList.RemoveAt(oldIndex);
         StateHasChanged();
+    }
+
+    public void ShowCode()
+    {
+        Code = FlowDefinition.GenerateFlowCode().FormattedCode;
     }
 
 }

@@ -7,8 +7,6 @@ namespace Coreflow.Interfaces
     {
         public Guid Identifier { get; set; } = Guid.NewGuid();
 
-        public string FactoryIdentifier { get; set; }
-
         public string VariableIdentifier { get; set; } = Guid.NewGuid().ToString();
 
         public string Code { get; set; }
@@ -17,6 +15,11 @@ namespace Coreflow.Interfaces
 
         public AbstractVariableCreator()
         {
+        }
+
+        public AbstractVariableCreator(string pName) : this()
+        {
+            Name = pName;
         }
 
         public AbstractVariableCreator(string pName, string pCode, string pVariableIdentifier) : this()

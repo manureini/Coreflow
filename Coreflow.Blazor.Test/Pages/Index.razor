@@ -1,7 +1,9 @@
 ﻿@page "/"
 
 
-<FlowEditor FlowDefinition="mFlowDefinition" />
+<button @onclick="RunFlow">Run Flow</button>
+
+<FlowEditor FlowDefinition="mFlowDefinition" CodeCreatorStorage="mCoreflowService.CodeCreatorStorage" />
 
 
 @code {
@@ -12,13 +14,21 @@
 
     protected override void OnInitialized()
     {
-        var storage = new SimpleFlowDefinitionFileStorage(@"C:\GitHub\Coreflow\Coreflow.Web\Flows");
+        var storage = new MemoryFlowDefinitionStorage();
         var instanceStorage = new NoFlowInstanceStorage();
         var injection = new DictionaryArgumentInjectionStore(new System.Collections.Concurrent.ConcurrentDictionary<string, object>());
 
         mCoreflowService = new CoreflowService(storage, instanceStorage, injection, "Plugins");
 
-        mFlowDefinition = (FlowDefinition)mCoreflowService.FlowDefinitionStorage.GetDefinitions().First();
+        mFlowDefinition = mCoreflowService.FlowDefinitionFactory.Create("test");
+
+        //mFlowDefinition = (FlowDefinition)mCoreflowService.FlowDefinitionStorage.GetDefinitions().First();
+    }
+
+    public void RunFlow()
+    {
+        mCoreflowService.CompileFlows();
+        mCoreflowService.RunFlow(mFlowDefinition.Identifier);
     }
 
 } 

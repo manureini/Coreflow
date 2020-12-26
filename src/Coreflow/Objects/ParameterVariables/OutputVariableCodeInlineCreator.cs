@@ -3,6 +3,7 @@ using System;
 
 namespace Coreflow.Interfaces
 {
+    [Obsolete]
     public class OutputVariableCodeInlineCreator : IArgument
     {
         public Guid Identifier { get; set; } = Guid.NewGuid();
