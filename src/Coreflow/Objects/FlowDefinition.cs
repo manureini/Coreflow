@@ -114,8 +114,6 @@ namespace Coreflow
             return null;
         }
 
-
-
         public ICodeCreator FindParentCodeCreatorOf(Guid pCodeCreatorIdentifier)
         {
             if (CodeCreator.Identifier == pCodeCreatorIdentifier)
@@ -142,7 +140,6 @@ namespace Coreflow
 
             return null;
         }
-
 
         public FlowCode GenerateFlowCode()
         {

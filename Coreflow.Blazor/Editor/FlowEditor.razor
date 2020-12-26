@@ -152,7 +152,16 @@
 
     public void ShowCode()
     {
-        Code = FlowDefinition.GenerateFlowCode().FormattedCode;
+        var flowCode = FlowDefinition.GenerateFlowCode();
+
+        if (System.Runtime.InteropServices.RuntimeInformation.OSArchitecture == System.Runtime.InteropServices.Architecture.Wasm)
+        {
+            Code = flowCode.Code;
+            return;
+        }
+
+        Code = flowCode.FormattedCode;
+
     }
 
 }

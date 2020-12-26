@@ -18,23 +18,24 @@ namespace Coreflow.Helper
         public const string COMMENT_ID_PREFIX = "//#id ";
         public const string CONTAINER_ID_PREFIX = "//#Container";
 
+        public const string FLOW_ASSEMBLY_PREFIX = "Generated_Flows_";
+
         private static Regex mIdRegex = new Regex(@"\/\/#id *([a-zA-Z0-9-]*)");
         private static Regex mContainerRegex = new Regex(@"\/\/#Container");
 
         private static volatile int mCounter = 0;
 
-        public static FlowCompileResult CompileFlowCode(string pCode, bool pDebug, string pAssemblyName = null)
+        public static FlowCompileResult CompileFlowCode(string pCode, bool pDebug)
         {
             FlowCompileResult ret = new FlowCompileResult();
 
-
-            pAssemblyName = pAssemblyName ?? Guid.NewGuid().ToString();
+            var assemblyName = FLOW_ASSEMBLY_PREFIX + Guid.NewGuid().ToString().Replace("-", "_");
 
             EmitResult emitResult;
 
             if (pDebug)
             {
-                emitResult = EmitWithDebugSymbols(pCode, pAssemblyName, out string dllPath, out string pdbPath, out string sourcePath);
+                emitResult = EmitWithDebugSymbols(pCode, assemblyName, out string dllPath, out string pdbPath, out string sourcePath);
 
                 ret.DllFilePath = dllPath;
                 ret.PdbFilePath = pdbPath;
@@ -42,7 +43,9 @@ namespace Coreflow.Helper
             }
             else
             {
-                emitResult = EmitNoDebug(pAssemblyName, pCode);
+                var result = EmitNoDebug(assemblyName, pCode);
+                ret.AssemblyBinary = result.assembly;
+                emitResult = result.emitResult;
             }
 
             if (!emitResult.Success)
@@ -156,7 +159,7 @@ namespace Coreflow.Helper
             return emitResult;
         }
 
-        private static EmitResult EmitNoDebug(string pAssemblyName, string pCode)
+        private static (EmitResult emitResult, byte[] assembly) EmitNoDebug(string pAssemblyName, string pCode)
         {
             var tree = ParseTextNotDebuggable(pCode);
 
@@ -167,11 +170,11 @@ namespace Coreflow.Helper
               .AddSyntaxTrees(tree)
               .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
-            using (MemoryStream ms = new MemoryStream())
-            {
-                EmitResult emitResult = compilation.Emit(ms);
-                return emitResult;
-            }
+            MemoryStream ms = new MemoryStream();
+            EmitResult emitResult = compilation.Emit(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+
+            return (emitResult, ms.ToArray());
         }
 
         public static Compilation CreateCompilation(string pAssemblyName, SyntaxTree syntaxTree)

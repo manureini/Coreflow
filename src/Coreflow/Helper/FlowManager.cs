@@ -4,6 +4,7 @@ using Coreflow.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Coreflow.Helper
@@ -16,7 +17,7 @@ namespace Coreflow.Helper
         {
         }
 
-        public FlowCompileResult CompileFlowsCreateAndLoadAssembly(IEnumerable<IFlowDefinition> pFlows, bool pDebug)
+        public FlowCompileResult CompileFlowsCreateAndLoadAssembly(IEnumerable<IFlowDefinition> pFlows, bool pDebug, bool pForceRecompile)
         {
             lock (mLocker)
             {
@@ -47,7 +48,7 @@ namespace Coreflow.Helper
 
                 string fullcode = combinedCode.ToString();
 
-                if (fullcode == mFullCode)
+                if (!pForceRecompile && fullcode == mFullCode)
                     return null;
 
                 mFullCode = fullcode;
@@ -59,10 +60,7 @@ namespace Coreflow.Helper
 
                 mFactories.Clear();
 
-
-                string assemblyName = "Flows";
-
-                var result = FlowCompilerHelper.CompileFlowCode(fullcode, pDebug, assemblyName);
+                var result = FlowCompilerHelper.CompileFlowCode(fullcode, pDebug);
 
                 if (!result.Successful)
                     throw new Exception("Flows did not compile!");
@@ -79,7 +77,16 @@ namespace Coreflow.Helper
 
                    Assembly asm = mAssemblyContext.LoadFromAssemblyPath(result.DllFilePath);*/
 
-                Assembly asm = Assembly.LoadFile(result.DllFilePath);
+                Assembly asm;
+
+                if (RuntimeInformation.OSArchitecture == Architecture.Wasm)
+                {
+                    asm = AppDomain.CurrentDomain.Load(result.AssemblyBinary);
+                }
+                else
+                {
+                    asm = Assembly.LoadFile(result.DllFilePath);
+                }
 
                 UpdateFactories(asm);
 

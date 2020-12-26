@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Coreflow.Objects
 {
@@ -18,5 +19,7 @@ namespace Coreflow.Objects
         public string PdbFilePath { get; internal set; }
 
         public string SourcePath { get; internal set; }
+
+        public byte[] AssemblyBinary { get; internal set; }
     }
 }

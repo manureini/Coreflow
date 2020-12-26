@@ -75,7 +75,7 @@
         return options;
     }
 
-    protected async void OnCodeChanged(ModelContentChangedEvent pArgs)
+    protected async Task OnCodeChanged(ModelContentChangedEvent pArgs)
     {
         if (!mIsInitialized)
             return;
