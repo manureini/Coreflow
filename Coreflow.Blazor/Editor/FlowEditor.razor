@@ -70,6 +70,7 @@
 
     public void HideDropZones()
     {
+        SelectedCodeCreator = null;
         DropZonesVisible = false;
         InvokeStateHasChanged();
     }
@@ -171,7 +172,7 @@
 
     public void InvokeStateHasChanged()
     {
-        StateHasChanged();    
+        StateHasChanged();
     }
 
 

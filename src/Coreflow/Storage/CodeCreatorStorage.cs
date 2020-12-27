@@ -24,11 +24,17 @@ namespace Coreflow.Storage
 
         public void AddCodeCreatorFactory(ICodeCreatorFactory pFactory)
         {
+            if (mCustomCodeCCreatorFactories.ContainsKey(pFactory.Identifier))
+                return;
+
             mCustomCodeCCreatorFactories.Add(pFactory.Identifier, pFactory);
         }
 
         public void AddCodeCreatorDefaultConstructor(Type pCodeCreatorType)
         {
+            if (mDefaultConstructorFactories.ContainsKey(pCodeCreatorType))
+                return;
+
             if (!typeof(ICodeCreator).IsAssignableFrom(pCodeCreatorType))
                 throw new ArgumentException($"type {pCodeCreatorType.FullName} does not implement {nameof(ICodeCreator)}");
 

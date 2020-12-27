@@ -66,6 +66,11 @@ namespace Coreflow
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(TraceLoggerCodeCreator));
             CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(WarningLoggerCodeCreator));
 
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).Where(a => a != this.GetType().Assembly))
+            {
+                LoadPlugin(assembly);
+            }
+
             if (pPluginDirectory != null)
             {
                 Logger.LogDebug("Plugin dir: " + pPluginDirectory);
@@ -83,18 +88,7 @@ namespace Coreflow
 
                 foreach (var asm in loadedAssemblies)
                 {
-                    var pluginType = asm.GetTypes().Where(t => typeof(IPlugin).IsAssignableFrom(t));
-                    if (pluginType.Count() > 1)
-                        throw new Exception($"{asm.FullName} contains multple {nameof(IPlugin)} classes");
-
-                    if (pluginType.Any())
-                    {
-                        var pluginInstance = (IPlugin)Activator.CreateInstance(pluginType.First());
-                        pluginInstance.OnEnable();
-                    }
-
-                    CodeCreatorStorage.AddCodeCreatorDefaultConstructor(asm.GetTypes().Where(t => typeof(ICodeCreator).IsAssignableFrom(t)));
-                    CodeCreatorStorage.AddCodeActivity(asm.GetTypes().Where(t => typeof(ICodeActivity).IsAssignableFrom(t)));
+                    LoadPlugin(asm);
                 }
             }
 
@@ -102,6 +96,25 @@ namespace Coreflow
             {
                 CodeCreatorStorage.AddCodeCreatorFactory(new CallFlowCreatorFactory(this, (FlowDefinition)flow));
             }
+        }
+
+        private void LoadPlugin(Assembly asm)
+        {
+            var pluginType = asm.GetTypes().Where(t => !t.IsInterface && !t.IsAbstract && typeof(IPlugin).IsAssignableFrom(t));
+
+            if (pluginType.Count() > 1)
+                throw new Exception($"{asm.FullName} contains multple {nameof(IPlugin)} classes");
+
+            if (pluginType.Any())
+            {
+                var pluginInstance = (IPlugin)Activator.CreateInstance(pluginType.First());
+                pluginInstance.OnEnable();
+            }
+
+            var types = asm.GetTypes().Where(t => !t.IsInterface && !t.IsAbstract && !typeof(IArgument).IsAssignableFrom(t));
+
+            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(types.Where(t => typeof(ICodeCreator).IsAssignableFrom(t)));
+            CodeCreatorStorage.AddCodeActivity(types.Where(t => typeof(ICodeActivity).IsAssignableFrom(t)));
         }
 
         public void CompileFlows(bool pDebug = true, bool pForceRecompile = false)
