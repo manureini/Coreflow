@@ -1,11 +1,11 @@
-﻿<div class="panel border-panel">
+﻿<div class="cf-code-creator-list">
 
     @foreach (var grouped in mAllCodeCreators.GroupBy(c => c.codecreator is IUiDesignable cd ? cd.Category : null).OrderBy(g => g.Key))
     {
-        <h5>@grouped.Key</h5>
+        <h6 class="cf-code-creator-list-category cf-category-title">@(string.IsNullOrWhiteSpace(grouped.Key) ? "None" : grouped.Key)</h6>
         @foreach (var entry in grouped.Select(g => (factory: g.factory, codeCreator: g.codecreator, displayName: g.codecreator.GetDisplayName())).OrderBy(c => c.displayName))
         {
-            <div class="codecreator-panel-parameter"
+            <div class="cf-code-creator"
                  draggable="true"
                  @ondragstart="(args) => OnDragStart(args, entry.factory)" @ondragstart:stopPropagation
                  @ondragend="OnDragEnd" @ondragend:stopPropagation>

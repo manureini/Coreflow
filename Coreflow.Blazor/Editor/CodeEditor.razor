@@ -1,6 +1,6 @@
 ﻿
 
-<MonacoEditor @ref="mEditor" Id=@mId ConstructionOptions="EditorConstructionOptions" CssClass=@("code-editor-monaco "  + (IsInline ? "code-editor-monaco-inline" : "code-editor-monaco-fullscreen")) OnDidChangeModelContent="OnCodeChanged" />
+<MonacoEditor @ref="mEditor" Id=@mId ConstructionOptions="EditorConstructionOptions" CssClass=@("cf-code-editor-monaco "  + (IsInline ? "cf-code-editor-monaco-inline" : "cf-code-editor-monaco-fullscreen")) OnDidChangeModelContent="OnCodeChanged" />
 
 
 @code {
@@ -88,10 +88,10 @@
     protected void SendCodeChanged(object source, System.Timers.ElapsedEventArgs e)
     {
         _ = InvokeAsync(async () =>
-         {
-             mTimer.Stop();
-             mCurrentDisplayedCode = await mEditor.GetValue();
-             _ = CodeChanged.InvokeAsync(mCurrentDisplayedCode);
-         });
+        {
+            mTimer.Stop();
+            mCurrentDisplayedCode = await mEditor.GetValue();
+            _ = CodeChanged.InvokeAsync(mCurrentDisplayedCode);
+        });
     }
 }

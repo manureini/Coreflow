@@ -1,27 +1,23 @@
 ﻿
-<div class="codecreator-parameter-editor">
+<div class="cf-code-creator-parameter-editor">
 
     @if (CodeCreator != null && CodeCreator is IParametrized parametrized)
     {
         @foreach (var groupingPm in parametrized.GetParameters().GroupBy(p => p.Category))
         {
-            <p>@groupingPm.Key</p>
+            <h6 class="cf-code-creator-parameter-editor-category-title cf-category-title">@groupingPm.Key</h6>
 
-            <table id="codecreator-parameter-editor-table">
-                <tr>
-                    <th>Parameter</th>
-                    <th>Value</th>
-                </tr>
+            <table class="cf-code-creator-parameter-editor-table">
 
                 @foreach (var pm in groupingPm)
                 {
                     var argument = parametrized.Arguments.First(a => a.Name == pm.Name);
 
-                    <tr data-name="@pm.Name">
-                        <td data-toggle="tooltip" title="@pm.Direction @pm.Name @pm.Type">@pm.GetDisplayNameOrName()</td>
-                        <td>
-                            <CodeEditor @bind-Code="@argument.Code" IsInline="true" />
-                        </td>
+                    <tr>
+                        <td title="@pm.Direction @pm.Name @pm.Type" class="cf-code-creator-parameter-editor-parameter-title">@pm.GetDisplayNameOrName()</td>
+                    </tr>
+                    <tr>
+                        <td class="cf-code-creator-parameter-editor-parameter-content"><CodeEditor @bind-Code="@argument.Code" IsInline="true" /></td>
                     </tr>
                 }
 
@@ -56,7 +52,7 @@
 
     protected override void OnParametersSet()
     {
-  
+
     }
 
     public void InvokeStateHasChanged()

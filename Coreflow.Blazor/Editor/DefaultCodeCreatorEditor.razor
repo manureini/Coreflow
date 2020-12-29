@@ -1,7 +1,7 @@
 ﻿
 @if (DropZoneEnabled && !PreviousCodeCreatorIsSelected && CodeCreator != FlowDefinition.CodeCreator)
 {
-    <div class="codecreator-dropzone" @ondrop="OnDropBefore" ondragover="event.preventDefault();"></div>
+    <div class="cf-code-creator-dropzone" @ondrop="OnDropBefore" ondragover="event.preventDefault();"></div>
 }
 
 
@@ -14,15 +14,15 @@
          @ondragend="OnDragEnd" @ondragend:stopPropagation
          @onkeydown="OnKeyDown" @onkeydown:stopPropagation tabindex="0">
 
-        <div class="codecreator-title">
-            <span class="codecreator-title-left">
+        <div class="cf-code-creator-title">
+            <span class="cf-code-creator-title-left">
                 <i class=@IconCssClass></i>
-                <input type="text" class="input-displayname displayname" spellcheck="false" value="@DisplayName" @onchange="OnDisplayNameChange" @onkeydown:stopPropagation />
+                <input type="text" class="cf-code-creator-input-display-name" spellcheck="false" value="@DisplayName" @onchange="OnDisplayNameChange" @onkeydown:stopPropagation />
             </span>
-            <span class="codecreator-title-right">
+            <span class="cf-code-creator-title-right">
                 @if (UserNote != null)
                 {
-                    <a class="codecreator-note" href="#" tabindex="0">
+                    <a class="cf-code-creator-note" href="#" tabindex="0">
                         <i class="fa fa-sticky-note"></i>
                     </a>
                 }
@@ -31,13 +31,12 @@
 
         @if (CodeCreator is ICodeCreatorContainerCreator containerCreator)
         {
-            <div class="codecreator-container-sequences">
+            <div class="cf-code-creator-sequence-container">
 
                 @for (int i = 0; i < containerCreator.SequenceCount; i++)
                 {
-                    <div class="codecreator-container-sequence">
-                        <div class="codecreator-container-start" data-index="@i"></div>
-
+                    <div class="cf-code-creator-sequence">
+                      
                         @{
                             ICodeCreator lastCodeCreator = null;
                         }
@@ -56,7 +55,7 @@
                         @if (DropZoneEnabled && lastCodeCreator != FlowEditor.SelectedCodeCreator)
                         {
                             int sequenceIndex = i;
-                            <div class="codecreator-dropzone" @ondrop="() => OnDrop(containerCreator, sequenceIndex)" ondragover="event.preventDefault();"></div>
+                            <div class="cf-code-creator-dropzone" @ondrop="() => OnDrop(containerCreator, sequenceIndex)" ondragover="event.preventDefault();"></div>
                         }
 
                     </div>
@@ -69,7 +68,7 @@
 }
 else if (CodeCreator == null && FlowDefinition.CodeCreator == null)
 {
-    <div class="codecreator-dropzone" @ondrop="OnDropRoot" ondragover="event.preventDefault();"></div>
+    <div class="cf-code-creator-dropzone" @ondrop="OnDropRoot" ondragover="event.preventDefault();"></div>
 }
 
 
@@ -114,11 +113,11 @@ else if (CodeCreator == null && FlowDefinition.CodeCreator == null)
     {
         get
         {
-            string ret = "codecreator";
+            string ret = "cf-code-creator";
 
             if (FlowEditor.SelectedCodeCreator == CodeCreator)
             {
-                ret += " codecreator-active";
+                ret += " cf-code-creator-active";
             }
 
             return ret;

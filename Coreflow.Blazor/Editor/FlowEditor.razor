@@ -1,25 +1,35 @@
 ﻿
-
-
 <button @onclick="ShowCode">Show Code</button>
 
-@if (Code != null)
-{
-    <CodeEditor Code="@Code" />
-}
 
-<CascadingValue Value="this">
 
-    <CodeCreatorList CodeCreatorStorage="CodeCreatorStorage" />
 
-    <DefaultCodeCreatorEditor FlowDefinition="FlowDefinition" CodeCreator="FlowDefinition.CodeCreator" DropZoneEnabled="DropZonesVisible" />
+<div class="cf-editor-main">
 
-    @if (!DropZonesVisible)
+
+    @if (Code != null)
     {
-        <DefaultCodeCreatorParameterEditor @ref="mParameterEditor" CodeCreator="SelectedCodeCreator" />
+        <CodeEditor Code="@Code" />
     }
+    else
+    {
+        <CascadingValue Value="this">
 
-</CascadingValue>
+            <CodeCreatorList CodeCreatorStorage="CodeCreatorStorage" />
+
+            <div class="cf-code-creator-container-main">
+                <DefaultCodeCreatorEditor FlowDefinition="FlowDefinition" CodeCreator="FlowDefinition.CodeCreator" DropZoneEnabled="DropZonesVisible" />
+            </div>
+
+            @if (!DropZonesVisible)
+            {
+                <DefaultCodeCreatorParameterEditor @ref="mParameterEditor" CodeCreator="SelectedCodeCreator" />
+            }
+
+        </CascadingValue>
+    }
+</div>
+
 
 @code {
 
@@ -159,6 +169,13 @@
 
     public void ShowCode()
     {
+        if (Code != null)
+        {
+            Code = null;
+            InvokeStateHasChanged();
+            return;
+        }
+
         var flowCode = FlowDefinition.GenerateFlowCode();
 
         if (System.Runtime.InteropServices.RuntimeInformation.OSArchitecture == System.Runtime.InteropServices.Architecture.Wasm)
