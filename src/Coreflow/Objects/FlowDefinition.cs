@@ -3,6 +3,7 @@ using Coreflow.Objects;
 using Coreflow.Runtime;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Coreflow
 {
@@ -27,6 +28,7 @@ namespace Coreflow
         private object mLocker = new object();
 
         // not serialized
+        [JsonIgnore]
         public CoreflowRuntime Coreflow { get; set; }
 
         [Obsolete("Only serializer")]
@@ -100,7 +102,8 @@ namespace Coreflow
             if (pCodeCreator.Identifier == pGuid)
                 return pCodeCreator;
 
-            if (pCodeCreator is ICodeCreatorContainerCreator container)
+            if (pCodeCreator is ICodeCreatorContainerCreator container && container.CodeCreators != null)
+            {
                 foreach (var ccContainer in container.CodeCreators)
                 {
                     foreach (var cc in ccContainer)
@@ -110,6 +113,7 @@ namespace Coreflow
                             return found;
                     }
                 }
+            }
 
             return null;
         }
@@ -124,7 +128,7 @@ namespace Coreflow
 
         private ICodeCreator FindParentCodeCreatorOf(ICodeCreator pCodeCreator, Guid pCodeCreatorIdentifier)
         {
-            if (pCodeCreator is ICodeCreatorContainerCreator container)
+            if (pCodeCreator is ICodeCreatorContainerCreator container && container.CodeCreators != null)
                 foreach (var ccContainer in container.CodeCreators)
                 {
                     foreach (var cc in ccContainer)

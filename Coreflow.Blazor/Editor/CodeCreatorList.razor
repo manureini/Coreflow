@@ -51,16 +51,6 @@
             }
         }
 
-        if (codeCreator is ICodeCreatorContainerCreator container)
-        {
-            container.CodeCreators = new List<List<ICodeCreator>>();
-
-            for (int i = 0; i < container.SequenceCount; i++)
-            {
-                container.CodeCreators.Add(new List<ICodeCreator>());
-            }
-        }
-
         FlowEditor.ShowDropZones(codeCreator);
     }
 

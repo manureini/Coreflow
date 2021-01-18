@@ -75,7 +75,7 @@ namespace Coreflow.Blazor
 
             var container = parent as ICodeCreatorContainerCreator;
 
-            if (container == null)
+            if (container == null || container.CodeCreators == null)
                 return (null, -1);
 
             for (int i = 0; i < container.CodeCreators.Count; i++)

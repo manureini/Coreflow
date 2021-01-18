@@ -30,11 +30,14 @@ namespace Coreflow
             {
                 container.ParentContainerCreator = pParent;
 
-                foreach (var entry in container.CodeCreators)
+                if (container.CodeCreators != null)
                 {
-                    foreach (var cc in entry)
+                    foreach (var entry in container.CodeCreators)
                     {
-                        SetParentContainer(cc, container);
+                        foreach (var cc in entry)
+                        {
+                            SetParentContainer(cc, container);
+                        }
                     }
                 }
             }
@@ -190,11 +193,14 @@ namespace Coreflow
             if (pContainer == null)
                 return null;
 
-            foreach (var cclist in pContainer.CodeCreators)
+            if (pContainer.CodeCreators != null)
             {
-                IVariableCreator found = cclist.Select(v => v as IVariableCreator).Where(v => v != null).FirstOrDefault(pFilter);
-                if (found != null)
-                    return found;
+                foreach (var cclist in pContainer.CodeCreators)
+                {
+                    IVariableCreator found = cclist.Select(v => v as IVariableCreator).Where(v => v != null).FirstOrDefault(pFilter);
+                    if (found != null)
+                        return found;
+                }
             }
 
             return GetVariableCreatorInInitialScope(pContainer.ParentContainerCreator, pFilter);

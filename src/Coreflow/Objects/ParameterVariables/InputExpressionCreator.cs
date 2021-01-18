@@ -9,7 +9,7 @@ namespace Coreflow.Interfaces
     {
         public Guid Identifier { get; set; } = Guid.NewGuid();
 
-        public string VariableIdentifier { get; internal set; } = Guid.NewGuid().ToString();
+        public string VariableIdentifier { get; set; } = Guid.NewGuid().ToString();
 
         public string Code { get; set; }
 

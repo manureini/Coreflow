@@ -34,10 +34,11 @@ namespace Coreflow.Validation.Corrector
                 if (cc == null)
                     return;
 
-                foreach (var entry in cc.CodeCreators)
-                {
-                    entry.RemoveAll(c => c.Identifier == ccid);
-                }
+                if (cc.CodeCreators != null)
+                    foreach (var entry in cc.CodeCreators)
+                    {
+                        entry.RemoveAll(c => c.Identifier == ccid);
+                    }
             }
         }
     }

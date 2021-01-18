@@ -38,7 +38,7 @@ namespace Coreflow.Validation
                     cChecker.Check(ref pMessages, pCodeCreator);
             }
 
-            if (pCodeCreator is ICodeCreatorContainerCreator container)
+            if (pCodeCreator is ICodeCreatorContainerCreator container && container.CodeCreators != null)
             {
                 foreach (var ccontainer in container.CodeCreators)
                     foreach (var cc in ccontainer)

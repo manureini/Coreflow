@@ -8,7 +8,7 @@
   .cf-code-creator.cf-code-creator-active {
     background: #545454; }
   .cf-code-creator i {
-    padding-left: 5px; }
+    padding: 0 3px; }
   .cf-code-creator .cf-code-creator-input-display-name {
     background: rgba(30, 30, 30, 0.25);
     border: none;
@@ -29,8 +29,8 @@
   border-color: #515151; }
 
 .cf-code-editor-monaco.cf-code-editor-monaco-fullscreen {
-  width: 90vw;
-  height: 90vh; }
+  height: 80vh;
+  width: 100%; }
 
 .cf-editor-main {
   display: flex;

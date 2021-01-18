@@ -44,12 +44,18 @@ namespace Coreflow.Storage
 
         public void AddCodeCreatorDefaultConstructor(IEnumerable<Type> pCodeCreatorType)
         {
-            pCodeCreatorType.ForEach(t => AddCodeCreatorDefaultConstructor(t));
+            foreach (var ccType in pCodeCreatorType)
+            {
+                AddCodeCreatorDefaultConstructor(ccType);
+            }
         }
 
         public void AddCodeActivity(IEnumerable<Type> pCodeActivityTypes)
         {
-            pCodeActivityTypes.ForEach(t => AddCodeActivity(t));
+            foreach (var ccType in pCodeActivityTypes)
+            {
+                AddCodeActivity(ccType);
+            }
         }
 
         public void AddCodeActivity(Type pCodeActivityType)

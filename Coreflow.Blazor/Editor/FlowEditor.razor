@@ -119,6 +119,16 @@
     {
         var oldParentInfo = FlowDefinition.FindParentOf(SelectedCodeCreator);
 
+        if (pContainer.CodeCreators == null)
+        {
+            pContainer.CodeCreators = new List<List<ICodeCreator>>();
+
+            for (int i = 0; i < pContainer.SequenceCount; i++)
+            {
+                pContainer.CodeCreators.Add(new List<ICodeCreator>());
+            }
+        }
+
         if (oldParentInfo.parent == null)
         {
             pContainer.CodeCreators[pSequence].Add(SelectedCodeCreator);
@@ -162,6 +172,18 @@
         var oldParentCCList = oldParentInfo.parent.CodeCreators[oldParentInfo.indexContext];
         int oldIndex = oldParentCCList.IndexOf(SelectedCodeCreator);
         oldParentCCList.RemoveAt(oldIndex);
+
+        bool allSequencesEmpty = true;
+
+        foreach (var sequenceList in oldParentInfo.parent.CodeCreators)
+        {
+            allSequencesEmpty &= sequenceList.Count == 0;
+        }
+
+        if(allSequencesEmpty)
+        {
+            oldParentInfo.parent.CodeCreators = null;
+        }
 
         SelectedCodeCreator = null;
         InvokeStateHasChanged();

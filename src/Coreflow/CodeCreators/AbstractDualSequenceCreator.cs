@@ -8,7 +8,7 @@ namespace Coreflow.CodeCreators
 {
     public abstract class AbstractDualSequenceCreator : ICodeCreatorContainerCreator, IUiDesignable
     {
-        public List<List<ICodeCreator>> CodeCreators { get; set; } = new List<List<ICodeCreator>>();
+        public List<List<ICodeCreator>> CodeCreators { get; set; }
 
         public ICodeCreatorContainerCreator ParentContainerCreator { get; set; }
 
@@ -61,7 +61,7 @@ namespace Coreflow.CodeCreators
 
         protected virtual void AddInitializeCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
-            if (CodeCreators.Count > 0)
+            if (CodeCreators != null && CodeCreators.Count > 0)
                 foreach (IVariableCreator varCreator in CodeCreators.SelectMany(a => a).Select(a => a as IVariableCreator).Where(a => a != null))
                 {
                     IVariableCreator existing = FlowBuilderHelper.GetVariableCreatorInInitialScope(this, c => c.VariableIdentifier == varCreator.VariableIdentifier && pBuilderContext.HasLocalVariableName(c));
@@ -83,7 +83,7 @@ namespace Coreflow.CodeCreators
             pCodeWriter.AppendLineBottom(RemoveLabelAndCloseBracket);
             pCodeWriter.AppendLineBottom();
 
-            if (CodeCreators.Count > 0 && CodeCreators[0] != null)
+            if (CodeCreators != null && CodeCreators.Count > 0 && CodeCreators[0] != null)
                 foreach (ICodeCreator c in CodeCreators[0])
                 {
                     AbstractSingleSequenceCreator.ProcessCodeCreator(pBuilderContext, pCodeWriter, c, this);
@@ -99,7 +99,7 @@ namespace Coreflow.CodeCreators
 
             pCodeWriter.AppendLineBottom("}"); /* second */
 
-            if (CodeCreators.Count > 1 && CodeCreators[1] != null)
+            if (CodeCreators != null && CodeCreators.Count > 1 && CodeCreators[1] != null)
                 foreach (ICodeCreator c in CodeCreators[1])
                 {
                     AbstractSingleSequenceCreator.ProcessCodeCreator(pBuilderContext, pCodeWriter, c, this);

@@ -13,7 +13,7 @@ namespace Coreflow.CodeCreators
 
         public ICodeCreatorContainerCreator ParentContainerCreator { get; set; }
 
-        public List<List<ICodeCreator>> CodeCreators { get; set; } = new List<List<ICodeCreator>>();
+        public List<List<ICodeCreator>> CodeCreators { get; set; }
 
         public int SequenceCount { get; } = 1;
 

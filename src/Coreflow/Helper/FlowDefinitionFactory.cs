@@ -34,7 +34,10 @@ namespace Coreflow.Helper
 
         public void AddDefaultReferencedNamespace(IEnumerable<string> pNameSpaces)
         {
-            pNameSpaces.ForEach(a => AddDefaultReferencedNamespace(a));
+            foreach (var ns in pNameSpaces)
+            {
+                AddDefaultReferencedNamespace(ns);
+            }
         }
 
         public FlowDefinition Create(string pName)

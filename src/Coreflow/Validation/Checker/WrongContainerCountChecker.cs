@@ -8,7 +8,7 @@ namespace Coreflow.Validation.Checker
     {
         public void Check(ref List<IFlowValidationMessage> pMessages, ICodeCreator pCodeCreator)
         {
-            if (pCodeCreator is ICodeCreatorContainerCreator container)
+            if (pCodeCreator is ICodeCreatorContainerCreator container && container.CodeCreators != null)
             {
                 if (container.SequenceCount != container.CodeCreators.Count)
                 {

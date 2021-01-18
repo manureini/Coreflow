@@ -8,7 +8,7 @@ namespace Coreflow.CodeCreators
 {
     public abstract class AbstractSingleSequenceCreator : ICodeCreatorContainerCreator, IUiDesignable
     {
-        public List<List<ICodeCreator>> CodeCreators { get; set; } = new List<List<ICodeCreator>>();
+        public List<List<ICodeCreator>> CodeCreators { get; set; }
 
         public ICodeCreatorContainerCreator ParentContainerCreator { get; set; }
 
@@ -37,7 +37,7 @@ namespace Coreflow.CodeCreators
 
         public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer)
         {
-            if (CodeCreators.Count > 1)
+            if (CodeCreators != null && CodeCreators.Count > 1)
                 throw new Exception("Inconsistent Data");
 
             pBuilderContext.UpdateCurrentSymbols();
@@ -54,7 +54,7 @@ namespace Coreflow.CodeCreators
 
         protected virtual void AddInitializeCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder)
         {
-            if (CodeCreators.Count > 0)
+            if (CodeCreators != null && CodeCreators.Count > 0)
                 foreach (IVariableCreator varCreator in CodeCreators.First().Select(a => a as IVariableCreator).Where(a => a != null))
                 {
                     IVariableCreator existing = FlowBuilderHelper.GetVariableCreatorInInitialScope(this, c => c.VariableIdentifier == varCreator.VariableIdentifier && pBuilderContext.HasLocalVariableName(c));
@@ -75,7 +75,7 @@ namespace Coreflow.CodeCreators
 
             pCodeWriter.AppendLineBottom("}");
 
-            if (CodeCreators.Count > 0)
+            if (CodeCreators != null && CodeCreators.Count > 0)
                 foreach (ICodeCreator c in CodeCreators.First())
                 {
                     ProcessCodeCreator(pBuilderContext, pCodeWriter, c, this);
