@@ -23,18 +23,18 @@ namespace Coreflow
 
         protected abstract string LogLevel { get; }
 
-        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer = null)
+        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
             pCodeWriter.WriteIdentifierTagTop(this);
 
             pCodeWriter.AppendLineTop($"Microsoft.Extensions.Logging.LoggerExtensions.Log{LogLevel}({nameof(ICompiledFlow.Logger)}, ");
-            Arguments[0].ToCode(pBuilderContext, pCodeWriter, pContainer);
+            Arguments[0].ToCode(pBuilderContext, pCodeWriter);
             pCodeWriter.AppendTop(",");
-            Arguments[1].ToCode(pBuilderContext, pCodeWriter, pContainer);
+            Arguments[1].ToCode(pBuilderContext, pCodeWriter);
             pCodeWriter.AppendTop(",");
-            Arguments[2].ToCode(pBuilderContext, pCodeWriter, pContainer);
+            Arguments[2].ToCode(pBuilderContext, pCodeWriter);
             pCodeWriter.AppendTop(",");
-            Arguments[3].ToCode(pBuilderContext, pCodeWriter, pContainer);
+            Arguments[3].ToCode(pBuilderContext, pCodeWriter);
             pCodeWriter.AppendTop(");");
         }
 

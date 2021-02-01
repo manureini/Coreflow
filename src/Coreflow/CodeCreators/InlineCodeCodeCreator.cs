@@ -19,10 +19,10 @@ namespace Coreflow.CodeCreators
 
         public string Category => "Basic";
 
-        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer = null)
+        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
             pCodeWriter.WriteIdentifierTagTop(this);
-            Arguments[0].ToCode(pBuilderContext, pCodeWriter, pContainer);
+            Arguments[0].ToCode(pBuilderContext, pCodeWriter);
         }
 
         public CodeCreatorParameter[] GetParameters()

@@ -62,7 +62,7 @@ namespace Coreflow.CodeCreators
             pBuilderContext.CreateLocalVariableName(this);
         }
 
-        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pParentContainer = null)
+        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
             pBuilderContext.UpdateCurrentSymbols();
             pCodeWriter.WriteIdentifierTagTop(this);
@@ -81,7 +81,7 @@ namespace Coreflow.CodeCreators
                     continue;
 
                 pCodeWriter.AppendLineTop($"{dictVariableName}.Add(\"{entry.Name}\",");
-                entry.ToCode(pBuilderContext, pCodeWriter, pParentContainer);
+                entry.ToCode(pBuilderContext, pCodeWriter);
                 pCodeWriter.AppendLineTop($");");
             }
 

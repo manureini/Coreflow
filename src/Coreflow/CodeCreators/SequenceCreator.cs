@@ -17,7 +17,7 @@ namespace Coreflow.CodeCreators
 
         public override string Category => "Basic";
 
-        public override void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer)
+        public override void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
             AddCodeCreatorsCode(pBuilderContext, pCodeWriter);
         }

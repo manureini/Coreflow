@@ -27,7 +27,7 @@ namespace Coreflow.Interfaces
             Identifier = pIdentifier;
         }
 
-        public virtual void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer = null)
+        public virtual void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
             pCodeWriter.WriteIdentifierTagTop(this);
             pCodeWriter.AppendLineTop(Code);

@@ -22,11 +22,11 @@ namespace Coreflow.CodeCreators
 
         public override string Category => "Basic";
 
-        public override void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer)
+        public override void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder)
         {
             pCodeBuilder.AppendLineTop("if(");
 
-            Arguments[0].ToCode(pBuilderContext, pCodeBuilder, pContainer);
+            Arguments[0].ToCode(pBuilderContext, pCodeBuilder);
 
             pCodeBuilder.AppendLineTop(")");
 

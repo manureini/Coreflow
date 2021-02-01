@@ -74,7 +74,7 @@ namespace Coreflow.CodeCreators
             }
         }
 
-        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer)
+        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
             MethodInfo mi = typeof(T).GetMethod("Execute");
 
@@ -145,7 +145,7 @@ namespace Coreflow.CodeCreators
             if (mi.ReturnType != typeof(void))
             {
                 IArgument resultarg = Arguments.Last();
-                resultarg.ToCode(pBuilderContext, pCodeWriter, pContainer);
+                resultarg.ToCode(pBuilderContext, pCodeWriter);
                 pCodeWriter.AppendLineTop(" = ");
             }
 
@@ -158,7 +158,7 @@ namespace Coreflow.CodeCreators
             {
                 IArgument argument = Arguments[pi.Position];
 
-                argument.ToCode(pBuilderContext, pCodeWriter, pContainer);
+                argument.ToCode(pBuilderContext, pCodeWriter);
                 pCodeWriter.AppendTop(",");
             }
 

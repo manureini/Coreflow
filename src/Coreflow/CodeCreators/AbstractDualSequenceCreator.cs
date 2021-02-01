@@ -42,10 +42,10 @@ namespace Coreflow.CodeCreators
             ParentContainerCreator = pParentContainerCreator;
         }
 
-        public abstract void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer);
+        public abstract void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder);
 
 
-        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer)
+        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder)
         {
             pBuilderContext.UpdateCurrentSymbols();
 
@@ -56,7 +56,7 @@ namespace Coreflow.CodeCreators
             pCodeBuilder.AppendLineBottom("}"); /* DualContainer */
 
             AddInitializeCode(pBuilderContext, pCodeBuilder);
-            ToSequenceCode(pBuilderContext, pCodeBuilder, pContainer);
+            ToSequenceCode(pBuilderContext, pCodeBuilder);
         }
 
         protected virtual void AddInitializeCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)

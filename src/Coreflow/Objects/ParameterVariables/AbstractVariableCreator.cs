@@ -38,6 +38,6 @@ namespace Coreflow.Interfaces
         {
         }
 
-        public abstract void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter, ICodeCreatorContainerCreator pContainer = null);
+        public abstract void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter);
     }
 }

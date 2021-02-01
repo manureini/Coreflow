@@ -33,9 +33,9 @@ namespace Coreflow.CodeCreators
             ParentContainerCreator = pParentContainerCreator;
         }
 
-        public abstract void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer);
+        public abstract void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder);
 
-        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder, ICodeCreatorContainerCreator pContainer)
+        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder)
         {
             if (CodeCreators != null && CodeCreators.Count > 1)
                 throw new Exception("Inconsistent Data");
@@ -49,7 +49,7 @@ namespace Coreflow.CodeCreators
             pCodeBuilder.AppendLineBottom("}"); /* SingleContainer */
 
             AddInitializeCode(pBuilderContext, pCodeBuilder);
-            ToSequenceCode(pBuilderContext, pCodeBuilder, pContainer);
+            ToSequenceCode(pBuilderContext, pCodeBuilder);
         }
 
         protected virtual void AddInitializeCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder)
@@ -87,7 +87,7 @@ namespace Coreflow.CodeCreators
             //   pCodeWriter.AppendLineTop("/* start part */");
             int index = pCodeWriter.GetButtomIndex();
 
-            c.ToCode(pBuilderContext, pCodeWriter, pContainer);
+            c.ToCode(pBuilderContext, pCodeWriter);
 
             string bottomPart = pCodeWriter.SubstringButtom(index);
 

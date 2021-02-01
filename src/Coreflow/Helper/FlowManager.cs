@@ -67,7 +67,7 @@ namespace Coreflow.Helper
                 var result = FlowCompilerHelper.CompileFlowCode(fullcode, pDebug, mCoreflow.TemporaryFilesDirectory);
 
                 if (!result.Successful)
-                    throw new Exception("Flows did not compile!");
+                    throw new Exception($"Flows did not compile! Message: {result.ErrorMessage}");
 
                 /*   if (mAssemblyContext != null)
                    {
