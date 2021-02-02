@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Coreflow.Helper;
 using Coreflow.Interfaces;
 using Coreflow.Objects;
+using Coreflow.Objects.ParameterVariables;
 
 namespace Coreflow.CodeCreators
 {
@@ -26,9 +27,16 @@ namespace Coreflow.CodeCreators
 
             pCodeWriter.WriteIdentifierTagTop(this);
 
+            pBuilderContext.BuildingContext.Add(ExpressionCreatorHintsKeys.CUSTOM_DEFAULT_EXPRESSION_EXPRESSION_CREATOR_KEY, "object noName_" + Identifier.ToString().ToVariableName());
             Arguments[0].ToCode(pBuilderContext, pCodeWriter);
+            pBuilderContext.BuildingContext.Remove(ExpressionCreatorHintsKeys.CUSTOM_DEFAULT_EXPRESSION_EXPRESSION_CREATOR_KEY);
+
             pCodeWriter.AppendTop(" = ");
+
+            pBuilderContext.BuildingContext.Add(ExpressionCreatorHintsKeys.CUSTOM_DEFAULT_EXPRESSION_EXPRESSION_CREATOR_KEY, "null");
             Arguments[1].ToCode(pBuilderContext, pCodeWriter);
+            pBuilderContext.BuildingContext.Remove(ExpressionCreatorHintsKeys.CUSTOM_DEFAULT_EXPRESSION_EXPRESSION_CREATOR_KEY);
+
             pCodeWriter.AppendTop(";");
         }
 

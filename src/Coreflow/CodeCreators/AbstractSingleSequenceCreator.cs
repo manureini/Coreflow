@@ -35,21 +35,27 @@ namespace Coreflow.CodeCreators
 
         public abstract void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder);
 
-        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder)
+        public virtual void WriteHeaderCodeToParentContainer(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
+        {
+        }
+
+        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
             if (CodeCreators != null && CodeCreators.Count > 1)
                 throw new Exception("Inconsistent Data");
 
             pBuilderContext.UpdateCurrentSymbols();
 
-            pCodeBuilder.WriteIdentifierTagTop(this);
-            pCodeBuilder.WriteContainerTagTop(this);
+            pCodeWriter.WriteIdentifierTagTop(this);
+            pCodeWriter.WriteContainerTagTop(this);
 
-            pCodeBuilder.AppendLineTop("{"); /* SingleContainer */
-            pCodeBuilder.AppendLineBottom("}"); /* SingleContainer */
+            WriteHeaderCodeToParentContainer(pBuilderContext, pCodeWriter);
 
-            AddInitializeCode(pBuilderContext, pCodeBuilder);
-            ToSequenceCode(pBuilderContext, pCodeBuilder);
+            pCodeWriter.AppendLineTop("{"); /* SingleContainer */
+            pCodeWriter.AppendLineBottom("}"); /* SingleContainer */
+
+            AddInitializeCode(pBuilderContext, pCodeWriter);
+            ToSequenceCode(pBuilderContext, pCodeWriter);
         }
 
         protected virtual void AddInitializeCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder)

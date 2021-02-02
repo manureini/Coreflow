@@ -42,21 +42,26 @@ namespace Coreflow.CodeCreators
             ParentContainerCreator = pParentContainerCreator;
         }
 
-        public abstract void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder);
+        public abstract void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter);
 
+        public virtual void WriteHeaderCodeToParentContainer(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
+        {
+        }
 
-        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder)
+        public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
             pBuilderContext.UpdateCurrentSymbols();
 
-            pCodeBuilder.WriteIdentifierTagTop(this);
-            pCodeBuilder.WriteContainerTagTop(this);
+            pCodeWriter.WriteIdentifierTagTop(this);
+            pCodeWriter.WriteContainerTagTop(this);
 
-            pCodeBuilder.AppendLineTop("{");  /* DualContainer */
-            pCodeBuilder.AppendLineBottom("}"); /* DualContainer */
+            WriteHeaderCodeToParentContainer(pBuilderContext, pCodeWriter);
 
-            AddInitializeCode(pBuilderContext, pCodeBuilder);
-            ToSequenceCode(pBuilderContext, pCodeBuilder);
+            pCodeWriter.AppendLineTop("{");  /* DualContainer */
+            pCodeWriter.AppendLineBottom("}"); /* DualContainer */
+
+            AddInitializeCode(pBuilderContext, pCodeWriter);
+            ToSequenceCode(pBuilderContext, pCodeWriter);
         }
 
         protected virtual void AddInitializeCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
