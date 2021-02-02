@@ -35,7 +35,7 @@ namespace Coreflow.Validation.Corrector
                 var iec = cc.Arguments.First(a => a.Name == name) as InputExpressionCreator;
                 var parameter = cc.GetParameters().First(a => a.Name == name);
 
-                iec.Type = parameter.Type.AssemblyQualifiedName;
+                iec.Type = parameter.Type;
             }
         }
     }

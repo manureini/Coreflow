@@ -15,8 +15,7 @@ namespace Coreflow.Interfaces
 
         public string Name { get; set; }
 
-        //Type "Type" and serializer does not work
-        public string Type { get; set; }
+        public Type Type { get; set; }
 
         public string DefaultValueCode { get; set; }
 
@@ -32,14 +31,14 @@ namespace Coreflow.Interfaces
             Code = pExpression;
         }
 
-        public InputExpressionCreator(string pName, string pExpression, Guid pIdentifier, string pType, string pDefaultValueCode) : this(pName, pExpression)
+        public InputExpressionCreator(string pName, string pExpression, Guid pIdentifier, Type pType, string pDefaultValueCode) : this(pName, pExpression)
         {
             Identifier = pIdentifier;
             Type = pType;
             DefaultValueCode = pDefaultValueCode;
         }
 
-        public InputExpressionCreator(string pName, string pType, string pDefaultValueCode)
+        public InputExpressionCreator(string pName, Type pType, string pDefaultValueCode)
         {
             Name = pName;
             Type = pType;
@@ -53,22 +52,20 @@ namespace Coreflow.Interfaces
         public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodewriter)
         {
             pCodewriter.WriteIdentifierTagTop(this);
-
-            Type type = TypeHelper.SearchType(Type);
-
+ 
             Code = Code?.Trim();
 
             if (string.IsNullOrWhiteSpace(Code))
             {
                 if (!string.IsNullOrWhiteSpace(DefaultValueCode))
                 {
-                    if (type.IsByRef && !DefaultValueCode.StartsWith("ref "))
+                    if (Type.IsByRef && !DefaultValueCode.StartsWith("ref "))
                         DefaultValueCode = "ref " + DefaultValueCode;
                     pCodewriter.AppendLineTop(DefaultValueCode);
                     return;
                 }
 
-                pCodewriter.AppendLineTop(TypeHelper.GetDefaultInitializationCodeSnippet(type, pBuilderContext));
+                pCodewriter.AppendLineTop(TypeHelper.GetDefaultInitializationCodeSnippet(Type, pBuilderContext));
                 return;
             }
 
@@ -78,7 +75,7 @@ namespace Coreflow.Interfaces
 
                 if (TypeHelper.IsValidVariableName(name))
                 {
-                    pCodewriter.AppendLineTop($"({type.FullName})CoreflowInstace.ArgumentInjectionStore.GetArgumentValue(\"{name}\", typeof({type.FullName}))");
+                    pCodewriter.AppendLineTop($"({Type.FullName})CoreflowInstace.ArgumentInjectionStore.GetArgumentValue(\"{name}\", typeof({Type.FullName}))");
                     return;
                 }
             }

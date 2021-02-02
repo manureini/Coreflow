@@ -15,15 +15,14 @@ namespace Coreflow.Interfaces
 
         public string Name { get; set; }
 
-        //Type "Type" and serializer does not work
-        public string Type { get; set; }
+        public Type Type { get; set; }
 
         public OutputExpressionCreator() { }
 
-        public OutputExpressionCreator(string pName, string pTypeAssemblyQualifiedName)
+        public OutputExpressionCreator(string pName, Type pType)
         {
             Name = pName;
-            Type = pTypeAssemblyQualifiedName;
+            Type = pType;
         }
 
         public virtual void Initialize(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
@@ -36,8 +35,7 @@ namespace Coreflow.Interfaces
 
             if (string.IsNullOrWhiteSpace(Code))
             {
-                Type type = TypeHelper.SearchType(Type);
-                pCodeWriter.AppendLineTop(TypeHelper.GetDefaultInitializationCodeSnippet(type, pBuilderContext));
+                pCodeWriter.AppendLineTop(TypeHelper.GetDefaultInitializationCodeSnippet(Type, pBuilderContext));
                 return;
             }
 
@@ -47,7 +45,7 @@ namespace Coreflow.Interfaces
             {
                 bool existing = pBuilderContext.CurrentSymbols.Any(s => s.Name == Code);
 
-                if (Type == typeof(LeftSideCSharpCode).AssemblyQualifiedName)
+                if (Type == typeof(LeftSideCSharpCode))
                 {
                     pCodeWriter.AppendLineTop($"{(!existing ? "var " : " ")}{Code}");
                 }

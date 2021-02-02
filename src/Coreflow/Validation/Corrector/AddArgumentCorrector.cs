@@ -35,7 +35,7 @@ namespace Coreflow.Validation.Corrector
                 var parameter = cc.GetParameters().Single(p => p.Name == name);
                 int index = Array.FindIndex(cc.GetParameters(), c => c.Name == name);
 
-                cc.Arguments.Insert(index, ArgumentHelper.CreateArgument(parameter, name, parameter.Type.AssemblyQualifiedName, string.Empty, Guid.NewGuid()));
+                cc.Arguments.Insert(index, ArgumentHelper.CreateArgument(parameter));
             }
         }
     }

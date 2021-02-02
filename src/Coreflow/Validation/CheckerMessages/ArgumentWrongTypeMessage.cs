@@ -22,11 +22,11 @@ namespace Coreflow.Validation.CheckerMessages
 
         public Guid Identifier { get; set; } = Guid.NewGuid();
 
-        public string CurrentType { get; }
+        public Type CurrentType { get; }
 
         public Type ExpectedType { get; }
 
-        internal ArgumentWrongTypeMessage(string pCodeCreatorTypeIdentifier, CodeCreatorParameter pParameter, IArgument pArgument, Guid pFirstCodeCreator, string pCurrentType, Type pExpectedType)
+        internal ArgumentWrongTypeMessage(string pCodeCreatorTypeIdentifier, CodeCreatorParameter pParameter, IArgument pArgument, Guid pFirstCodeCreator, Type pCurrentType, Type pExpectedType)
         {
             CodeCreatorTypeIdentifier = pCodeCreatorTypeIdentifier;
             Parameter = pParameter;

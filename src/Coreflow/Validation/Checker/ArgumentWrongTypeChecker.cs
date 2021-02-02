@@ -18,7 +18,7 @@ namespace Coreflow.Validation.Checker
                 {
                     var arg = para.Arguments.FirstOrDefault(a => a != null && a.Name == param.Name);
 
-                    if (arg != null && arg is InputExpressionCreator iec && iec.Type != param.Type.AssemblyQualifiedName)
+                    if (arg != null && arg is InputExpressionCreator iec && iec.Type != param.Type)
                     {
                         AddToResult(ref pMessages, pCodeCreator, param, arg, iec.Type, param.Type);
                     }
@@ -26,7 +26,7 @@ namespace Coreflow.Validation.Checker
             }
         }
 
-        private void AddToResult(ref List<IFlowValidationMessage> pMessages, ICodeCreator pCodeCreator, CodeCreatorParameter pParameter, IArgument pArgument, string pCurrentType, Type pExpectedType)
+        private void AddToResult(ref List<IFlowValidationMessage> pMessages, ICodeCreator pCodeCreator, CodeCreatorParameter pParameter, IArgument pArgument, Type pCurrentType, Type pExpectedType)
         {
             string typeIdentifier = pCodeCreator.GetTypeIdentifier();
 
