@@ -18,6 +18,8 @@ namespace Coreflow.Interfaces
         //Type "Type" and serializer does not work
         public string Type { get; set; }
 
+        public OutputExpressionCreator() { }
+
         public OutputExpressionCreator(string pName, string pTypeAssemblyQualifiedName)
         {
             Name = pName;
@@ -32,15 +34,17 @@ namespace Coreflow.Interfaces
         {
             pCodeWriter.WriteIdentifierTagTop(this);
 
+            if (string.IsNullOrWhiteSpace(Code))
+            {
+                Type type = TypeHelper.SearchType(Type);
+                pCodeWriter.AppendLineTop(TypeHelper.GetDefaultInitializationCodeSnippet(type, pBuilderContext));
+                return;
+            }
+
             bool isSimpleVariableName = !Code.Trim().Contains(" ") && !Code.Contains("\"");
 
             if (isSimpleVariableName)
             {
-                if (string.IsNullOrWhiteSpace(Code))
-                {
-                    Code = "null";
-                }
-
                 bool existing = pBuilderContext.CurrentSymbols.Any(s => s.Name == Code);
 
                 if (Type == typeof(LeftSideCSharpCode).AssemblyQualifiedName)
