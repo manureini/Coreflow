@@ -1,5 +1,6 @@
 ﻿using Coreflow.Interfaces;
 using Coreflow.Objects;
+using Coreflow.Objects.ParameterVariables;
 using System.Collections.Generic;
 
 namespace Coreflow.CodeCreators
@@ -24,11 +25,13 @@ namespace Coreflow.CodeCreators
 
         public override void ToSequenceCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeBuilder)
         {
+            pBuilderContext.BuildingContext.Add(ExpressionCreatorHintsKeys.CUSTOM_DEFAULT_EXPRESSION_EXPRESSION_CREATOR_KEY, IfCreator.CustomDefaultExpressionIfArgument);
+
             pCodeBuilder.AppendLineTop("if(");
-
             Arguments[0].ToCode(pBuilderContext, pCodeBuilder);
-
             pCodeBuilder.AppendLineTop(")");
+
+            pBuilderContext.BuildingContext.Remove(ExpressionCreatorHintsKeys.CUSTOM_DEFAULT_EXPRESSION_EXPRESSION_CREATOR_KEY);
 
             AddFirstCodeCreatorsCode(pBuilderContext, pCodeBuilder);
 

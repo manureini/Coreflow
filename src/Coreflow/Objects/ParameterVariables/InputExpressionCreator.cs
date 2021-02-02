@@ -68,7 +68,7 @@ namespace Coreflow.Interfaces
                     return;
                 }
 
-                pCodewriter.AppendLineTop(TypeHelper.GetDefaultInitializationCodeSnippet(type));
+                pCodewriter.AppendLineTop(TypeHelper.GetDefaultInitializationCodeSnippet(type, pBuilderContext));
                 return;
             }
 

@@ -25,6 +25,10 @@ namespace Coreflow.Objects
             DefinitionGuid = pDefinitionGuid;
 
             ConstructorInfo emptyConstructor = pDynamicFlowType.GetConstructor(Type.EmptyTypes);
+
+            if(emptyConstructor == null)            
+                throw new Exception($"Invalid Flow Type. Default Constructor not found in {pDynamicFlowType.AssemblyQualifiedName}!");            
+
             var dynamicMethod = new DynamicMethod("CreateInstance", pDynamicFlowType, Type.EmptyTypes, true);
             ILGenerator ilGenerator = dynamicMethod.GetILGenerator();
             //   ilGenerator.Emit(OpCodes.Nop);

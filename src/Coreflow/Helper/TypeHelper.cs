@@ -1,4 +1,6 @@
 ﻿using Coreflow.Interfaces;
+using Coreflow.Objects;
+using Coreflow.Objects.ParameterVariables;
 using Microsoft.CodeAnalysis.CSharp;
 using System;
 using System.Collections;
@@ -225,8 +227,19 @@ namespace Coreflow.Helper
             return SearchType(parsedTypeName);
         }
 
-        public static string GetDefaultInitializationCodeSnippet(Type pType)
+        public static string GetDefaultInitializationCodeSnippet(Type pType, FlowBuilderContext pBuilderContext)
         {
+            if(pBuilderContext.BuildingContext.ContainsKey(ExpressionCreatorHintsKeys.CUSTOM_DEFAULT_EXPRESSION_EXPRESSION_CREATOR_KEY))
+            {
+                var value = pBuilderContext.BuildingContext[ExpressionCreatorHintsKeys.CUSTOM_DEFAULT_EXPRESSION_EXPRESSION_CREATOR_KEY];
+
+                if (value is string str)
+                    return str;
+
+                if (value is Func<Type, string> func)
+                    return func(pType);
+            }
+
             if (pType == typeof(CSharpCode))
                 return string.Empty;
 

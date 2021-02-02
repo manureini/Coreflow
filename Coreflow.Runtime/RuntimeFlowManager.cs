@@ -39,6 +39,9 @@ namespace Coreflow.Interfaces
         {
             lock (mLocker)
             {
+                if (!mFactories.ContainsKey(pFlowIdentifier))
+                    throw new Exception($"Flow with Identifier {pFlowIdentifier} not found. Is it in storage and already compiled?");
+                
                 return mFactories[pFlowIdentifier];
             }
         }
