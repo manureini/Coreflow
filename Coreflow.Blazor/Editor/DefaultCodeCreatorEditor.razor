@@ -36,7 +36,7 @@
                 @for (int i = 0; i < containerCreator.SequenceCount; i++)
                 {
                     <div class="cf-code-creator-sequence">
-                      
+
                         @{
                             ICodeCreator lastCodeCreator = null;
                         }
@@ -48,7 +48,7 @@
                                 var prevIsSelected = lastCodeCreator != null && lastCodeCreator == FlowEditor.SelectedCodeCreator;
                                 lastCodeCreator = creator;
 
-                                <DefaultCodeCreatorEditor FlowDefinition="FlowDefinition" CodeCreator="creator" DropZoneEnabled="DropZoneEnabled" PreviousCodeCreatorIsSelected="prevIsSelected" />
+                                <DefaultCodeCreatorEditor FlowDefinition="FlowDefinition" CodeCreator="creator" PreviousCodeCreatorIsSelected="prevIsSelected" />
                             }
                         }
 
@@ -80,8 +80,14 @@ else if (CodeCreator == null && FlowDefinition.CodeCreator == null)
     [Parameter]
     public ICodeCreator CodeCreator { get; set; }
 
-    [Parameter]
-    public bool DropZoneEnabled { get; set; }
+
+    public bool DropZoneEnabled
+    {
+        get
+        {
+            return FlowEditor.DropZonesVisible && !(CodeCreator == FlowEditor.SelectedCodeCreator);
+        }
+    }
 
     [Parameter]
     public bool PreviousCodeCreatorIsSelected { get; set; }
@@ -134,8 +140,6 @@ else if (CodeCreator == null && FlowDefinition.CodeCreator == null)
 
         UserColor = FlowDefinition.GetMetadata(CodeCreator.Identifier, Constants.USER_COLOR) as string;
         UserNote = FlowDefinition.GetMetadata(CodeCreator.Identifier, Constants.USER_NOTE) as string;
-
-        DropZoneEnabled = DropZoneEnabled && !(CodeCreator == FlowEditor.SelectedCodeCreator);
     }
 
     protected void OnDisplayNameChange(ChangeEventArgs args)

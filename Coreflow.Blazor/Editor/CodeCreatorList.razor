@@ -51,6 +51,7 @@
             }
         }
 
+        FlowEditor.SelectedCodeCreator = codeCreator;
         FlowEditor.ShowDropZones(codeCreator);
     }
 
@@ -58,6 +59,7 @@
     {
         Task.Run(async () =>
         {
+            FlowEditor.SelectedCodeCreator = null;
             await Task.Delay(500);
             FlowEditor.HideDropZones();
         });

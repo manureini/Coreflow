@@ -18,7 +18,7 @@
             <CodeCreatorList CodeCreatorStorage="CodeCreatorStorage" />
 
             <div class="cf-code-creator-container-main">
-                <DefaultCodeCreatorEditor FlowDefinition="FlowDefinition" CodeCreator="FlowDefinition.CodeCreator" DropZoneEnabled="DropZonesVisible" />
+                <DefaultCodeCreatorEditor FlowDefinition="FlowDefinition" CodeCreator="FlowDefinition.CodeCreator" />
             </div>
 
             @if (!DropZonesVisible)
@@ -44,7 +44,7 @@
 
     public ICodeCreator SelectedCodeCreator { get; set; }
 
-    protected bool DropZonesVisible { get; set; }
+    public bool DropZonesVisible { get; set; }
 
     protected string Code { get; set; }
 
@@ -56,6 +56,9 @@
 
     internal async Task OnSelectCodeCreator(ICodeCreator pCodeCreator)
     {
+        if (pCodeCreator == SelectedCodeCreator)
+            return;
+
         SelectedCodeCreator = pCodeCreator;
 
         if (Events?.OnAfterSelect != null)
@@ -73,14 +76,16 @@
 
     public void ShowDropZones(ICodeCreator pCodeCreator)
     {
-        SelectedCodeCreator = pCodeCreator;
-        DropZonesVisible = true;
-        InvokeStateHasChanged();
+        // https://stackoverflow.com/questions/28408720/jquery-changing-the-dom-on-dragstart-event-fires-dragend-immediately
+        Task.Run(() =>
+        {
+            DropZonesVisible = true;
+            InvokeAsync(StateHasChanged);
+        });
     }
 
     public void HideDropZones()
     {
-        SelectedCodeCreator = null;
         DropZonesVisible = false;
         InvokeStateHasChanged();
     }
@@ -112,6 +117,7 @@
         if (oldIndex != -1)
             oldParentCCList.RemoveAt(oldIndex);
 
+        HideDropZones();
         InvokeStateHasChanged();
     }
 
@@ -148,12 +154,16 @@
                 oldIndex++;
 
         oldParentCCList.RemoveAt(oldIndex);
+
+        HideDropZones();
         InvokeStateHasChanged();
     }
 
     public void SetSelectedCodeCreatorAsRoot()
     {
         FlowDefinition.CodeCreator = SelectedCodeCreator;
+
+        HideDropZones();
         InvokeStateHasChanged();
     }
 
