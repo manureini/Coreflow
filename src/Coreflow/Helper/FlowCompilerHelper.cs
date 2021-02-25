@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -25,6 +24,8 @@ namespace Coreflow.Helper
         private static Regex mContainerRegex = new Regex(@"\/\/#Container");
 
         private static volatile int mCounter = 0;
+
+        public static ReferenceHelper ReferenceHelper = new ReferenceHelper(a => a.FullName.StartsWith(FlowCompilerHelper.FLOW_ASSEMBLY_PREFIX));
 
         public static FlowCompileResult CompileFlowCode(string pCode, bool pDebug, string pTmpDir)
         {

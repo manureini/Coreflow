@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Coreflow.Objects
+﻿namespace Coreflow.Objects
 {
     public enum VariableDirection
     {

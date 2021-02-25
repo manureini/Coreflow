@@ -10,38 +10,46 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Coreflow.Helper
 {
-    public static class ReferenceHelper
+    // Important !!!!
+    // This class is used in Project Coreflow and DynamixGenerator
+    // Update it on all projects for any changes
+
+    public class ReferenceHelper
     {
-        private static string mDotnetRootPath;
-        private static string mRefRootPath;
+        protected string mDotnetRootPath;
+        protected string mRefRootPath;
+        protected Dictionary<string, MetadataReference> mReferenceCache = new Dictionary<string, MetadataReference>();
+        protected object mLocker = new object();
+        protected SemaphoreSlim mLoadLocker = new SemaphoreSlim(1, 1);
+        protected Func<Assembly, bool> mFilter;
 
-        private static Dictionary<string, MetadataReference> mReferenceCache = new Dictionary<string, MetadataReference>();
-
-        private static object mLocker = new object();
-        private static SemaphoreSlim mLoadLocker = new SemaphoreSlim(1, 1);
-
-        static ReferenceHelper()
+        public ReferenceHelper(Func<Assembly, bool> pFilter = null, string pDotnetRootPath = null)
         {
+            mFilter = pFilter;
+            mDotnetRootPath = pDotnetRootPath;
+
             if (RuntimeInformation.OSArchitecture == Architecture.Wasm)
                 return;
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (mDotnetRootPath == null)
             {
-                mDotnetRootPath = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles"), "dotnet") + Path.DirectorySeparatorChar;
-            }
-            else
-            {
-                mDotnetRootPath = Environment.GetEnvironmentVariable("DOTNET_ROOT");
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    mDotnetRootPath = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles"), "dotnet") + Path.DirectorySeparatorChar;
+                }
+                else
+                {
+                    mDotnetRootPath = Environment.GetEnvironmentVariable("DOTNET_ROOT");
+                }
             }
 
             mRefRootPath = Path.Combine(mDotnetRootPath, "packs") + Path.DirectorySeparatorChar;
         }
 
-        public static async Task LoadReferencesFromWebAsync(HttpClient pHttpClient)
+        public async Task LoadReferencesFromWebAsync(HttpClient pHttpClient)
         {
             if (RuntimeInformation.OSArchitecture == Architecture.Wasm)
             {
@@ -53,18 +61,13 @@ namespace Coreflow.Helper
 
                     foreach (var assembly in assemblies)
                     {
-                        if (assembly.ManifestModule.ScopeName.StartsWith(FlowCompilerHelper.FLOW_ASSEMBLY_PREFIX) ||
-                            string.IsNullOrWhiteSpace(assembly.FullName) ||
-                            assembly.FullName.StartsWith(FlowCompilerHelper.FLOW_ASSEMBLY_PREFIX))
-                            continue;
-
                         if (mReferenceCache.ContainsKey(assembly.FullName))
                             continue;
 
-                        var assemblyName = assembly.GetName().Name;
-
-                        if (string.IsNullOrWhiteSpace(assemblyName) || assemblyName.StartsWith(FlowCompilerHelper.FLOW_ASSEMBLY_PREFIX))
+                        if (mFilter != null && mFilter(assembly))
                             continue;
+
+                        var assemblyName = assembly.GetName().Name;
 
                         var fileName = assemblyName + ".dll";
 
@@ -87,7 +90,7 @@ namespace Coreflow.Helper
             }
         }
 
-        private static string FindReferenceAssemblyIfNeeded(string pRuntimeAssembly)
+        private string FindReferenceAssemblyIfNeeded(string pRuntimeAssembly)
         {
             if (!pRuntimeAssembly.StartsWith(mDotnetRootPath))
                 return pRuntimeAssembly;
@@ -132,7 +135,7 @@ namespace Coreflow.Helper
             return pRuntimeAssembly;
         }
 
-        public static IEnumerable<MetadataReference> GetMetadataReferences()
+        public IEnumerable<MetadataReference> GetMetadataReferences()
         {
             lock (mLocker)
             {
@@ -141,16 +144,12 @@ namespace Coreflow.Helper
                 if (RuntimeInformation.OSArchitecture == Architecture.Wasm)
                 {
                     var ret = assemblies.Select(a =>
-                     {
-                         if (a.ManifestModule.ScopeName.StartsWith(FlowCompilerHelper.FLOW_ASSEMBLY_PREFIX))
-                             return null;
+                    {
+                        if (mReferenceCache.ContainsKey(a.FullName))
+                            return mReferenceCache[a.FullName];
 
-                         var location = a.FullName;
-                         if (mReferenceCache.ContainsKey(location))
-                             return mReferenceCache[location];
-
-                         return null;
-                     }).Where(a => a != null).Distinct().ToArray();
+                        return null;
+                    }).Where(a => a != null).Distinct().ToArray();
 
                     return ret;
                 }
@@ -164,6 +163,9 @@ namespace Coreflow.Helper
 
                         if (mReferenceCache.ContainsKey(location))
                             return mReferenceCache[location];
+
+                        if (mFilter != null && mFilter(a))
+                            return null;
 
                         string referenceAssembly = FindReferenceAssemblyIfNeeded(location);
 
@@ -184,7 +186,5 @@ namespace Coreflow.Helper
                 }).Where(a => a != null).Distinct().ToArray(); //make ToArray here because of lock
             }
         }
-
-
     }
 }

@@ -1,6 +1,4 @@
-﻿using Coreflow.Helper;
-
-namespace Coreflow.Objects
+﻿namespace Coreflow.Objects
 {
     public class FlowCode
     {
