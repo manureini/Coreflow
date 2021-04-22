@@ -107,6 +107,11 @@ namespace Coreflow.CodeCreators
                         code = iec.DefaultValueCode;
                     }
 
+                    if (string.IsNullOrWhiteSpace(code))
+                    {
+                        code = $"default(global::{iec.Type.FullName})";
+                    }
+
                     pCodeWriter.AppendLineTop($"var {variableName} = {code};");
                 }
             }
