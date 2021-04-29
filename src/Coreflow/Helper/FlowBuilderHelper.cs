@@ -24,7 +24,7 @@ namespace Coreflow
             return pFlows.Select(w => GenerateFlowCode(w));
         }
 
-        private static void SetParentContainer(ICodeCreator pCodeCreator, ICodeCreatorContainerCreator pParent = null)
+        private static void SetParentContainer(ICodeCreator pCodeCreator, bool pClear, ICodeCreatorContainerCreator pParent = null)
         {
             if (pCodeCreator is ICodeCreatorContainerCreator container)
             {
@@ -36,7 +36,7 @@ namespace Coreflow
                     {
                         foreach (var cc in entry)
                         {
-                            SetParentContainer(cc, container);
+                            SetParentContainer(cc, pClear, pClear ? null : container);
                         }
                     }
                 }
@@ -48,7 +48,7 @@ namespace Coreflow
             FlowCode ret = new FlowCode();
             ret.Definition = pFlowDefinition;
 
-            SetParentContainer(pFlowDefinition.CodeCreator);
+            SetParentContainer(pFlowDefinition.CodeCreator, false);
 
             FlowCodeWriter cw = new FlowCodeWriter();
 
@@ -183,6 +183,8 @@ namespace Coreflow
 
                 pFlowDefinition.CodeCreator.ToCode(context, cw);
             }
+
+            SetParentContainer(pFlowDefinition.CodeCreator, true);
 
             ret.Code = cw.ToString();
             return ret;
