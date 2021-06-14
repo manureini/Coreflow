@@ -63,6 +63,8 @@ namespace Coreflow.CodeCreators
 
         public void Initialize(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
+            pBuilderContext.UpdateCurrentSymbols();
+
             string typeName = "global::" + typeof(T).FullName;
             string variableName = pBuilderContext.CreateLocalVariableName(this);
 
@@ -70,12 +72,23 @@ namespace Coreflow.CodeCreators
 
             foreach (FieldInfo fi in typeof(T).GetFields())
             {
+                if (fi.IsStatic) //we assign only values which are not static -> mutiple flows could run in parallel
+                    continue;
+
+                if (!pBuilderContext.CurrentSymbols.Any(s => s.Name == fi.Name))
+                {
+                    pCodeWriter.AppendLineTop($"//No symbol found with name {fi.Name} -> skipped attribute value");
+                    return;
+                }
+
                 pCodeWriter.AppendLineTop($"{variableName}.{fi.Name} = {fi.Name};");
             }
         }
 
         public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodeWriter)
         {
+            pBuilderContext.UpdateCurrentSymbols();
+
             MethodInfo mi = typeof(T).GetMethod("Execute");
 
             //validation part
@@ -98,6 +111,7 @@ namespace Coreflow.CodeCreators
 
                 if (argument is InputExpressionCreator iec)
                 {
+                    /*
                     string variableName = argument.Identifier.ToString().ToVariableName();
 
                     string code = iec.Code;
@@ -112,7 +126,12 @@ namespace Coreflow.CodeCreators
                         code = $"default(global::{iec.Type.FullName})";
                     }
 
-                    pCodeWriter.AppendLineTop($"var {variableName} = {code};");
+                    pCodeWriter.AppendLineTop($"var {variableName} = {code};");*/
+
+                    string variableName = argument.Identifier.ToString().ToVariableName();
+                    pCodeWriter.AppendLineTop($"var {variableName} =");
+                    iec.ToCode(pBuilderContext, pCodeWriter);
+                    pCodeWriter.AppendLineTop(";");
                 }
             }
 

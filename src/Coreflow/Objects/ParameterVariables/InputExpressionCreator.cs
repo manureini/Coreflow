@@ -2,6 +2,7 @@
 using Coreflow.Objects;
 using Microsoft.CodeAnalysis;
 using System;
+using System.Linq;
 
 namespace Coreflow.Interfaces
 {
@@ -52,17 +53,20 @@ namespace Coreflow.Interfaces
         public void ToCode(FlowBuilderContext pBuilderContext, FlowCodeWriter pCodewriter)
         {
             pCodewriter.WriteIdentifierTagTop(this);
- 
+
             Code = Code?.Trim();
 
             if (string.IsNullOrWhiteSpace(Code))
             {
                 if (!string.IsNullOrWhiteSpace(DefaultValueCode))
                 {
-                    if (Type.IsByRef && !DefaultValueCode.StartsWith("ref "))
-                        DefaultValueCode = "ref " + DefaultValueCode;
-                    pCodewriter.AppendLineTop(DefaultValueCode);
-                    return;
+                    if (!(TypeHelper.IsValidVariableName(DefaultValueCode) && !pBuilderContext.CurrentSymbols.Any(s => s.Name == DefaultValueCode)))
+                    {
+                        if (Type.IsByRef && !DefaultValueCode.StartsWith("ref "))
+                            DefaultValueCode = "ref " + DefaultValueCode;
+                        pCodewriter.AppendLineTop(DefaultValueCode);
+                        return;
+                    }
                 }
 
                 pCodewriter.AppendLineTop(TypeHelper.GetDefaultInitializationCodeSnippet(Type, pBuilderContext));

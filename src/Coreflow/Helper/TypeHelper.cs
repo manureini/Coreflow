@@ -229,7 +229,7 @@ namespace Coreflow.Helper
 
         public static string GetDefaultInitializationCodeSnippet(Type pType, FlowBuilderContext pBuilderContext)
         {
-            if(pBuilderContext.BuildingContext.ContainsKey(ExpressionCreatorHintsKeys.CUSTOM_DEFAULT_EXPRESSION_EXPRESSION_CREATOR_KEY))
+            if (pBuilderContext.BuildingContext.ContainsKey(ExpressionCreatorHintsKeys.CUSTOM_DEFAULT_EXPRESSION_EXPRESSION_CREATOR_KEY))
             {
                 var value = pBuilderContext.BuildingContext[ExpressionCreatorHintsKeys.CUSTOM_DEFAULT_EXPRESSION_EXPRESSION_CREATOR_KEY];
 
@@ -248,7 +248,7 @@ namespace Coreflow.Helper
                 return GetCodeForEmptyIEnumerable(pType);
             }
 
-            return "default(global::" + pType.FullName + ")";
+            return $"default({TypeNameToCode(pType)})";
         }
 
         public static string GetCodeForEmptyIEnumerable(Type pType)
@@ -258,7 +258,7 @@ namespace Coreflow.Helper
 
             Type genericType = pType.GenericTypeArguments.Single();
 
-            return $"Enumerable.Empty<global::{genericType.FullName}>()";
+            return $"Enumerable.Empty<{TypeNameToCode(genericType)}>()";
         }
 
         public static bool IsValidVariableName(string pName)
