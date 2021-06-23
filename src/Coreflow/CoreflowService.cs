@@ -117,7 +117,7 @@ namespace Coreflow
             CodeCreatorStorage.AddCodeActivity(types.Where(t => typeof(ICodeActivity).IsAssignableFrom(t)));
         }
 
-        public void CompileFlows(bool pDebug = true, bool pForceRecompile = false)
+        public FlowCompileResult CompileFlows(bool pDebug = true, bool pForceRecompile = false)
         {
             var result = ((FlowManager)FlowManager).CompileFlowsCreateAndLoadAssembly(FlowDefinitionStorage.GetDefinitions(), pDebug, pForceRecompile);
 
@@ -125,6 +125,8 @@ namespace Coreflow
             {
                 LastCompileResult = result;
             }
+
+            return result;
         }
 
         public void StartApiServer(IPAddress pLocalIpAddress, int pPort)
