@@ -3,6 +3,7 @@ using Coreflow.Runtime;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace Coreflow.Storage
 {
@@ -57,7 +58,6 @@ namespace Coreflow.Storage
 
         public void Update(IFlowDefinition pFlowDefinition)
         {
-            Remove(pFlowDefinition.Identifier);
             Add(pFlowDefinition);
         }
 

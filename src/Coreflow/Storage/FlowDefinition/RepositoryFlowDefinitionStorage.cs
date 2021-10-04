@@ -27,7 +27,7 @@ namespace Coreflow.Storage
         {
             string serialized = JsonSerializer.Serialize(FlowDefinitionSerializer.Serialize(pFlowDefinition));
 
-            var response = mClient.PostAsync("api/FlowDefinitions/" + pFlowDefinition.Identifier, new StringContent(serialized, Encoding.UTF8, "application/json")).Result;
+            var response = mClient.PostAsync("/api/FlowDefinitions/" + pFlowDefinition.Identifier, new StringContent(serialized, Encoding.UTF8, "application/json")).Result;
 
             if (!response.IsSuccessStatusCode)
                 throw new Exception("Flow could not be added!");
