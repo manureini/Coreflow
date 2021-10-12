@@ -47,24 +47,24 @@ namespace Coreflow
 
             CodeCreatorStorage.AddCodeActivity(typeof(ConsoleWriteLineActivity));
             CodeCreatorStorage.AddCodeActivity(typeof(SleepActivity));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(ForLoopCreator));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(WhileCreator));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(SequenceCreator));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(InlineCodeCodeCreator));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(CommentCreator));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(DebuggerBreakCreator));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(AssignCreator));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(TerminateCreator));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(IfCreator));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(IfElseCreator));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(PrintVariablesCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(ForLoopCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(WhileCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(SequenceCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(InlineCodeCodeCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(CommentCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(DebuggerBreakCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(AssignCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(TerminateCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(IfCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(IfElseCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(PrintVariablesCreator));
 
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(CriticalLoggerCodeCreator));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(DebugLoggerCodeCreator));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(ErrorLoggerCodeCreator));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(InformationLoggerCodeCreator));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(TraceLoggerCodeCreator));
-            CodeCreatorStorage.AddCodeCreatorDefaultConstructor(typeof(WarningLoggerCodeCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(CriticalLoggerCodeCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(DebugLoggerCodeCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(ErrorLoggerCodeCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(InformationLoggerCodeCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(TraceLoggerCodeCreator));
+            CodeCreatorStorage.AddCodeCreator(typeof(WarningLoggerCodeCreator));
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).Where(a => a != this.GetType().Assembly))
             {

@@ -65,10 +65,9 @@ namespace Coreflow.CodeCreators
         {
             pBuilderContext.UpdateCurrentSymbols();
 
-            string typeName = "global::" + typeof(T).FullName;
             string variableName = pBuilderContext.CreateLocalVariableName(this);
 
-            pCodeWriter.AppendLineTop($"var {variableName} = new {typeName}();");
+            pCodeWriter.AppendLineTop($"var {variableName} = new {TypeHelper.TypeNameToCode(typeof(T))}();");
 
             foreach (FieldInfo fi in typeof(T).GetFields())
             {

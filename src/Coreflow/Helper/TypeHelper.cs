@@ -93,7 +93,12 @@ namespace Coreflow.Helper
 
                     for (int i = 0; i < genericParamCount; i++)
                     {
-                        genericTypes[i] = SearchType(match.Groups[3].Captures[i].Value);
+                       var genericType  = SearchType(match.Groups[3].Captures[i].Value);
+
+                        if (genericType == null)
+                            return null;
+
+                        genericTypes[i] = genericType;
                     }
 
                     var baseType = SearchType(baseTypeName + "`" + genericParamCount);

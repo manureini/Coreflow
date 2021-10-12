@@ -1,9 +1,12 @@
-﻿namespace Coreflow.Interfaces
+﻿using System;
+
+namespace Coreflow.Interfaces
 {
     public interface ICodeCreatorFactory
     {
         string Identifier { get; }
+        Type[] OverrideableCustomTypes { get; }
 
-        ICodeCreator Create();
+        ICodeCreator Create(Type[] pCustomTypes = null);
     }
 }

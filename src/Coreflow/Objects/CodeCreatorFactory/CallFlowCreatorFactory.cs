@@ -36,6 +36,8 @@ namespace Coreflow.Objects.CodeCreatorFactory
             }
         }
 
+        public Type[] OverrideableCustomTypes => null;
+
         public CallFlowCreatorFactory(CoreflowService pInstance, FlowDefinition pFlowDefinition)
         {
             mCoreflow = pInstance;
@@ -43,7 +45,7 @@ namespace Coreflow.Objects.CodeCreatorFactory
             FlowIdentifier = pFlowDefinition.Identifier;
         }
 
-        public ICodeCreator Create()
+        public ICodeCreator Create(Type[] pCustomTypes = null)
         {
             return new CallFlowCreator(FlowIdentifier, FlowName, FlowIcon, Arguments)
             {

@@ -18,13 +18,11 @@
 
 @code {
 
-
     [Parameter]
     public Coreflow.Storage.CodeCreatorStorage CodeCreatorStorage { get; set; }
 
     [CascadingParameter]
     public FlowEditor FlowEditor { get; set; }
-
 
     protected (ICodeCreatorFactory factory, ICodeCreator codecreator)[] mAllCodeCreators;
 
@@ -38,7 +36,19 @@
         pArgs.DataTransfer.DropEffect = "move";
         pArgs.DataTransfer.EffectAllowed = "move";
 
-        var codeCreator = pCodeCreatorFactory.Create();
+        Type[] customTypes = null;
+
+        if(pCodeCreatorFactory.OverrideableCustomTypes != null)
+        {
+            customTypes = pCodeCreatorFactory.OverrideableCustomTypes;
+
+            for(int i = 0; i < customTypes.Length; i++)
+            {
+              //  customTypes[i] = typeof(string);
+            }
+        }
+
+        var codeCreator = pCodeCreatorFactory.Create(customTypes);
 
         if (codeCreator is IParametrized parametrized)
         {

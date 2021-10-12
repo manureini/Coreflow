@@ -12,6 +12,8 @@ namespace Coreflow.Objects.CodeCreatorFactory
 
         private string FactoryIdentifier { get; }
 
+        public Type[] OverrideableCustomTypes => null;
+
         public CodeCreatorMissingFactory(string pType, string pFactoryIdentifier)
         {
             Type = pType;
@@ -21,6 +23,11 @@ namespace Coreflow.Objects.CodeCreatorFactory
         public ICodeCreator Create()
         {
             return new MissingCodeCreatorCreator(Type, Identifier);
+        }
+
+        public ICodeCreator Create(Type[] pCustomTypes = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

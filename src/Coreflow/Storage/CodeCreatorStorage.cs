@@ -30,7 +30,7 @@ namespace Coreflow.Storage
             mCustomCodeCCreatorFactories.Add(pFactory.Identifier, pFactory);
         }
 
-        public void AddCodeCreatorDefaultConstructor(Type pCodeCreatorType)
+        public void AddCodeCreator(Type pCodeCreatorType)
         {
             if (mDefaultConstructorFactories.ContainsKey(pCodeCreatorType))
                 return;
@@ -38,7 +38,7 @@ namespace Coreflow.Storage
             if (!typeof(ICodeCreator).IsAssignableFrom(pCodeCreatorType))
                 throw new ArgumentException($"type {pCodeCreatorType.FullName} does not implement {nameof(ICodeCreator)}");
 
-            DefaultConstructorCodeCreatorFactory factory = new DefaultConstructorCodeCreatorFactory(pCodeCreatorType);
+            var factory = new DefaultCodeCreatorFactory(pCodeCreatorType);
             mDefaultConstructorFactories.Add(pCodeCreatorType, factory);
         }
 
@@ -46,7 +46,7 @@ namespace Coreflow.Storage
         {
             foreach (var ccType in pCodeCreatorType)
             {
-                AddCodeCreatorDefaultConstructor(ccType);
+                AddCodeCreator(ccType);
             }
         }
 
@@ -61,7 +61,7 @@ namespace Coreflow.Storage
         public void AddCodeActivity(Type pCodeActivityType)
         {
             Type generic = typeof(CodeActivityCreator<>).MakeGenericType(pCodeActivityType);
-            AddCodeCreatorDefaultConstructor(generic);
+            AddCodeCreator(generic);
         }
 
         public IEnumerable<ICodeCreatorFactory> GetAllFactories()

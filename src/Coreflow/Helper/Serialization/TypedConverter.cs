@@ -27,6 +27,9 @@ namespace Coreflow.Helper.Serialization
             var typeName = reader.GetString();
             var type = TypeHelper.SearchType(typeName);
 
+            if (type == null)
+                throw new Exception($"Type not found: {typeName}");
+
             reader.Read();
 
             reader.Read(); // End Object
