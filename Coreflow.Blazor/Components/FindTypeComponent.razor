@@ -1,0 +1,77 @@
+﻿@using System.Reflection
+@using Coreflow.Helper
+
+<style>
+
+    .flow-type-selector-list {
+        width: 80vw;
+        overflow-y: scroll;
+        max-height: 400px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        list-style-type: none;
+        overflow-x: hidden;
+    }
+
+    .flow-type-selector-list-entry {
+        cursor: pointer;
+        border: 1px transparent;
+        user-select: none;
+    }
+
+        .flow-type-selector-list-entry:hover {
+            border: 1px solid;
+        }
+
+</style>
+
+<div>
+    <span>Typename:</span>
+    <input type="text" @onchange="Update" />
+
+    <ul class="flow-type-selector-list">
+        @foreach (var type in mTypes)
+        {
+            <li class="flow-type-selector-list-entry" @onclick="async () => await OnTypeSelected.InvokeAsync(type)">@type.FullName (@type.AssemblyQualifiedName)</li>
+        }
+    </ul>
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public EventCallback<Type> OnTypeSelected { get; set; }
+
+    protected string mSearchString { get; set; }
+
+    protected List<Type> mTypes { get; set; } = new List<Type>();
+
+    protected Type[] mAllTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).ToArray();
+
+    protected void Update(ChangeEventArgs args)
+    {
+        mSearchString = args.Value.ToString().Trim();
+
+        var type = TypeHelper.SearchType(mSearchString);
+
+        mTypes.Clear();
+
+        if (type != null)
+        {
+            mTypes.Add(type);
+        }
+
+        var lowerTypeStr = mSearchString.ToLower();
+
+        mTypes.AddRange(mAllTypes.Where(t => t.Name.ToLowerInvariant().Contains(lowerTypeStr)).Take(50));
+
+        if (mTypes.Count < 50)
+        {
+            mTypes.AddRange(mAllTypes.Where(t => t.FullName.ToLowerInvariant().Contains(lowerTypeStr)).Take(50));
+        }
+
+        mTypes = mTypes.Distinct().Take(50).ToList();
+    }
+}

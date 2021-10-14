@@ -1,0 +1,15 @@
+﻿@using Blazored.Modal
+@using Blazored.Modal.Services
+
+<Coreflow.Blazor.Components.FindTypeComponent OnTypeSelected="OnTypeSelected" />
+
+@code {
+
+    [CascadingParameter]
+    BlazoredModalInstance ModalInstance { get; set; }
+
+    protected async Task OnTypeSelected(Type pType)
+    {
+        await ModalInstance.CloseAsync(ModalResult.Ok(pType));
+    }
+}

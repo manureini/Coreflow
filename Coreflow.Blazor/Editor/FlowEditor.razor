@@ -1,9 +1,6 @@
 ﻿
 <button @onclick="ShowCode">Show Code</button>
 
-
-
-
 <div class="cf-editor-main">
 
 
@@ -22,17 +19,16 @@
             </div>
 
             @if (!DropZonesVisible)
-            {
-                <DefaultCodeCreatorParameterEditor @ref="mParameterEditor" CodeCreator="SelectedCodeCreator" />
-            }
+        {
+            <DefaultCodeCreatorParameterEditor @ref="mParameterEditor" CodeCreator="SelectedCodeCreator" />
+        }
 
-        </CascadingValue>
+    </CascadingValue>
     }
 </div>
 
 
 @code {
-
 
     [Parameter]
     public FlowDefinition FlowDefinition { get; set; }
@@ -40,9 +36,38 @@
     [Parameter]
     public CodeCreatorStorage CodeCreatorStorage { get; set; }
 
+    [CascadingParameter]
+    public IModalService Modal { get; set; }
+
     protected FlowEditorEvents Events { get; set; }
 
-    public ICodeCreator SelectedCodeCreator { get; set; }
+    protected ICodeCreator mSelectedCodeCreator;
+    public ICodeCreator SelectedCodeCreator
+    {
+        get
+        {
+            return mSelectedCodeCreator;
+        }
+        set
+        {
+            mSelectedCodeCreator = value;
+            mSelectedCodeCreatorFactory = null;
+        }
+    }
+
+    protected ICodeCreatorFactory mSelectedCodeCreatorFactory;
+    public ICodeCreatorFactory SelectedCodeCreatorFactory
+    {
+        get
+        {
+            return mSelectedCodeCreatorFactory;
+        }
+        set
+        {
+            mSelectedCodeCreatorFactory = value;
+            mSelectedCodeCreator = null;
+        }
+    }
 
     public bool DropZonesVisible { get; set; }
 
@@ -74,8 +99,10 @@
         Events = pEvents;
     }
 
-    public void ShowDropZones(ICodeCreator pCodeCreator)
+    public void ShowDropZones()
     {
+        StateHasChanged();
+
         // https://stackoverflow.com/questions/28408720/jquery-changing-the-dom-on-dragstart-event-fires-dragend-immediately
         Task.Run(() =>
         {
@@ -90,25 +117,66 @@
         InvokeStateHasChanged();
     }
 
-    public void MoveSelectedCodeCreatorBefore(ICodeCreator pAfterCodeCreator)
+    protected async Task<ICodeCreator> GetCurrentCodeCreator()
     {
+        if (SelectedCodeCreatorFactory == null)
+            return SelectedCodeCreator;
+
+        Type[] customTypes = null;
+
+        if (SelectedCodeCreatorFactory.OverrideableCustomTypes != null)
+        {
+            customTypes = SelectedCodeCreatorFactory.OverrideableCustomTypes;
+
+            for (int i = 0; i < customTypes.Length; i++)
+            {
+                var modal = Modal.Show<FindTypeModal>();
+                var result = await modal.Result;
+
+                if (result.Data == null)
+                    return null;
+
+                customTypes[i] = (Type)result.Data;
+            }
+        }
+
+        var codeCreator = SelectedCodeCreatorFactory.Create(customTypes);
+
+        if (codeCreator is IParametrized parametrized)
+        {
+            parametrized.Arguments = new List<IArgument>();
+
+            foreach (var parameter in parametrized.GetParameters())
+            {
+                var argument = Coreflow.Helper.ArgumentHelper.CreateArgument(parameter);
+                parametrized.Arguments.Add(argument);
+            }
+        }
+
+        return codeCreator;
+    }
+
+    public async Task MoveSelectedCodeCreatorBefore(ICodeCreator pAfterCodeCreator)
+    {
+        var cc = await GetCurrentCodeCreator();
+
         var newParentInfo = FlowDefinition.FindParentOf(pAfterCodeCreator);
         var newParentCCList = newParentInfo.parent.CodeCreators[newParentInfo.indexContext];
         int newIndex = newParentCCList.IndexOf(pAfterCodeCreator);
 
-        var oldParentInfo = FlowDefinition.FindParentOf(SelectedCodeCreator);
+        var oldParentInfo = FlowDefinition.FindParentOf(cc);
 
         if (oldParentInfo.parent == null)
         {
-            newParentCCList.Insert(newIndex, SelectedCodeCreator);
+            newParentCCList.Insert(newIndex, cc);
             StateHasChanged();
             return;
         }
 
         List<ICodeCreator> oldParentCCList = oldParentInfo.parent.CodeCreators[oldParentInfo.indexContext];
-        int oldIndex = oldParentCCList.IndexOf(SelectedCodeCreator);
+        int oldIndex = oldParentCCList.IndexOf(cc);
 
-        newParentCCList.Insert(newIndex, SelectedCodeCreator);
+        newParentCCList.Insert(newIndex, cc);
 
         if (newParentInfo.parent == oldParentInfo.parent)
             if (oldIndex >= newIndex)
@@ -121,9 +189,11 @@
         InvokeStateHasChanged();
     }
 
-    public void MoveSelectedCodeCreatorIn(ICodeCreatorContainerCreator pContainer, int pSequence)
+    public async Task MoveSelectedCodeCreatorIn(ICodeCreatorContainerCreator pContainer, int pSequence)
     {
-        var oldParentInfo = FlowDefinition.FindParentOf(SelectedCodeCreator);
+        var cc = await GetCurrentCodeCreator();
+
+        var oldParentInfo = FlowDefinition.FindParentOf(cc);
 
         if (pContainer.CodeCreators == null)
         {
@@ -137,15 +207,15 @@
 
         if (oldParentInfo.parent == null)
         {
-            pContainer.CodeCreators[pSequence].Add(SelectedCodeCreator);
+            pContainer.CodeCreators[pSequence].Add(cc);
             StateHasChanged();
             return;
         }
 
         var oldParentCCList = oldParentInfo.parent.CodeCreators[oldParentInfo.indexContext];
-        int oldIndex = oldParentCCList.IndexOf(SelectedCodeCreator);
+        int oldIndex = oldParentCCList.IndexOf(cc);
 
-        pContainer.CodeCreators[pSequence].Add(SelectedCodeCreator);
+        pContainer.CodeCreators[pSequence].Add(cc);
 
         int newIndex = pContainer.CodeCreators[pSequence].Count - 1;
 
@@ -159,9 +229,11 @@
         InvokeStateHasChanged();
     }
 
-    public void SetSelectedCodeCreatorAsRoot()
+    public async Task SetSelectedCodeCreatorAsRoot()
     {
-        FlowDefinition.CodeCreator = SelectedCodeCreator;
+        var cc = await GetCurrentCodeCreator();
+
+        FlowDefinition.CodeCreator = cc;
 
         HideDropZones();
         InvokeStateHasChanged();
@@ -190,12 +262,13 @@
             allSequencesEmpty &= sequenceList.Count == 0;
         }
 
-        if(allSequencesEmpty)
+        if (allSequencesEmpty)
         {
             oldParentInfo.parent.CodeCreators = null;
         }
 
         SelectedCodeCreator = null;
+        SelectedCodeCreatorFactory = null;
         InvokeStateHasChanged();
     }
 

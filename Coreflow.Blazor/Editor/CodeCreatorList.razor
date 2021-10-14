@@ -5,10 +5,9 @@
         <h6 class="cf-code-creator-list-category cf-category-title">@(string.IsNullOrWhiteSpace(grouped.Key) ? "None" : grouped.Key)</h6>
         @foreach (var entry in grouped.Select(g => (factory: g.factory, codeCreator: g.codecreator, displayName: g.codecreator.GetDisplayName())).OrderBy(c => c.displayName))
         {
-            <div class="cf-code-creator"
-                 draggable="true"
-                 @ondragstart="(args) => OnDragStart(args, entry.factory)" @ondragstart:stopPropagation
-                 @ondragend="OnDragEnd" @ondragend:stopPropagation>
+            <div class="cf-code-creator" draggable="true"
+         @ondragstart="(args) => OnDragStart(args, entry.factory)" @ondragstart:stopPropagation
+         @ondragend="OnDragEnd" @ondragend:stopPropagation>
                 <i class="@entry.codeCreator.GetIconClassName()"></i><span class="displayname">@entry.displayName</span>
             </div>
         }
@@ -36,43 +35,18 @@
         pArgs.DataTransfer.DropEffect = "move";
         pArgs.DataTransfer.EffectAllowed = "move";
 
-        Type[] customTypes = null;
-
-        if(pCodeCreatorFactory.OverrideableCustomTypes != null)
-        {
-            customTypes = pCodeCreatorFactory.OverrideableCustomTypes;
-
-            for(int i = 0; i < customTypes.Length; i++)
-            {
-              //  customTypes[i] = typeof(string);
-            }
-        }
-
-        var codeCreator = pCodeCreatorFactory.Create(customTypes);
-
-        if (codeCreator is IParametrized parametrized)
-        {
-            parametrized.Arguments = new List<IArgument>();
-
-            foreach (var parameter in parametrized.GetParameters())
-            {
-                var argument = Coreflow.Helper.ArgumentHelper.CreateArgument(parameter);
-                parametrized.Arguments.Add(argument);
-            }
-        }
-
-        FlowEditor.SelectedCodeCreator = codeCreator;
-        FlowEditor.ShowDropZones(codeCreator);
+        FlowEditor.SelectedCodeCreatorFactory = pCodeCreatorFactory;
+        FlowEditor.ShowDropZones();
     }
 
     protected void OnDragEnd()
     {
-        Task.Run(async () =>
-        {
-            FlowEditor.SelectedCodeCreator = null;
-            await Task.Delay(500);
-            FlowEditor.HideDropZones();
-        });
+        _ = Task.Run(async () =>
+         {
+             FlowEditor.SelectedCodeCreator = null;
+             FlowEditor.SelectedCodeCreatorFactory = null;
+             await Task.Delay(500);
+             FlowEditor.HideDropZones();
+         });
     }
-
 }

@@ -1,18 +1,16 @@
-﻿
-@if (DropZoneEnabled && !PreviousCodeCreatorIsSelected && CodeCreator != FlowDefinition.CodeCreator)
+﻿@if (DropZoneEnabled && !PreviousCodeCreatorIsSelected && CodeCreator != FlowDefinition.CodeCreator)
 {
     <div class="cf-code-creator-dropzone" @ondrop="OnDropBefore" ondragover="event.preventDefault();"></div>
 }
 
-
 @if (CodeCreator != null)
 {
     <div class=@CssClass style=@CssStyle title=@CodeCreator.GetType().FullName
-         @onclick=OnClick @onclick:stopPropagation @onclick:preventDefault
-         draggable="true"
-         @ondragstart="OnDragStart" @ondragstart:stopPropagation
-         @ondragend="OnDragEnd" @ondragend:stopPropagation
-         @onkeydown="OnKeyDown" @onkeydown:stopPropagation tabindex="0">
+     @onclick=OnClick @onclick:stopPropagation @onclick:preventDefault
+     draggable="true"
+     @ondragstart="OnDragStart" @ondragstart:stopPropagation
+     @ondragend="OnDragEnd" @ondragend:stopPropagation
+     @onkeydown="OnKeyDown" @onkeydown:stopPropagation tabindex="0">
 
         <div class="cf-code-creator-title">
             <span class="cf-code-creator-title-left">
@@ -52,10 +50,10 @@
                             }
                         }
 
-                        @if (DropZoneEnabled && lastCodeCreator != FlowEditor.SelectedCodeCreator)
+                        @if (DropZoneEnabled && (FlowEditor.SelectedCodeCreator == null || lastCodeCreator != FlowEditor.SelectedCodeCreator))
                         {
                             int sequenceIndex = i;
-                            <div class="cf-code-creator-dropzone" @ondrop="() => OnDrop(containerCreator, sequenceIndex)" ondragover="event.preventDefault();"></div>
+                            <div class="cf-code-creator-dropzone" @ondrop="async () => await OnDrop(containerCreator, sequenceIndex)" ondragover="event.preventDefault();"></div>
                         }
 
                     </div>
@@ -157,7 +155,7 @@ else if (CodeCreator == null && FlowDefinition.CodeCreator == null)
     {
         pArgs.DataTransfer.DropEffect = "move";
         pArgs.DataTransfer.EffectAllowed = "move";
-        FlowEditor.ShowDropZones(CodeCreator);
+        FlowEditor.ShowDropZones();
     }
 
     protected void OnDragEnd()
@@ -165,19 +163,19 @@ else if (CodeCreator == null && FlowDefinition.CodeCreator == null)
         FlowEditor.HideDropZones();
     }
 
-    protected void OnDropBefore()
+    protected Task OnDropBefore()
     {
-        FlowEditor.MoveSelectedCodeCreatorBefore(CodeCreator);
+        return FlowEditor.MoveSelectedCodeCreatorBefore(CodeCreator);
     }
 
-    protected void OnDrop(ICodeCreatorContainerCreator pContainer, int pSequence)
+    protected Task OnDrop(ICodeCreatorContainerCreator pContainer, int pSequence)
     {
-        FlowEditor.MoveSelectedCodeCreatorIn(pContainer, pSequence);
+        return FlowEditor.MoveSelectedCodeCreatorIn(pContainer, pSequence);
     }
 
-    protected void OnDropRoot()
+    protected Task OnDropRoot()
     {
-        FlowEditor.SetSelectedCodeCreatorAsRoot();
+        return FlowEditor.SetSelectedCodeCreatorAsRoot();
     }
 
     protected void OnKeyDown(KeyboardEventArgs pArgs)
