@@ -15,13 +15,20 @@ namespace Coreflow.Objects
         {
             get
             {
-                if (typeof(ICodeActivityCreator).IsAssignableFrom(Type) && Type.IsGenericType)
+                if (Type.IsGenericType)
                 {
-                    var cctype = Type.GetGenericArguments()[0];
-
-                    if (cctype.IsGenericType)
+                    if (Type.IsGenericTypeDefinition)
                     {
-                        return cctype.GetGenericArguments();
+                        return Type.GetGenericArguments();
+                    }
+                    else
+                    {
+                        var cctype = Type.GetGenericArguments()[0];
+
+                        if (cctype.IsGenericTypeDefinition)
+                        {
+                            return cctype.GetGenericArguments();
+                        }
                     }
                 }
 
@@ -38,36 +45,50 @@ namespace Coreflow.Objects
         {
             var type = Type;
 
-            if (typeof(ICodeActivityCreator).IsAssignableFrom(Type) && Type.IsGenericType)
+            if (type.IsGenericType)
             {
-                var cctype = Type.GetGenericArguments()[0];
-
-                if (cctype.IsGenericType)
+                if (type.IsGenericTypeDefinition)
                 {
-                    Type[] genericTypes = pCustomTypes;
+                    type = type.GetGenericTypeDefinition().MakeGenericType(GetGenericTypes(pCustomTypes, type));
+                }
+                else
+                {
+                    var cctype = type.GetGenericArguments()[0];
 
-                    if (genericTypes == null)
+                    if (cctype.IsGenericTypeDefinition)
                     {
-                        var attr = cctype.GetCustomAttributes(typeof(DefaultGenericTypeAttribute), false).FirstOrDefault() as DefaultGenericTypeAttribute;
+                        Type[] genericTypes = GetGenericTypes(pCustomTypes, cctype);
 
-                        if (attr != null)
-                        {
-                            genericTypes = attr.DefaultGenericType;
-                        }
+                        var innerType = cctype.MakeGenericType(genericTypes);
+
+                        type = type.GetGenericTypeDefinition().MakeGenericType(innerType);
                     }
-
-                    if (genericTypes == null)
-                    {
-                        genericTypes = new[] { typeof(object) };
-                    }
-
-                    var innerType = cctype.MakeGenericType(genericTypes);
-
-                    type = type.GetGenericTypeDefinition().MakeGenericType(innerType);
                 }
             }
 
             return Activator.CreateInstance(type) as ICodeCreator;
+        }
+
+        private static Type[] GetGenericTypes(Type[] pCustomTypes, Type cctype)
+        {
+            Type[] genericTypes = pCustomTypes;
+
+            if (genericTypes == null)
+            {
+                var attr = cctype.GetCustomAttributes(typeof(DefaultGenericTypeAttribute), false).FirstOrDefault() as DefaultGenericTypeAttribute;
+
+                if (attr != null)
+                {
+                    genericTypes = attr.DefaultGenericType;
+                }
+            }
+
+            if (genericTypes == null)
+            {
+                genericTypes = new[] { typeof(object) };
+            }
+
+            return genericTypes;
         }
     }
 }
