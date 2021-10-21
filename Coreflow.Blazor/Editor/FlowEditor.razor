@@ -122,11 +122,13 @@
         if (SelectedCodeCreatorFactory == null)
             return SelectedCodeCreator;
 
+        var ccFactory = SelectedCodeCreatorFactory;
+
         Type[] customTypes = null;
 
-        if (SelectedCodeCreatorFactory.OverrideableCustomTypes != null)
+        if (ccFactory.OverrideableCustomTypes != null)
         {
-            customTypes = SelectedCodeCreatorFactory.OverrideableCustomTypes;
+            customTypes = ccFactory.OverrideableCustomTypes;
 
             for (int i = 0; i < customTypes.Length; i++)
             {
@@ -140,7 +142,7 @@
             }
         }
 
-        var codeCreator = SelectedCodeCreatorFactory.Create(customTypes);
+        var codeCreator = ccFactory.Create(customTypes);
 
         if (codeCreator is IParametrized parametrized)
         {
