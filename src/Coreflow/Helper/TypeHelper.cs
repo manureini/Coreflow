@@ -20,6 +20,9 @@ namespace Coreflow.Helper
         }
 
         private static Regex mGenericTypeCSharpRegex = new Regex(@"(.*)`([0-9]*)\[(?:\[(.+?)\]?,?)*\]");
+        private static Regex mGenericTypeInnerPartCSharpRegex = new Regex(@"\[(.*)\]");
+        private static Regex mGenericTypeFirstInnerPartCSharpRegex = new Regex(@"\[(.*?)(?:\]$|\],\[)");
+        private static Regex mGenericTypeGenericCount = new Regex(@"`([0-9]*)");
         private static Regex mGenericTypeCodeRegex = new Regex(@"(.*?)<(?:(.*?)[,|>])*");
 
         public static Type SearchType(string pTypeName)
@@ -78,30 +81,30 @@ namespace Coreflow.Helper
 
             if (pTypeName.Contains("`"))
             {
-                var match = mGenericTypeCSharpRegex.Match(pTypeName);
+                var match = mGenericTypeInnerPartCSharpRegex.Match(pTypeName);
 
                 if (match.Success)
                 {
-                    string baseTypeName = match.Groups[1].Value;
+                    var baseTypeName = pTypeName.Replace(match.Groups[0].Value, string.Empty);
 
-                    int genericParamCount = Convert.ToInt32(match.Groups[2].Value);
+                    var baseType = SearchType(baseTypeName);
 
-                    if (genericParamCount != match.Groups[3].Captures.Count)
-                        return null;
+                    int genericParamCount = Convert.ToInt32(mGenericTypeGenericCount.Match(baseTypeName).Groups[1].Value);
 
                     var genericTypes = new Type[genericParamCount];
 
+                    var innerPart = match.Groups[1].Value;
+
                     for (int i = 0; i < genericParamCount; i++)
                     {
-                       var genericType  = SearchType(match.Groups[3].Captures[i].Value);
+                        var nextInnerPart = mGenericTypeFirstInnerPartCSharpRegex.Match(innerPart);
 
-                        if (genericType == null)
-                            return null;
+                        var innerType = SearchType(nextInnerPart.Groups[1].Value);
 
-                        genericTypes[i] = genericType;
+                        genericTypes[i] = innerType;
+
+                        innerPart = innerPart.Substring(nextInnerPart.Length);
                     }
-
-                    var baseType = SearchType(baseTypeName + "`" + genericParamCount);
 
                     return baseType.MakeGenericType(genericTypes);
                 }
