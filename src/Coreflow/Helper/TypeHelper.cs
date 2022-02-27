@@ -101,9 +101,12 @@ namespace Coreflow.Helper
 
                         var innerType = SearchType(nextInnerPart.Groups[1].Value);
 
+                        if (innerType == null)
+                            return null;
+
                         genericTypes[i] = innerType;
 
-                        innerPart = innerPart.Substring(nextInnerPart.Length);
+                        innerPart = innerPart.Substring(nextInnerPart.Length - 1);
                     }
 
                     return baseType.MakeGenericType(genericTypes);
