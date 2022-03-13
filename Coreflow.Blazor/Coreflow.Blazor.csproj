@@ -18,13 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blazored.Modal" Version="6.0.1" />
     <PackageReference Include="BlazorMonaco" Version="2.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Modal\src\Blazored.Modal\Blazored.Modal.csproj" />
     <ProjectReference Include="..\Coreflow.Runtime\Coreflow.Runtime.csproj" />
     <ProjectReference Include="..\src\Coreflow\Coreflow.csproj" />
   </ItemGroup>
