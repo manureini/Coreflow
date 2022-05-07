@@ -25,7 +25,7 @@ namespace Coreflow.Helper
 
         private static volatile int mCounter = 0;
 
-        public static ReferenceHelper ReferenceHelper = new ReferenceHelper(a => a.FullName.StartsWith(FlowCompilerHelper.FLOW_ASSEMBLY_PREFIX));
+        public static ReferenceHelper ReferenceHelper = new ReferenceHelper();
 
         public static FlowCompileResult CompileFlowCode(string pCode, bool pDebug, string pTmpDir)
         {
@@ -91,7 +91,7 @@ namespace Coreflow.Helper
             SourceText sourceText = null;
             SyntaxTree syntaxTree = GetSyntaxTree(pCode, pAssemblyName, pTmpDir, ref assemblyPath, ref pdbPath, ref sourcePath, ref sourceText);
 
-            var references = ReferenceHelper.GetMetadataReferences();
+            var references = ReferenceHelper.GetMetadataReferences(a => a.FullName.StartsWith(FlowCompilerHelper.FLOW_ASSEMBLY_PREFIX));
 
             var compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary).WithPlatform(Platform.AnyCpu);
 

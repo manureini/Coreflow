@@ -13,43 +13,36 @@ using System.Threading.Tasks;
 
 namespace Coreflow.Helper
 {
-    // Important !!!!
-    // This class is used in Project Coreflow and DynamixGenerator
-    // Update it on all projects for any changes
 
     public class ReferenceHelper
     {
         protected string mDotnetRootPath;
         protected string mRefRootPath;
+        protected Dictionary<string, string[]> mRefDllFiles;
         protected Dictionary<string, MetadataReference> mReferenceCache = new Dictionary<string, MetadataReference>();
         protected object mLocker = new object();
         protected SemaphoreSlim mLoadLocker = new SemaphoreSlim(1, 1);
-        protected Func<Assembly, bool> mFilter;
 
-        public ReferenceHelper(Func<Assembly, bool> pFilter = null, string pDotnetRootPath = null)
+        public ReferenceHelper()
         {
-            mFilter = pFilter;
-            mDotnetRootPath = pDotnetRootPath;
-
             if (RuntimeInformation.OSArchitecture == Architecture.Wasm)
                 return;
 
-            if (mDotnetRootPath == null)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    mDotnetRootPath = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles"), "dotnet") + Path.DirectorySeparatorChar;
-                }
-                else
-                {
-                    mDotnetRootPath = Environment.GetEnvironmentVariable("DOTNET_ROOT");
-                }
+                mDotnetRootPath = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles"), "dotnet") + Path.DirectorySeparatorChar;
+            }
+            else
+            {
+                mDotnetRootPath = Environment.GetEnvironmentVariable("DOTNET_ROOT");
             }
 
             mRefRootPath = Path.Combine(mDotnetRootPath, "packs") + Path.DirectorySeparatorChar;
+
+            mRefDllFiles = Directory.GetFiles(mRefRootPath, "*.dll", SearchOption.AllDirectories).GroupBy(f => Path.GetFileName(f)).ToDictionary(g => g.Key, x => x.ToArray());
         }
 
-        public async Task LoadReferencesFromWebAsync(HttpClient pHttpClient)
+        public async Task LoadReferencesFromWebAsync(HttpClient pHttpClient, Func<Assembly, bool> pFilter = null)
         {
             if (RuntimeInformation.OSArchitecture == Architecture.Wasm)
             {
@@ -64,7 +57,7 @@ namespace Coreflow.Helper
                         if (mReferenceCache.ContainsKey(assembly.FullName))
                             continue;
 
-                        if (mFilter != null && mFilter(assembly))
+                        if (pFilter != null && pFilter(assembly))
                             continue;
 
                         var assemblyName = assembly.GetName().Name;
@@ -109,11 +102,15 @@ namespace Coreflow.Helper
             if (pRuntimeAssembly.Contains(".Private."))
                 return null;
 
+            var runtimeasm = AssemblyName.GetAssemblyName(pRuntimeAssembly);
+
             string dllFileName = Path.GetFileName(pRuntimeAssembly);
 
-            var refFiles = Directory.GetFiles(mRefRootPath, dllFileName, SearchOption.AllDirectories).Where(f =>
+            if (!mRefDllFiles.ContainsKey(dllFileName))
+                return null;
+
+            var refFiles = mRefDllFiles[dllFileName].Where(f =>
             {
-                var runtimeasm = AssemblyName.GetAssemblyName(pRuntimeAssembly);
                 var refAsm = AssemblyName.GetAssemblyName(f);
 
                 if (runtimeasm.Version != refAsm.Version)
@@ -123,20 +120,18 @@ namespace Coreflow.Helper
                     return false;
 
                 return true;
-            });
+            }).ToArray();
 
-            if (refFiles.Count() > 1)
-            {
-                Console.WriteLine($"WARNING: Search for referenced assembly {dllFileName} in {mRefRootPath} has mutiple results");
-            }
+            if (refFiles.Count() <= 1)
+                return refFiles.FirstOrDefault();
 
-            if (pRuntimeAssembly.Contains("netstandard.dll") && refFiles.Count() > 1)
-            {
-                refFiles = refFiles.Where(r => r.Contains("netcore"));
-                Console.WriteLine($"WARNING: netstandard.dll has multiple resulsts force using reference with netcore");
-            }
+            Console.WriteLine($"WARNING: Search for referenced assembly {dllFileName} in {mRefRootPath} has mutiple results");
 
-            string refPath = refFiles.FirstOrDefault();
+            var runtimePaths = pRuntimeAssembly.Split(Path.DirectorySeparatorChar).ToList();
+            var refPaths = runtimePaths.Select(r => r + ".Ref").ToArray();
+            runtimePaths.AddRange(refPaths);
+
+            string refPath = refFiles.Select(f => (f, f.Split(Path.DirectorySeparatorChar).Intersect(runtimePaths).Count())).OrderByDescending(f => f.Item2).First().f;
 
             if (refPath != null && File.Exists(refPath))
             {
@@ -146,7 +141,7 @@ namespace Coreflow.Helper
             return pRuntimeAssembly;
         }
 
-        public IEnumerable<MetadataReference> GetMetadataReferences()
+        public IEnumerable<MetadataReference> GetMetadataReferences(Func<Assembly, bool> pFilter = null)
         {
             lock (mLocker)
             {
@@ -172,7 +167,7 @@ namespace Coreflow.Helper
                         if (mReferenceCache.ContainsKey(a.FullName))
                             return mReferenceCache[a.FullName];
 
-                        if (mFilter != null && mFilter(a))
+                        if (pFilter != null && pFilter(a))
                             return null;
 
                         string location = a.Location;
