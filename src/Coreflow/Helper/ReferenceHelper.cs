@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 
 namespace Coreflow.Helper
 {
-
     // Important !!!!
     // This class is used in Project Coreflow and DynamixGenerator
     // Update it on all projects for any changes
@@ -43,7 +42,7 @@ namespace Coreflow.Helper
 
             mRefRootPath = Path.Combine(mDotnetRootPath, "packs") + Path.DirectorySeparatorChar;
 
-            if (Directory.Exists(mDotnetRootPath))
+            if (Directory.Exists(mRefRootPath))
             {
                 mRefDllFiles = Directory.GetFiles(mRefRootPath, "*.dll", SearchOption.AllDirectories).GroupBy(f => Path.GetFileName(f)).ToDictionary(g => g.Key, x => x.ToArray());
             }
