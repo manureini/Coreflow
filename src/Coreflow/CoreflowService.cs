@@ -98,7 +98,7 @@ namespace Coreflow
             }
         }
 
-        private void LoadPlugin(Assembly asm)
+        public void LoadPlugin(Assembly asm)
         {
             var pluginType = asm.GetTypes().Where(t => !t.IsInterface && !t.IsAbstract && typeof(IPlugin).IsAssignableFrom(t));
 

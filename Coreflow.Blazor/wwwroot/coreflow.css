@@ -4,33 +4,39 @@
   border-width: 1px;
   border-color: grey;
   margin: 10px 10px 10px 14px;
-  border-radius: 3px; }
-  .cf-code-creator.cf-code-creator-active {
-    background: #545454; }
-  .cf-code-creator i {
-    padding: 0 3px; }
-  .cf-code-creator .cf-code-creator-input-display-name {
-    background: rgba(30, 30, 30, 0.25);
-    border: none;
-    width: 22%;
-    color: #d1d1d1; }
+  border-radius: 3px;
+}
+.cf-code-creator.cf-code-creator-active {
+  background: #545454;
+}
+.cf-code-creator i {
+  padding: 0 3px;
+}
+.cf-code-creator .cf-code-creator-input-display-name {
+  background: rgba(30, 30, 30, 0.25);
+  border: none;
+  width: 22%;
+  color: #d1d1d1;
+}
 
 .cf-code-creator-dropzone {
   background: #515151;
   height: 20px;
   border-radius: 3px;
-  margin: 10px; }
+  margin: 10px;
+}
 
 .cf-code-editor-monaco.cf-code-editor-monaco-inline {
   width: 100%;
   height: 35px;
   border: solid;
   border-width: 1px;
-  border-color: #515151; }
-
+  border-color: #515151;
+}
 .cf-code-editor-monaco.cf-code-editor-monaco-fullscreen {
   height: 80vh;
-  width: 100%; }
+  width: 100%;
+}
 
 .cf-editor-main {
   display: flex;
@@ -38,35 +44,54 @@
   width: 100%;
   background: #1e1e1e;
   color: #d1d1d1;
-  font-size: 0.9rem; }
-  .cf-editor-main .cf-code-creator-list {
-    width: 13%;
-    justify-self: left;
-    padding: 10px 5px; }
-    .cf-editor-main .cf-code-creator-list .cf-code-creator {
-      margin: 3px; }
-  .cf-editor-main .cf-code-creator-container-main {
-    width: 70%;
-    justify-self: center;
-    border: solid;
-    border-color: #383838;
-    border-width: 1px; }
-  .cf-editor-main .cf-code-creator-parameter-editor {
-    width: 17%;
-    justify-self: right;
-    padding: 10px 5px; }
+  font-size: 0.9rem;
+}
+.cf-editor-main .cf-code-creator-list {
+  width: 13%;
+  justify-self: left;
+  padding: 10px 5px;
+  position: sticky;
+  top: 0;
+  max-height: 95vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.cf-editor-main .cf-code-creator-list .cf-code-creator {
+  margin: 3px;
+}
+.cf-editor-main .cf-code-creator-container-main {
+  width: 70%;
+  justify-self: center;
+  border: solid;
+  border-color: #383838;
+  border-width: 1px;
+}
+.cf-editor-main .cf-code-creator-parameter-editor {
+  width: 17%;
+  justify-self: right;
+  padding: 10px 5px;
+  position: sticky;
+  top: 0;
+  max-height: 95vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 
 .cf-code-creator-parameter-editor-table {
-  width: 100%; }
-  .cf-code-creator-parameter-editor-table .cf-code-creator-parameter-editor-parameter-title {
-    padding-top: 12px;
-    line-height: 0.9;
-    margin-bottom: 0; }
+  width: 100%;
+}
+.cf-code-creator-parameter-editor-table .cf-code-creator-parameter-editor-parameter-title {
+  padding-top: 12px;
+  line-height: 0.9;
+  margin-bottom: 0;
+}
 
 .cf-category-title {
   padding-top: 12px;
   line-height: 0.9;
   margin-bottom: 0;
-  font-weight: bold; }
-  .cf-category-title:first-child {
-    padding-top: 0; }
+  font-weight: bold;
+}
+.cf-category-title:first-child {
+  padding-top: 0;
+}
