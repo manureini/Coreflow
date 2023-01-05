@@ -4,7 +4,7 @@ namespace Coreflow.Objects
 {
     public class DisplayMetaAttribute : Attribute
     {
-        public const string DEFAULT_ICON = "fa-cog";
+        public const string DEFAULT_ICON = "fa-gear";
 
         public string DisplayName { get; }
 

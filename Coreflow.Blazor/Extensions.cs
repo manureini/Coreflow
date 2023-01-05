@@ -31,16 +31,16 @@ namespace Coreflow.Blazor
                 return GetIconClassName(desingable.Icon);
             }
 
-            return "fa " + DisplayMetaAttribute.DEFAULT_ICON;
+            return "fa-solid " + DisplayMetaAttribute.DEFAULT_ICON;
         }
 
         public static string GetIconClassName(string pIconString)
         {
             if (pIconString == null)
-                return "fa " + DisplayMetaAttribute.DEFAULT_ICON;
+                return "fa-solid " + DisplayMetaAttribute.DEFAULT_ICON;
 
             if (pIconString.Contains("fa-"))
-                return "fa " + pIconString;
+                return "fa-solid " + pIconString;
 
             throw new NotSupportedException($"Icon '{pIconString}' is not supported");
         }
