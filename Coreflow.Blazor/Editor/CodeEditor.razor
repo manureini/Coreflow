@@ -1,7 +1,6 @@
-﻿
+﻿@using BlazorMonaco.Editor;
 
-<MonacoEditor @ref="mEditor" Id=@mId ConstructionOptions="EditorConstructionOptions" CssClass=@("cf-code-editor-monaco "  + (IsInline ? "cf-code-editor-monaco-inline" : "cf-code-editor-monaco-fullscreen")) OnDidChangeModelContent="OnCodeChanged" />
-
+<StandaloneCodeEditor @ref="mEditor" Id=@mId ConstructionOptions="EditorConstructionOptions" CssClass=@("cf-code-editor-monaco " + (IsInline ? "cf-code-editor-monaco-inline" : "cf-code-editor-monaco-fullscreen")) OnDidChangeModelContent="OnCodeChanged" />
 
 @code {
 
@@ -16,7 +15,7 @@
     [Parameter]
     public bool IsInline { get; set; }
 
-    protected MonacoEditor mEditor;
+    protected StandaloneCodeEditor mEditor;
     protected string mId;
 
     protected System.Timers.Timer mTimer;
@@ -44,7 +43,7 @@
         }
     }
 
-    protected StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
+    protected StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
     {
         var options = new StandaloneEditorConstructionOptions
         {
@@ -66,7 +65,7 @@
             options.LineNumbers = "off";
             options.GlyphMargin = false;
             options.Folding = false;
-            options.LineDecorationsWidth = "0";
+            options.LineDecorationsWidth = 0;
             options.LineNumbersMinChars = 0;
 
             options.Scrollbar = new EditorScrollbarOptions()

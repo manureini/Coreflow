@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,9 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BlazorMonaco" Version="2.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.10" />
+    <PackageReference Include="BlazorMonaco" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="7.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.2" />
   </ItemGroup>
 
   <ItemGroup>
