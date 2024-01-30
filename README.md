@@ -5,5 +5,5 @@ and run them locally using the Coreflow Library.
 
 A flow will be converted to C# Code and compiled with Roslyn and .NET Core.
 
-This software was implemented during by Bachelor Thesis from March to June 2019.
+This software was implemented during my Bachelor Thesis from March to June 2019.
 
