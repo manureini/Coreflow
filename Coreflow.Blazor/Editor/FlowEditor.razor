@@ -19,11 +19,11 @@
             </div>
 
             @if (!DropZonesVisible)
-        {
-            <DefaultCodeCreatorParameterEditor @ref="mParameterEditor" CodeCreator="SelectedCodeCreator" />
-        }
+            {
+                <DefaultCodeCreatorParameterEditor @ref="mParameterEditor" CodeCreator="SelectedCodeCreator" />
+            }
 
-    </CascadingValue>
+        </CascadingValue>
     }
 </div>
 
@@ -296,7 +296,7 @@
 
     public void InvokeStateHasChanged()
     {
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
 

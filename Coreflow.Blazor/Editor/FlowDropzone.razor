@@ -1,0 +1,25 @@
+﻿<div class="cf-code-creator-dropzone @(_isDraggingOver ? "dragging-over" : string.Empty)"
+     @ondrop="OnDrop"
+     @ondragover="OnDragOver"
+     @ondragover:preventDefault
+     @ondragleave="OnDragLeave">
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback<DragEventArgs> OnDrop { get; set; }
+
+    private bool _isDraggingOver = false;
+
+    private void OnDragOver(DragEventArgs e)
+    {
+        _isDraggingOver = true;
+    }
+
+    private void OnDragLeave(DragEventArgs e)
+    {
+        _isDraggingOver = false;
+    }
+
+}

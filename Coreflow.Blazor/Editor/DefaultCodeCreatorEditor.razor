@@ -1,16 +1,16 @@
 ﻿@if (DropZoneEnabled && !PreviousCodeCreatorIsSelected && CodeCreator != FlowDefinition.CodeCreator)
 {
-    <div class="cf-code-creator-dropzone" @ondrop="OnDropBefore" ondragover="event.preventDefault();"></div>
+    <FlowDropzone OnDrop="OnDropBefore" />
 }
 
 @if (CodeCreator != null)
 {
     <div class=@CssClass style=@CssStyle title=@CodeCreator.GetType().FullName
-     @onclick=OnClick @onclick:stopPropagation @onclick:preventDefault
-     draggable="true"
-     @ondragstart="OnDragStart" @ondragstart:stopPropagation
-     @ondragend="OnDragEnd" @ondragend:stopPropagation
-     @onkeydown="OnKeyDown" @onkeydown:stopPropagation tabindex="0">
+         @onclick=OnClick @onclick:stopPropagation @onclick:preventDefault
+         draggable="true"
+         @ondragstart="OnDragStart" @ondragstart:stopPropagation
+         @ondragend="OnDragEnd" @ondragend:stopPropagation
+         @onkeydown="OnKeyDown" @onkeydown:stopPropagation tabindex="0">
 
         <div class="cf-code-creator-title">
             <span class="cf-code-creator-title-left">
@@ -53,7 +53,7 @@
                         @if (DropZoneEnabled && (FlowEditor.SelectedCodeCreator == null || lastCodeCreator != FlowEditor.SelectedCodeCreator))
                         {
                             int sequenceIndex = i;
-                            <div class="cf-code-creator-dropzone" @ondrop="async () => await OnDrop(containerCreator, sequenceIndex)" ondragover="event.preventDefault();"></div>
+                            <FlowDropzone OnDrop="async () => await OnDrop(containerCreator, sequenceIndex)" />
                         }
 
                     </div>
@@ -66,7 +66,7 @@
 }
 else if (CodeCreator == null && FlowDefinition.CodeCreator == null)
 {
-    <div class="cf-code-creator-dropzone" @ondrop="OnDropRoot" ondragover="event.preventDefault();"></div>
+    <FlowDropzone OnDrop="OnDropRoot" />
 }
 
 

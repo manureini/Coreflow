@@ -7,7 +7,7 @@
   border-radius: 3px;
 }
 .cf-code-creator.cf-code-creator-active {
-  background: #545454;
+  background: rgb(83.55, 83.55, 83.55);
 }
 .cf-code-creator i {
   padding: 0 3px;
@@ -16,7 +16,7 @@
   background: rgba(30, 30, 30, 0.25);
   border: none;
   width: 22%;
-  color: #d1d1d1;
+  color: rgb(208.5, 208.5, 208.5);
 }
 
 .cf-code-creator-dropzone {
@@ -24,6 +24,9 @@
   height: 20px;
   border-radius: 3px;
   margin: 10px;
+}
+.cf-code-creator-dropzone.dragging-over {
+  background: rgb(93.75, 93.75, 93.75);
 }
 
 .cf-code-editor-monaco.cf-code-editor-monaco-inline {
@@ -43,7 +46,7 @@
   flex-direction: row;
   width: 100%;
   background: #1e1e1e;
-  color: #d1d1d1;
+  color: rgb(208.5, 208.5, 208.5);
   font-size: 0.9rem;
 }
 .cf-editor-main .cf-code-creator-list {
@@ -63,7 +66,7 @@
   width: 70%;
   justify-self: center;
   border: solid;
-  border-color: #383838;
+  border-color: rgb(55.5, 55.5, 55.5);
   border-width: 1px;
 }
 .cf-editor-main .cf-code-creator-parameter-editor {
